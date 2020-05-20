@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using GpsServer.Models;
-
-namespace GpsServer.Teltonika.Client
+﻿namespace GpsServer.Teltonika.Client
 {
+    using System;
+    using System.Collections.Generic;
+
+    using GpsServer.Models;
+
     /*     ► Codec 8 protocol sending over TCP ◄
            ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 
@@ -82,16 +83,21 @@ namespace GpsServer.Teltonika.Client
            000000000000004308020000016B40D57B480100000000000000000000000000000001010101000000000000016B40D5C198010000000000000000000000000000000101010101000000020000252C
 
         */
-    
     public class FmxParserCodec8
     {
-
+        /// <summary>
+        /// Defines the _utcDate.
+        /// </summary>
         private readonly DateTime _utcDate = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
-        
         /*
          * ▓▓▓▒▒░░ Parser for Phase 2 ░░▒▒▓▓▓
          */
+        /// <summary>
+        /// The Parse.
+        /// </summary>
+        /// <param name="hexData">The hexData<see cref="string"/>.</param>
+        /// <returns>The <see cref="TeltonikaTcpPacket"/>.</returns>
         public TeltonikaTcpPacket Parse(string hexData)
         {
             var result = new TeltonikaTcpPacket { HexMessage = hexData };
@@ -208,6 +214,5 @@ namespace GpsServer.Teltonika.Client
                 throw ex;
             }
         }
-
     }
 }

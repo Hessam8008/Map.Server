@@ -1,27 +1,63 @@
-﻿using System;
-using System.Net.Http;
-using GpsServer.Models;
-
-namespace GpsServer.Teltonika.Server
+﻿namespace GpsServer.Teltonika.Server
 {
+    using System;
+    using System.Threading.Tasks;
+    using global::UAC.EndPoints.Service.Base;
+    using GpsServer.Models;
+
+    using Notifier.EndPoints.Service.Base;
+    using Notifier.EndPoints.Service.Notification.Enums;
+    using Notifier.EndPoints.Service.Notification.RequestsArg;
+
+    using Services.Core.Interfaces;
+    using Services.WebApiCaller;
+    using Services.WebApiCaller.Configuration;
+
+    /// <summary>
+    /// Defines the <see cref="MessageCenter" />.
+    /// </summary>
     public static class MessageCenter
     {
-        //private static string url = "http://94.183.243.23:4054/api/GlobalHub/Broadcast";
-        private static string url = "http://10.10.1.34:4054/api/GlobalHub/Broadcast";
-        private static HttpClient client;
-        private static void BroadcastMessage(string msg)
+        private static INotifierService notifierService;
+        private static IApiCaller apiCaller;
+        private static IApiConfiguration apiConfiguration;
+        private static UserAcc uac;
+
+        /// <summary>
+        /// The broadcast message.
+        /// </summary>
+        /// <param name="message">
+        /// The message of the notification.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        private static async Task BroadcastMessage(string message)
         {
-            client ??= new HttpClient();
+            if (notifierService == null)
+            {
+                apiConfiguration = new WinApiConfiguration();
+                apiCaller = new ApiCaller();
+                notifierService = new NotifierService(apiCaller, apiConfiguration);
+                IUacService u = new UacService(apiCaller, apiConfiguration);
+                uac = new UserAcc(u);
+            }
+
+            var token = await uac.GetToken().ConfigureAwait(false);
+            apiCaller.SetJwtToken(token);
 
             try
             {
-                var newUrl = $"{url}?Message={Uri.EscapeUriString(msg)}";
+                var arg = new SendNotificationArg
+                              {
+                                  ApplicationId = 3,
+                                  Title = "Teltonika AVL",
+                                  IsSendToAll = true,
+                                  Body = message,
+                                  Type = NotificationTimingType.Online
+                              };
 
-                var response = client.PostAsync(newUrl, null).ConfigureAwait(false).GetAwaiter().GetResult();
-
-                if (response.StatusCode != System.Net.HttpStatusCode.OK)
-                    throw new Exception($"Send notification failed. Status code = {response.StatusCode}");
-
+                await notifierService.Notification.SendNotification(arg).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -29,18 +65,26 @@ namespace GpsServer.Teltonika.Server
             }
         }
 
-        public static void BroadcastIMEI(string msg)
+        /// <summary>
+        /// The Broadcast IMEI.
+        /// </summary>
+        /// <param name="imei">The IMEI of the device.<see cref="string"/>.</param>
+        public static async Task BroadcastIMEI(string imei)
         {
-            var obj = new 
+            var obj = new
             {
                 TYPE = "IMEI",
                 TIME = DateTime.UtcNow,
-                OBJ = msg
+                OBJ = imei
             };
-            BroadcastMessage(obj.ToJson());
+            await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
         }
 
-        public static void BroadcastPacket(TeltonikaTcpPacket tcp)
+        /// <summary>
+        /// The BroadcastPacket.
+        /// </summary>
+        /// <param name="tcp">The tcp<see cref="TeltonikaTcpPacket"/>.</param>
+        public static async Task BroadcastPacket(TeltonikaTcpPacket tcp)
         {
             var obj = new
             {
@@ -48,13 +92,17 @@ namespace GpsServer.Teltonika.Server
                 TIME = DateTime.UtcNow,
                 OBJ = tcp.ToJson()
             };
-            BroadcastMessage(obj.ToJson());
+            await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// The ToJson.
+        /// </summary>
+        /// <param name="obj">The obj<see cref="object"/>.</param>
+        /// <returns>The <see cref="string"/>.</returns>
         public static string ToJson(this object obj)
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
         }
-
     }
 }

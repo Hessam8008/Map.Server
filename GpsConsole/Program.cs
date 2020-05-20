@@ -14,7 +14,8 @@ namespace GpsConsole
     using global::Services.Core;
 
     using Notifier.Client.Libs.Windows.Services;
-    using Notifier.Client.Libs.Windows.Setting;
+
+    using Utilities.LocalStorage.LocalStorage;
 
     internal class Program
     {
@@ -29,7 +30,8 @@ namespace GpsConsole
             IApiConfiguration configuration = new WinApiConfiguration();
             configuration.Load();
             ApiSite apiSite = configuration.FindByTitle("Notifier.Hub");
-            ISettingProvider localSetting = new LocalSetting();
+            ILocalStorage localSetting = new LiteDBLocalStorage();
+            localSetting.Initialize(".\\","signalR");
             INotifierService notifierService = new NotifierService(localSetting);
             notifierService.Initialize(NotifierToken, apiSite.UrlAddress);
 
