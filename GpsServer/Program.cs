@@ -57,7 +57,7 @@ namespace GpsServer
 
                 var task = new Task(async () => { await server.Start(3343); });
                 task.Start();
-
+                Console.WriteLine("Press any key to close...");
                 Console.ReadKey();
 
                 server.Stop();
@@ -67,7 +67,7 @@ namespace GpsServer
                 Console.WriteLine(e);
             }
 
-            Console.WriteLine("Press any key to close...");
+            
             Console.ReadKey();
         }
 

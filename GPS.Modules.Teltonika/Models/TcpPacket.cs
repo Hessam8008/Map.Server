@@ -64,7 +64,7 @@
 
             foreach (var avl in this.Locations)
             {
-                result += $"\n  Time: {avl.Time}, Location: {avl.Longitude}, {avl.Latitude}\n";
+                result += $"\n\tTime: {avl.Time}, Location: {avl.Longitude}, {avl.Latitude}";
             }
 
             return result;

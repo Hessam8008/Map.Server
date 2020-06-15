@@ -154,7 +154,6 @@ namespace GPS.Modules.Teltonika
                 t.Start();
             }
             while (true);
-            this.Stop();
         }
 
         /// <summary>

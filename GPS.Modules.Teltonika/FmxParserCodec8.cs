@@ -148,7 +148,7 @@ namespace GPS.Modules.Teltonika
             {
                 var avl = new Location
                 {
-                    Time = this.utcDate.AddMilliseconds(hc.PopAsLong()).ToUniversalTime(),
+                    Time = this.utcDate.AddMilliseconds(hc.PopAsLong()).ToLocalTime(),
                     Priority = (Priority)hc.PopAsByte(),
                     Longitude = hc.PopAsInt() / 10000000d,
                     Latitude = hc.PopAsInt() / 10000000d,
