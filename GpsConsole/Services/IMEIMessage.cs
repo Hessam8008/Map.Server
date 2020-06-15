@@ -22,9 +22,15 @@ namespace GpsConsole.Services
 
         public virtual void PrintResult()
         {
+            var temp_backColor = Console.BackgroundColor;
+            var temp_foreColor = Console.ForegroundColor;
+
             Console.BackgroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"♫ IMEI: {MessageObject.Value}");
-            Console.BackgroundColor = ConsoleColor.Black;
+            
+            Console.BackgroundColor = temp_backColor;
+            Console.ForegroundColor = temp_foreColor;
         }
     }
 }

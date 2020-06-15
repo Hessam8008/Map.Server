@@ -26,6 +26,8 @@ namespace GpsConsole.Services
 
         public void PrintResult()
         {
+            var temp_foreColor = Console.ForegroundColor;
+
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine($"{MessageObject.IMEI}: {MessageObject.NumberOfData1} location(s) received.");
             Console.ForegroundColor = ConsoleColor.Green;
@@ -33,7 +35,8 @@ namespace GpsConsole.Services
             {
                 Console.WriteLine($"\t{avl.Time.ToLocalTime()} | {avl.Latitude}, {avl.Longitude} | Speed: {avl.Speed} ");
             }
-            Console.ForegroundColor = ConsoleColor.Gray;
+
+            Console.ForegroundColor = temp_foreColor;
         }
     }
 }

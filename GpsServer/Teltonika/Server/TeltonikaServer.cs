@@ -62,12 +62,19 @@
         /// <returns>The <see cref="Task"/>.</returns>
         private async Task HandleDevice(TcpClient client)
         {
-            var device = new MyDevice(client);
+            var device = new TeltonikaDevice(client);
             device.Authenticated += async (sender, args) =>
             {
                 Log($"Authentication OK. [IMEI: {args.IMEI}]", ConsoleColor.Yellow);
                 args.Accepted = true;
-                await MessageCenter.BroadcastIMEI(args.IMEI).ConfigureAwait(false);
+                try
+                {
+                    await MessageCenter.BroadcastIMEI(args.IMEI).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    Log($"BroadcastIMEI Error: {ex.Message}", ConsoleColor.Red);
+                }
             };
 
             device.Error += (sender, args) =>
@@ -79,7 +86,14 @@
             {
                 Log($"\nPacket [IMEI: {args.Packet.IMEI}, AVLs: {args.Packet.NumberOfData1}]: {args.Packet}", ConsoleColor.Green);
                 args.Accepted = true;
-                await MessageCenter.BroadcastPacket(args.Packet).ConfigureAwait(false);
+                try
+                {
+                    await MessageCenter.BroadcastPacket(args.Packet).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    Log($"BroadcastPacket Error: {ex.Message}", ConsoleColor.Red);
+                }
             };
 
             device.Disconnected += (sender, args) =>

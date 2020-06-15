@@ -12,6 +12,7 @@ using Services.WebApiCaller.Configuration;
 namespace GpsConsole
 {
     using global::Services.Core;
+    using global::Services.Core.Tools;
 
     using Notifier.Client.Libs.Windows.Services;
 
@@ -30,6 +31,7 @@ namespace GpsConsole
             IApiConfiguration configuration = new WinApiConfiguration();
             configuration.Load();
             ApiSite apiSite = configuration.FindByTitle("Notifier.Hub");
+            ShowMessage($"Hub: {apiSite.UrlAddress}", ConsoleColor.Gray);
             ILocalStorage localSetting = new LiteDBLocalStorage();
             localSetting.Initialize(".\\","signalR");
             INotifierService notifierService = new NotifierService(localSetting);
@@ -43,12 +45,12 @@ namespace GpsConsole
                     try
                     {
                         var plainMessage = Newtonsoft.Json.JsonConvert.DeserializeObject<PlainMessage>(e.Body);
-                        ShowMessage($"Time: {plainMessage.Time.ToLocalTime()}, Type: {plainMessage.Type}");
+                        ShowMessage($"Time: {plainMessage.Time.ToLocalTime()}, Type: {plainMessage.Type}", ConsoleColor.Magenta);
                         var message = messageParser.Parse(plainMessage);
 
                         if (message == null)
                         {
-                            ShowMessage(e.Body);
+                            ShowMessage($"Unknown message:\n{e.Body}", ConsoleColor.DarkMagenta);
                         }
                         else
                         {
@@ -76,12 +78,12 @@ namespace GpsConsole
         }
 
 
-        private static void ShowMessage(string message)
+        private static void ShowMessage(string message, ConsoleColor foreColor)
         {
-            var rnd = new Random();
-            var r = rnd.Next(7, 15);
-            Console.ForegroundColor = (ConsoleColor)r;
+            var temp_foreColor = Console.ForegroundColor;
+            Console.ForegroundColor = foreColor;
             Console.WriteLine($"* {message}");
+            Console.ForegroundColor = temp_foreColor;
         }
 
     }

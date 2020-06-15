@@ -1,11 +1,12 @@
 ﻿namespace GpsServer.Teltonika.Client
 {
-    using GpsServer.Teltonika.Server.Args;
     using System;
     using System.Globalization;
     using System.Net.Sockets;
     using System.Text;
     using System.Threading.Tasks;
+
+    using GpsServer.Teltonika.Server.Args;
 
     /// <summary>
     /// The OnAuthenticated.
@@ -33,13 +34,23 @@
     /// </summary>
     /// <param name="sender">The sender<see cref="object"/>.</param>
     /// <param name="e">The e<see cref="EventArgs"/>.</param>
-    public delegate void OnDisconnected(object sender, EventArgs e);
+    public delegate void OnDisconnected(object sender, DisconnectedArgs e);
 
     /// <summary>
-    /// Defines the <see cref="MyDevice" />.
+    /// Defines the <see cref="TeltonikaDevice" />.
     /// </summary>
-    public class MyDevice
+    public class TeltonikaDevice
     {
+        /// <summary>
+        /// Defines the client.
+        /// </summary>
+        private readonly TcpClient client;
+
+        /// <summary>
+        /// The IMEI of the device.
+        /// </summary>
+        private string imei;
+
         /// <summary>
         /// Defines the Authenticated.
         /// </summary>
@@ -60,16 +71,13 @@
         /// </summary>
         public event OnDisconnected Disconnected;
 
-        /// <summary>
-        /// Defines the client.
-        /// </summary>
-        private readonly TcpClient client;
+
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MyDevice"/> class.
+        /// Initializes a new instance of the <see cref="TeltonikaDevice"/> class.
         /// </summary>
         /// <param name="client">The client<see cref="TcpClient"/>.</param>
-        public MyDevice(TcpClient client)
+        public TeltonikaDevice(TcpClient client)
         {
             this.client = client;
         }
@@ -110,7 +118,7 @@
                 }
 
                 /* Decode IMEI */
-                var imei = Encoding.ASCII.GetString(bytes, 2, 15);
+                this.imei = Encoding.ASCII.GetString(bytes, 2, 15);
 
                 var connectedArg = new AuthenticatedArgs(imei);
                 Authenticated?.Invoke(this, connectedArg);
@@ -158,7 +166,7 @@
             {
                 client?.Close();
                 client?.Dispose();
-                Disconnected?.Invoke(this, new EventArgs());
+                Disconnected?.Invoke(this, new DisconnectedArgs(imei));
             }
             catch (Exception e)
             {
