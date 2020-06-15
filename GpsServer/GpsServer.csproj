@@ -26,6 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GPS.DataAccess\GPS.DataAccess.csproj" />
+    <ProjectReference Include="..\GPS.Modules.Teltonika\GPS.Modules.Teltonika.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="ApiConfig.cfg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

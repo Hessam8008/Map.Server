@@ -1,21 +1,21 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TeltonikaAvlData.cs" company="Golriz">
+// <copyright file="Location.cs" company="Golriz">
 //   Copy-right © 2020
 // </copyright>
 // <summary>
-//   The teltonika avl data.
+//   The avl data.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace GpsServer.Models
+namespace GPS.Models.AVL
 {
     using System;
     using System.Collections.Generic;
 
     /// <summary>
-    /// The teltonika avl data.
+    /// The Location of the device.
     /// </summary>
-    public class TeltonikaAvlData
+    public class Location
     {
         /// <summary>
         /// Gets or sets the Time.
@@ -65,11 +65,11 @@ namespace GpsServer.Models
         /// <summary>
         /// Gets or sets the TotalIOElement.
         /// </summary>
-        public byte TotalIOElement { get; set; }
+        public byte TotalIOElements { get; set; }
 
         /// <summary>
         /// Gets or sets the IoElements.
         /// </summary>
-        public List<TeltonikaIoElement> IoElements { get; set; }
+        public List<LocationElement> Elements { get; set; }
     }
 }

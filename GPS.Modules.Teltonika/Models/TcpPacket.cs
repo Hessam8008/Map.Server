@@ -1,11 +1,13 @@
-﻿namespace GpsServer.Models
+﻿namespace GPS.Modules.Teltonika.Models
 {
     using System.Collections.Generic;
 
+    using GPS.Models.AVL;
+
     /// <summary>
-    /// Defines the <see cref="TeltonikaTcpPacket" />.
+    /// Defines the <see cref="TcpPacket" />.
     /// </summary>
-    public class TeltonikaTcpPacket
+    public class TcpPacket
     {
         /// <summary>
         /// Gets or sets the IMEI.
@@ -50,7 +52,7 @@
         /// <summary>
         /// Gets or sets the Teltonika AVL Data.
         /// </summary>
-        public List<TeltonikaAvlData> AvlData { get; set; }
+        public List<Location> Locations { get; set; }
 
         /// <summary>
         /// The ToString.
@@ -60,7 +62,7 @@
         {
             var result = string.Empty;
 
-            foreach (var avl in this.AvlData)
+            foreach (var avl in this.Locations)
             {
                 result += $"\n  Time: {avl.Time}, Location: {avl.Longitude}, {avl.Latitude}\n";
             }

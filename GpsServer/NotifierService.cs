@@ -1,9 +1,9 @@
-﻿namespace GpsServer.Teltonika.Server
+﻿namespace GpsServer
 {
     using System;
     using System.Threading.Tasks;
-    using global::UAC.EndPoints.Service.Base;
-    using GpsServer.Models;
+
+    using GPS.Modules.Teltonika.Models;
 
     using Notifier.EndPoints.Service.Base;
     using Notifier.EndPoints.Service.Notification.Enums;
@@ -13,15 +13,17 @@
     using Services.WebApiCaller;
     using Services.WebApiCaller.Configuration;
 
+    using UAC.EndPoints.Service.Base;
+
     /// <summary>
-    /// Defines the <see cref="MessageCenter" />.
+    /// Defines the <see cref="NotifierService" />.
     /// </summary>
-    public static class MessageCenter
+    public static class NotifierService
     {
         private static INotifierService notifierService;
         private static IApiCaller apiCaller;
         private static IApiConfiguration apiConfiguration;
-        private static UserAcc uac;
+        private static UserAccountService uac;
 
         /// <summary>
         /// The broadcast message.
@@ -38,9 +40,9 @@
             {
                 apiConfiguration = new WinApiConfiguration();
                 apiCaller = new ApiCaller();
-                notifierService = new NotifierService(apiCaller, apiConfiguration);
+                notifierService = new Notifier.EndPoints.Service.Base.NotifierService(apiCaller, apiConfiguration);
                 IUacService u = new UacService(apiCaller, apiConfiguration);
-                uac = new UserAcc(u);
+                uac = new UserAccountService(u);
             }
 
             var token = await uac.GetToken().ConfigureAwait(false);
@@ -49,13 +51,13 @@
             try
             {
                 var arg = new SendNotificationArg
-                              {
-                                  ApplicationId = 3,
-                                  Title = "Teltonika AVL",
-                                  IsSendToAll = true,
-                                  Body = message,
-                                  Type = NotificationTimingType.Online
-                              };
+                {
+                    ApplicationId = 3,
+                    Title = "Teltonika AVL",
+                    IsSendToAll = true,
+                    Body = message,
+                    Type = NotificationTimingType.Online
+                };
 
                 await notifierService.Notification.SendNotification(arg).ConfigureAwait(false);
             }
@@ -84,7 +86,7 @@
         /// The BroadcastPacket.
         /// </summary>
         /// <param name="tcp">The tcp<see cref="TeltonikaTcpPacket"/>.</param>
-        public static async Task BroadcastPacket(TeltonikaTcpPacket tcp)
+        public static async Task BroadcastPacket(TcpPacket tcp)
         {
             var obj = new
             {
@@ -100,7 +102,7 @@
         /// </summary>
         /// <param name="obj">The obj<see cref="object"/>.</param>
         /// <returns>The <see cref="string"/>.</returns>
-        public static string ToJson(this object obj)
+        internal static string ToJson(this object obj)
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
         }

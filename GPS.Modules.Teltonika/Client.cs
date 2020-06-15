@@ -1,4 +1,17 @@
-﻿namespace GpsServer.Teltonika.Client
+﻿// ***********************************************************************
+// Assembly         : GPS.Modules.Teltonika
+// Author           : U12178
+// Created          : 06-15-2020
+//
+// Last Modified By : U12178
+// Last Modified On : 06-15-2020
+// ***********************************************************************
+// <copyright file="Client.cs" company="GPS.Modules.Teltonika">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+namespace GPS.Modules.Teltonika
 {
     using System;
     using System.Globalization;
@@ -6,40 +19,40 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    using GpsServer.Teltonika.Server.Args;
+    using GPS.Modules.Teltonika.Args;
 
     /// <summary>
     /// The OnAuthenticated.
     /// </summary>
-    /// <param name="sender">The sender<see cref="object"/>.</param>
-    /// <param name="e">The e<see cref="AuthenticatedArgs"/>.</param>
+    /// <param name="sender">The sender<see cref="object" />.</param>
+    /// <param name="e">The e<see cref="AuthenticatedArgs" />.</param>
     public delegate void OnAuthenticated(object sender, AuthenticatedArgs e);
 
     /// <summary>
     /// The OnPacketReceived.
     /// </summary>
-    /// <param name="sender">The sender<see cref="object"/>.</param>
-    /// <param name="e">The e<see cref="PacketReceivedArgs"/>.</param>
+    /// <param name="sender">The sender<see cref="object" />.</param>
+    /// <param name="e">The e<see cref="PacketReceivedArgs" />.</param>
     public delegate void OnPacketReceived(object sender, PacketReceivedArgs e);
 
     /// <summary>
     /// The OnError.
     /// </summary>
-    /// <param name="sender">The sender<see cref="object"/>.</param>
-    /// <param name="e">The e<see cref="ErrorArgs"/>.</param>
+    /// <param name="sender">The sender<see cref="object" />.</param>
+    /// <param name="e">The e<see cref="ErrorArgs" />.</param>
     public delegate void OnError(object sender, ErrorArgs e);
 
     /// <summary>
     /// The OnDisconnected.
     /// </summary>
-    /// <param name="sender">The sender<see cref="object"/>.</param>
-    /// <param name="e">The e<see cref="EventArgs"/>.</param>
+    /// <param name="sender">The sender<see cref="object" />.</param>
+    /// <param name="e">The e<see cref="EventArgs" />.</param>
     public delegate void OnDisconnected(object sender, DisconnectedArgs e);
 
     /// <summary>
-    /// Defines the <see cref="TeltonikaDevice" />.
+    /// Defines the <see cref="Client" />.
     /// </summary>
-    public class TeltonikaDevice
+    public class Client
     {
         /// <summary>
         /// Defines the client.
@@ -50,6 +63,15 @@
         /// The IMEI of the device.
         /// </summary>
         private string imei;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Client" /> class.
+        /// </summary>
+        /// <param name="client">The client<see cref="Client" />.</param>
+        public Client(TcpClient client)
+        {
+            this.client = client;
+        }
 
         /// <summary>
         /// Defines the Authenticated.
@@ -71,57 +93,52 @@
         /// </summary>
         public event OnDisconnected Disconnected;
 
-
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TeltonikaDevice"/> class.
-        /// </summary>
-        /// <param name="client">The client<see cref="TcpClient"/>.</param>
-        public TeltonikaDevice(TcpClient client)
-        {
-            this.client = client;
-        }
-
         /// <summary>
         /// The GetData.
         /// </summary>
-        /// <returns>The <see cref="Task"/>.</returns>
+        /// <returns>The <see cref="Task" />.</returns>
         public async Task GetData()
         {
             try
             {
                 var bytes = new byte[2048];
-                var stream = client.GetStream();
+                var stream = this.client.GetStream();
 
                 /*
                  * --► PHASE 01 ◄--
                  */
                 var counter = await stream.ReadAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
+                
+                // Socket disconnected
+                if (counter == 0)
+                {
+                    return;
+                }
 
                 /* First 2 bytes are IMEI length + next 15 bytes are IMEI  == 17 bytes
                     Sample: 000F333536333037303432343431303133 (HEX)
                  */
                 if (counter != 17)
                 {
-                    Error?.Invoke(this, new ErrorArgs("Authentication failed."));
+                    this.Error?.Invoke(this, new ErrorArgs("Authentication failed.", "N/A"));
                     return;
                 }
 
-                var hexImeiLen = BitConverter.ToString(bytes, 0, 2).Replace("-", "");
+                var hexImeiLen = BitConverter.ToString(bytes, 0, 2).Replace("-", string.Empty);
                 var imeiLen = int.Parse(hexImeiLen, NumberStyles.HexNumber);
 
                 /* Validate IMEI length has received by GPS */
                 if (imeiLen != 15)
                 {
-                    Error?.Invoke(this, new ErrorArgs($"Invalid IMEI length. IMEI must be 15 but it is {imeiLen}."));
+                    this.Error?.Invoke(this, new ErrorArgs($"Invalid IMEI length. IMEI must be 15 but it is {imeiLen}.", "N/A"));
                     return;
                 }
 
                 /* Decode IMEI */
                 this.imei = Encoding.ASCII.GetString(bytes, 2, 15);
 
-                var connectedArg = new AuthenticatedArgs(imei);
-                Authenticated?.Invoke(this, connectedArg);
+                var connectedArg = new AuthenticatedArgs(this.imei);
+                this.Authenticated?.Invoke(this, connectedArg);
 
                 if (!connectedArg.Accepted)
                 {
@@ -137,23 +154,25 @@
                  */
                 while ((counter = await stream.ReadAsync(bytes, 0, bytes.Length).ConfigureAwait(false)) != 0)
                 {
-                    var hexData = BitConverter.ToString(bytes, 0, counter).Replace("-", "");
+                    var hexData = BitConverter.ToString(bytes, 0, counter).Replace("-", string.Empty);
                     var parser = new FmxParserCodec8();
                     var data = parser.Parse(hexData);
-                    data.IMEI = imei;
+                    data.IMEI = this.imei;
                     var packetArgs = new PacketReceivedArgs(data);
-                    PacketReceived?.Invoke(this, packetArgs);
+                    this.PacketReceived?.Invoke(this, packetArgs);
                     if (packetArgs.Accepted)
+                    {
                         await stream.WriteAsync(BitConverter.GetBytes((int)data.NumberOfData1)).ConfigureAwait(false);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Error?.Invoke(this, new ErrorArgs(ex));
+                this.Error?.Invoke(this, new ErrorArgs(ex, this.imei));
             }
             finally
             {
-                CloseConnection();
+                this.CloseConnection();
             }
         }
 
@@ -164,9 +183,9 @@
         {
             try
             {
-                client?.Close();
-                client?.Dispose();
-                Disconnected?.Invoke(this, new DisconnectedArgs(imei));
+                this.client?.Close();
+                this.client?.Dispose();
+                this.Disconnected?.Invoke(this, new DisconnectedArgs(this.imei));
             }
             catch (Exception e)
             {
