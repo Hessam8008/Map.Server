@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GpsConsole.Interfaces
+﻿namespace Map.Client.Interfaces
 {
     public interface IRepository<in T>
     where T : IEntity

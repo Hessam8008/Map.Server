@@ -11,7 +11,7 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-namespace GpsServer
+namespace Map.Server
 {
     using System;
     using System.Threading.Tasks;

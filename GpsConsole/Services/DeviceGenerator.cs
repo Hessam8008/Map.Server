@@ -1,7 +1,4 @@
-﻿using System;
-using Notifier.Client;
-
-namespace GpsConsole.Services
+﻿namespace Map.Client.Services
 {
     //internal class DeviceGenerator : IDeviceGenerator
     //{

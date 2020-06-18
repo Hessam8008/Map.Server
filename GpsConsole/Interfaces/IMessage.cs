@@ -1,7 +1,7 @@
-﻿using GpsConsole.Models;
-
-namespace GpsConsole.Interfaces
+﻿namespace Map.Client.Interfaces
 {
+    using Map.Client.Models;
+
     public interface IMessage<out T> 
         where T : IEntity
     {

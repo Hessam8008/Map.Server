@@ -1,9 +1,10 @@
-﻿using System;
-using GpsConsole.Interfaces;
-using GpsConsole.Models;
-
-namespace GpsConsole.Services
+﻿namespace Map.Client.Services
 {
+    using System;
+
+    using Map.Client.Interfaces;
+    using Map.Client.Models;
+
     public class IMEIMessage : IMessage<IMEI>
     {
         public IMEIMessage()
@@ -16,7 +17,7 @@ namespace GpsConsole.Services
         public virtual bool CanParse(PlainMessage msg)
         {
             if (msg.Type != "IMEI") return false;
-            MessageObject = new IMEI { Value = msg.OBJ };
+            this.MessageObject = new IMEI { Value = msg.OBJ };
             return true;
         }
 
@@ -27,7 +28,7 @@ namespace GpsConsole.Services
 
             Console.BackgroundColor = ConsoleColor.Green;
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"♫ IMEI: {MessageObject.Value}");
+            Console.WriteLine($"♫ IMEI: {this.MessageObject.Value}");
             
             Console.BackgroundColor = temp_backColor;
             Console.ForegroundColor = temp_foreColor;

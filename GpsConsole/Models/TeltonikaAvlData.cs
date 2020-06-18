@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace GpsConsole.Models
+﻿namespace Map.Client.Models
 {
+    using System;
+    using System.Collections.Generic;
+
     public class TeltonikaAvlData
     {
         public DateTime Time { get;  set; }

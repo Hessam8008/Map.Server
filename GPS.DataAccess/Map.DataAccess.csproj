@@ -2,10 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>Map.DataAccess</AssemblyName>
+    <RootNamespace>Map.DataAccess</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GPS.Models\GPS.Models.csproj" />
+    <ProjectReference Include="..\GPS.Models\Map.Models.csproj" />
   </ItemGroup>
 
 </Project>

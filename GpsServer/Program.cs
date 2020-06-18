@@ -12,13 +12,11 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace GpsServer
+namespace Map.Server
 {
     using System;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
 
-    using GPS.Modules.Teltonika;
+    using Map.Modules.Teltonika;
 
     /// <summary>
     /// The program.
@@ -28,7 +26,9 @@ namespace GpsServer
         /// <summary>
         /// The main method.
         /// </summary>
-        /// <param name="args">The args<see cref="string" />.</param>
+        /// <param name="args">
+        /// The args<see cref="string"/>.
+        /// </param>
         public static void Main(string[] args)
         {
             try
@@ -55,8 +55,8 @@ namespace GpsServer
                         Log($"Disconnected {e.Imei}", ConsoleColor.Blue);
                     };
 
-                var task = new Task(async () => { await server.Start(3343); });
-                task.Start();
+                server.Start(3343);
+                
                 Console.WriteLine("Press any key to close...");
                 Console.ReadKey();
 
@@ -66,11 +66,19 @@ namespace GpsServer
             {
                 Console.WriteLine(e);
             }
-
             
             Console.ReadKey();
         }
 
+        /// <summary>
+        /// Log the text.
+        /// </summary>
+        /// <param name="text">
+        /// The text.
+        /// </param>
+        /// <param name="color">
+        /// The color.
+        /// </param>
         private static void Log(string text, ConsoleColor color = ConsoleColor.Gray)
         {
             var tempColor = Console.ForegroundColor;
@@ -78,6 +86,5 @@ namespace GpsServer
             Console.WriteLine("{0:HH:mm:ss}\n {1}\n\n", DateTime.Now, text);
             Console.ForegroundColor = tempColor;
         }
-
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace GpsConsole.Interfaces
+﻿namespace Map.Client.Interfaces
 {
     public interface IEntity { }
 }

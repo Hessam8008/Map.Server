@@ -1,8 +1,8 @@
-﻿namespace GPS.Modules.Teltonika.Models
+﻿namespace Map.Modules.Teltonika.Models
 {
     using System.Collections.Generic;
 
-    using GPS.Models.AVL;
+    using Map.Models.AVL;
 
     /// <summary>
     /// Defines the <see cref="TcpPacket" />.

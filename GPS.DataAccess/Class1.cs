@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GPS.DataAccess
+﻿namespace Map.DataAccess
 {
     public class Class1
     {

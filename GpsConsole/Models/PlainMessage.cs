@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace GpsConsole.Models
+﻿namespace Map.Client.Models
 {
+    using System;
+
     public class PlainMessage
     {
         public string Type { get; set; }

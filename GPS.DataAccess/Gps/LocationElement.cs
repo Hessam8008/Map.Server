@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Map.Models.AVL
+namespace Map.DataAccess.Gps
 {
     /// <summary>
     /// The location element such as fuel, doors, oil, etc.

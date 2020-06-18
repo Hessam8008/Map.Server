@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GPS.Modules.Teltonika.Args
+﻿namespace Map.Modules.Teltonika.Args
 {
     using System.Net;
     using System.Net.Sockets;
@@ -36,9 +32,9 @@ namespace GPS.Modules.Teltonika.Args
         public ConnectionAcceptedArgs(TcpClient client)
         {
             var remote = client.Client.RemoteEndPoint as IPEndPoint;
-            RemoteIP = remote?.Address.ToString();
-            Port = remote?.Port ?? 0;
-            Ttl = client.Client.Ttl;
+            this.RemoteIP = remote?.Address.ToString();
+            this.Port = remote?.Port ?? 0;
+            this.Ttl = client.Client.Ttl;
         }
     }
 }

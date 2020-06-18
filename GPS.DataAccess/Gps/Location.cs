@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Map.Models.AVL
+namespace Map.DataAccess.Gps
 {
     using System;
     using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace Map.Models.AVL
         /// <summary>
         /// Gets or sets the Priority.
         /// </summary>
-        public Priority Priority { get; set; }
+        public byte Priority { get; set; }
 
         /// <summary>
         /// Gets or sets the Longitude.

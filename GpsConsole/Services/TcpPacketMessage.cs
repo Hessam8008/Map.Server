@@ -1,10 +1,12 @@
-﻿using System;
-using GpsConsole.Interfaces;
-using GpsConsole.Models;
-using Newtonsoft.Json;
-
-namespace GpsConsole.Services
+﻿namespace Map.Client.Services
 {
+    using System;
+
+    using Map.Client.Interfaces;
+    using Map.Client.Models;
+
+    using Newtonsoft.Json;
+
     public class TcpPacketMessage : IMessage<TeltonikaTcpPacket>
     {
         public TeltonikaTcpPacket MessageObject { get; private set; }
@@ -14,7 +16,7 @@ namespace GpsConsole.Services
                 return false;
             try
             {
-                MessageObject = JsonConvert.DeserializeObject<TeltonikaTcpPacket>(message.OBJ);
+                this.MessageObject = JsonConvert.DeserializeObject<TeltonikaTcpPacket>(message.OBJ);
                 return true;
             }
             catch (Exception e)
@@ -29,9 +31,9 @@ namespace GpsConsole.Services
             var temp_foreColor = Console.ForegroundColor;
 
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine($"{MessageObject.IMEI}: {MessageObject.NumberOfData1} location(s) received.");
+            Console.WriteLine($"{this.MessageObject.IMEI}: {this.MessageObject.NumberOfData1} location(s) received.");
             Console.ForegroundColor = ConsoleColor.Green;
-            foreach (var avl in MessageObject.AvlData)
+            foreach (var avl in this.MessageObject.AvlData)
             {
                 Console.WriteLine($"\t{avl.Time.ToLocalTime()} | {avl.Latitude}, {avl.Longitude} | Speed: {avl.Speed} ");
             }

@@ -60,7 +60,7 @@
 //   * Below table represents AVL Data structure.
 //
 //   Timestamp  |  Priority  | GPS Element | IO Element
-//    8 bytes   |   1 byte   |  15 bytes	 |   X bytes
+//    8 bytes   |   1 byte   |  15 bytes   |   X bytes
 //
 //   Timestamp   : A difference, in milliseconds, between the current time and midnight, January, 1970 UTC(UNIX time).
 //   Priority    : Field which define AVL data priority(more information below).
@@ -68,14 +68,14 @@
 //   IO Element  : Additional configurable information from device(more information visit reference site).
 //
 //   Priority
-//   0	| Low
-//   1	| High
-//   2	| Panic
+//   0| Low
+//   1| High
+//   2| Panic
 //
 //
 //   GPS element
-//   Longitude |	Latitude |	Altitude  |	 Angle	| Satellites |  Speed
-//    4 bytes  |	4 bytes	 |  2 bytes	  | 2 bytes	|   1 byte	 | 2 bytes
+//   Longitude |    Latitude |  Altitude  |  Angle  | Satellites |  Speed
+//    4 bytes  |    4 bytes  |  2 bytes   | 2 bytes |   1 byte   | 2 bytes
 //
 //   Longitude  : East – west position.
 //   Latitude   : North – south position.
@@ -101,13 +101,13 @@
 //
 // </summary>
 // **********************************************************************
-namespace GPS.Modules.Teltonika
+namespace Map.Modules.Teltonika
 {
     using System;
     using System.Collections.Generic;
 
-    using GPS.Models.AVL;
-    using GPS.Modules.Teltonika.Models;
+    using Map.Models.AVL;
+    using Map.Modules.Teltonika.Models;
 
     /// <summary>
     /// The FMX parser codec 8.

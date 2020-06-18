@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using GpsConsole.Interfaces;
-using GpsConsole.Models;
-
-namespace GpsConsole.Services
+﻿namespace Map.Client.Services
 {
+    using System.Collections.Generic;
+
+    using Map.Client.Interfaces;
+    using Map.Client.Models;
+
     public class MessageParser2 : IMessageParser
     {
         public IMessage<IEntity> Parse(PlainMessage message)

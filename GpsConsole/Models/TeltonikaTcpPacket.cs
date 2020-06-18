@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using GpsConsole.Interfaces;
-
-namespace GpsConsole.Models
+﻿namespace Map.Client.Models
 {
+    using System.Collections.Generic;
+
+    using Map.Client.Interfaces;
+
     public class TeltonikaTcpPacket : IEntity
     {
         public TeltonikaTcpPacket()
@@ -23,7 +24,7 @@ namespace GpsConsole.Models
         {
             var result = "";
 
-            foreach (var avl in AvlData)
+            foreach (var avl in this.AvlData)
             {
                 result += $"\n  Time: {avl.Time}, Location: {avl.Longitude}, {avl.Latitude}\n";
             }

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GpsConsole.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.IdentityModel.Protocols;
-
-namespace GpsConsole
+﻿namespace Map.Client
 {
+    using Map.Client.Models;
+
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
     public class GpsContext : DbContext
     {
         public DbSet<IMEI> IMEIs { get; set; }

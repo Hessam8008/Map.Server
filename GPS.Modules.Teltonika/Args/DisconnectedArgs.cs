@@ -11,7 +11,7 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-namespace GPS.Modules.Teltonika.Args
+namespace Map.Modules.Teltonika.Args
 {
     /// <summary>
     /// The disconnected args.

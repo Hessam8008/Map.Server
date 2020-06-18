@@ -5,8 +5,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Company>Golriz</Company>
     <Authors>Hessam Hosseini</Authors>
-    <Product>GPS</Product>
-    <PackageId>GPS</PackageId>
+    <Product>Golriz Map</Product>
+    <PackageId>Map.Server</PackageId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GPS.DataAccess\GPS.DataAccess.csproj" />
-    <ProjectReference Include="..\GPS.Modules.Teltonika\GPS.Modules.Teltonika.csproj" />
+    <ProjectReference Include="..\GPS.DataAccess\Map.DataAccess.csproj" />
+    <ProjectReference Include="..\GPS.Modules.Teltonika\Map.Modules.Teltonika.csproj" />
   </ItemGroup>
 
   <ItemGroup>

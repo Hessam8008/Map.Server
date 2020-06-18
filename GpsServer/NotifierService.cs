@@ -1,9 +1,9 @@
-﻿namespace GpsServer
+﻿namespace Map.Server
 {
     using System;
     using System.Threading.Tasks;
 
-    using GPS.Modules.Teltonika.Models;
+    using Map.Modules.Teltonika.Models;
 
     using Notifier.EndPoints.Service.Base;
     using Notifier.EndPoints.Service.Notification.Enums;

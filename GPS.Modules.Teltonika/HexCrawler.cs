@@ -11,7 +11,7 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-namespace GPS.Modules.Teltonika
+namespace Map.Modules.Teltonika
 {
     using System;
     using System.Text;

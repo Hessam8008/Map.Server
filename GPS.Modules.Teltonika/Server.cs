@@ -11,15 +11,14 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-namespace GPS.Modules.Teltonika
+namespace Map.Modules.Teltonika
 {
     using System;
-    using System.Diagnostics;
     using System.Net;
     using System.Net.Sockets;
     using System.Threading.Tasks;
 
-    using GPS.Modules.Teltonika.Args;
+    using Map.Modules.Teltonika.Args;
 
     /// <summary>
     /// The OnAuthenticated.
@@ -82,7 +81,6 @@ namespace GPS.Modules.Teltonika
     /// </param>
     public delegate void OnServerStopped(object sender, EventArgs e);
 
-
     /// <summary>
     /// Defines the <see cref="Server" />.
     /// </summary>
@@ -131,29 +129,35 @@ namespace GPS.Modules.Teltonika
         /// <summary>
         /// The Start.
         /// </summary>
-        /// <param name="port">The port for listening.</param>
-        /// <returns>The <see cref="Task" />.</returns>
-        public async Task Start(int port)
+        /// <param name="port">
+        /// The port for listening.
+        /// </param>
+        public void Start(int port)
         {
             this.listener = new TcpListener(IPAddress.Any, port);
             this.listener.Start();
             this.ServerStarted?.Invoke(this, new ServerStartedArgs(this.listener));
-            do
-            {
-                TcpClient client;
-                try
-                {
-                    client = await this.listener.AcceptTcpClientAsync();
-                    this.ConnectionAccepted?.Invoke(this, new ConnectionAcceptedArgs(client));
-                }
-                catch
-                {
-                    break;
-                }
-                var t = new Task(async () => { await this.HandleClient(client); });
-                t.Start();
-            }
-            while (true);
+            var mainThread = new Task(
+                async () =>
+                    {
+                        while (true)
+                        {
+                            TcpClient client;
+                            try
+                            {
+                                client = await this.listener.AcceptTcpClientAsync();
+                                this.ConnectionAccepted?.Invoke(this, new ConnectionAcceptedArgs(client));
+                            }
+                            catch (Exception)
+                            {
+                                break;
+                            }
+
+                            var t = new Task(async () => { await this.HandleClient(client); });
+                            t.Start();
+                        }
+                    });
+            mainThread.Start();
         }
 
         /// <summary>
@@ -163,11 +167,10 @@ namespace GPS.Modules.Teltonika
         {
             this.listener?.Stop();
             this.ServerStopped?.Invoke(this, new EventArgs());
-            
         }
 
         /// <summary>
-        /// The HandleDevice.
+        /// Handle device connected to server.
         /// </summary>
         /// <param name="client">The client<see cref="TcpClient" />.</param>
         /// <returns>The <see cref="Task" />.</returns>
@@ -178,7 +181,7 @@ namespace GPS.Modules.Teltonika
             device.Error += (sender, args) => this.ClientError?.Invoke(device, args);
             device.PacketReceived += (sender, args) => this.ClientPacketReceived?.Invoke(device, args);
             device.Disconnected += (sender, args) => this.ClientDisconnected?.Invoke(device, args);
-            
+
             await device.GetData();
         }
     }

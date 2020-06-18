@@ -12,9 +12,9 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace GPS.Modules.Teltonika.Args
+namespace Map.Modules.Teltonika.Args
 {
-    using GPS.Modules.Teltonika.Models;
+    using Map.Modules.Teltonika.Models;
 
     /// <summary>
     /// Defines the <see cref="PacketReceivedArgs" />.

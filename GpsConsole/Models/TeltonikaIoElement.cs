@@ -1,4 +1,4 @@
-﻿namespace GpsConsole.Models
+﻿namespace Map.Client.Models
 {
     public class TeltonikaIoElement
     {

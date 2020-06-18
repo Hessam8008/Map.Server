@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace GPS.Models.AVL
+namespace Map.Models.AVL
 {
     /// <summary>Priority of GPS packet.</summary>
     public enum Priority : byte

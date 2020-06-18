@@ -1,11 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using GpsConsole.Interfaces;
-using GpsConsole.Models;
-
-namespace GpsConsole.Services
+﻿namespace Map.Client.Services
 {
+    using System;
+    using System.Linq;
+    using System.Reflection;
+
+    using Map.Client.Interfaces;
+    using Map.Client.Models;
+
     public class MessageParser1 : IMessageParser
     {
         public IMessage<IEntity> Parse(PlainMessage message)

@@ -11,7 +11,7 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-namespace GPS.Modules.Teltonika
+namespace Map.Modules.Teltonika
 {
     using System;
     using System.Globalization;
@@ -19,7 +19,7 @@ namespace GPS.Modules.Teltonika
     using System.Text;
     using System.Threading.Tasks;
 
-    using GPS.Modules.Teltonika.Args;
+    using Map.Modules.Teltonika.Args;
 
     /// <summary>
     /// The OnAuthenticated.

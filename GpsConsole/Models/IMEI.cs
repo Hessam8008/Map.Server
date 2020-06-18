@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
-using GpsConsole.Interfaces;
-
-namespace GpsConsole.Models
+﻿namespace Map.Client.Models
 {
+    using System.ComponentModel.DataAnnotations;
+
+    using Map.Client.Interfaces;
+
     public class IMEI : IEntity
     {
         [Required]

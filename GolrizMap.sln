@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GpsServer", "GpsServer\GpsServer.csproj", "{E108EFA3-1500-45CA-9DEA-49E893447C38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Map.Server", "GpsServer\Map.Server.csproj", "{E108EFA3-1500-45CA-9DEA-49E893447C38}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GpsConsole", "GpsConsole\GpsConsole.csproj", "{FC16498D-FEAF-44D3-A164-8CA95BC1662B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Map.Client", "GpsConsole\Map.Client.csproj", "{FC16498D-FEAF-44D3-A164-8CA95BC1662B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPS.DataAccess", "GPS.DataAccess\GPS.DataAccess.csproj", "{054A1A4E-2CF2-4C17-BF2F-65D51FB2A822}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Map.DataAccess", "GPS.DataAccess\Map.DataAccess.csproj", "{054A1A4E-2CF2-4C17-BF2F-65D51FB2A822}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPS.Models", "GPS.Models\GPS.Models.csproj", "{9D8DFD06-4260-45B0-939F-576025BB9961}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Map.Models", "GPS.Models\Map.Models.csproj", "{9D8DFD06-4260-45B0-939F-576025BB9961}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPS.Modules.Teltonika", "GPS.Modules.Teltonika\GPS.Modules.Teltonika.csproj", "{62FFB9EB-4270-4978-B106-B5D4D5FEA620}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Map.Modules.Teltonika", "GPS.Modules.Teltonika\Map.Modules.Teltonika.csproj", "{62FFB9EB-4270-4978-B106-B5D4D5FEA620}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

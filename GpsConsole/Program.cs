@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using GpsConsole.Interfaces;
-using GpsConsole.Models;
-using GpsConsole.Services;
-using Microsoft.EntityFrameworkCore;
-using Notifier.Client;
-using Services.Core.Interfaces;
-using Services.WebApiCaller.Configuration;
-
-namespace GpsConsole
+﻿namespace Map.Client
 {
+    using System;
+    using System.Threading.Tasks;
+
     using global::Services.Core;
-    using global::Services.Core.Tools;
+    using global::Services.Core.Interfaces;
+    using global::Services.WebApiCaller.Configuration;
+
+    using Map.Client.Interfaces;
+    using Map.Client.Models;
+    using Map.Client.Services;
 
     using Notifier.Client.Libs.Windows.Services;
 
