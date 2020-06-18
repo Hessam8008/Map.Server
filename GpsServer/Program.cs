@@ -16,7 +16,10 @@ namespace Map.Server
 {
     using System;
     using System.Linq;
+    using System.Security.Cryptography.X509Certificates;
+    using System.Threading.Tasks;
 
+    using Map.DataAccess;
     using Map.DataAccess.Gps;
     using Map.Modules.Teltonika;
 
@@ -31,10 +34,30 @@ namespace Map.Server
         /// <param name="args">
         /// The args<see cref="string"/>.
         /// </param>
-        public static void Main(string[] args)
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        public static async Task Main(string[] args)
         {
+            const string Cs = "server=dm1server1;uid=dbUser;pwd=1234;database=GPS";
+
             try
             {
+                MapUnitOfWork uow = new MapUnitOfWork(Cs);
+
+                var device = await uow.DeviceRepository.GetByIMEI(358480085786194) ??
+                             new Device
+                             {
+                                 IMEI = 358480085786194,
+                                 Model = "TMT250",
+                                 SN = "1102323094"
+                             };
+
+                device.Nickname = "حسام حسینی2";
+
+                device = await uow.DeviceRepository.SyncAsync(device);
+                uow.Commit();
+
 
                 var server = new Server();
                 server.ServerStarted += (sender, e) => Log($"Server started on {e.IP}, port {e.Port}", ConsoleColor.Yellow);
@@ -59,7 +82,7 @@ namespace Map.Server
                     };
 
                 server.Start(3343);
-                
+
                 Console.WriteLine("Press any key to close...");
                 Console.ReadKey();
 
@@ -69,7 +92,7 @@ namespace Map.Server
             {
                 Console.WriteLine(e);
             }
-            
+
             Console.ReadKey();
         }
 

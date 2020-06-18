@@ -35,17 +35,17 @@ namespace Map.DataAccess
         private IDbTransaction transaction;
 
         /// <summary>
-        /// The connection
+        /// The SQL connection.
         /// </summary>
         private IDbConnection connection;
 
         /// <summary>
-        /// The connection string
+        /// The connection string.
         /// </summary>
         private readonly string connectionString;
 
         /// <summary>
-        /// The device repo
+        /// The device repository.
         /// </summary>
         private DeviceRepo deviceRepo;
 
@@ -77,7 +77,7 @@ namespace Map.DataAccess
         }
 
         /// <summary>
-        /// Commits this instance.
+        /// Commits the transaction.
         /// </summary>
         public void Commit()
         {
@@ -99,7 +99,7 @@ namespace Map.DataAccess
         }
 
         /// <summary>
-        /// Rollbacks this instance.
+        /// Rollbacks the transaction.
         /// </summary>
         public void Rollback()
         {

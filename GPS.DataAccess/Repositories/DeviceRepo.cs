@@ -70,7 +70,7 @@ namespace Map.DataAccess.Repositories
         /// </summary>
         /// <param name="device">The device.</param>
         /// <returns>Task of device.</returns>
-        public async Task<Device> Sync(Device device)
+        public async Task<Device> SyncAsync(Device device)
         {
             return await this.QueryFirstOrDefaultAsync<Device>("[gps].[stpDevice_Sync]", device);
         }

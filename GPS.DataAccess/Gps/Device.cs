@@ -21,6 +21,18 @@ namespace Map.DataAccess.Gps
     public class Device
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Device"/> class.
+        /// </summary>
+        public Device()
+        {
+            this.CreateTime = DateTime.Now;
+            this.MobileNumber = string.Empty;
+            this.Model = string.Empty;
+            this.SN = string.Empty;
+            this.Nickname = "Unknown";
+        }
+
+        /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
         /// <value>The identifier.</value>
