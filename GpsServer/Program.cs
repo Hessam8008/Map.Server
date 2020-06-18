@@ -15,7 +15,9 @@
 namespace Map.Server
 {
     using System;
+    using System.Linq;
 
+    using Map.DataAccess.Gps;
     using Map.Modules.Teltonika;
 
     /// <summary>
@@ -33,6 +35,7 @@ namespace Map.Server
         {
             try
             {
+
                 var server = new Server();
                 server.ServerStarted += (sender, e) => Log($"Server started on {e.IP}, port {e.Port}", ConsoleColor.Yellow);
                 server.ServerStopped += (sender, e) => Log($"Server stopped.", ConsoleColor.Yellow);

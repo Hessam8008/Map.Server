@@ -6,34 +6,36 @@
 // Last Modified By : U12178
 // Last Modified On : 06-18-2020
 // ***********************************************************************
-// <copyright file="LocationElement.cs" company="Golriz">
+// <copyright file="Log.cs" company="Golriz">
 //     Copyright (c) . All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
 namespace Map.DataAccess.Gps
 {
+    using System;
+
     /// <summary>
-    /// Class LocationElement.
+    /// Class Log.
     /// </summary>
-    public class LocationElement
+    public class Log
     {
         /// <summary>
-        /// Gets or sets the location identifier.
+        /// Gets or sets the identifier.
         /// </summary>
-        /// <value>The location identifier.</value>
-        public int LocationId { get; set; }
+        /// <value>The identifier.</value>
+        public int ID { get; set; }
 
         /// <summary>
-        /// Gets or sets the element identifier.
+        /// Gets or sets the raw data.
         /// </summary>
-        /// <value>The element identifier.</value>
-        public byte ElementId { get; set; }
+        /// <value>The raw data.</value>
+        public string RawData { get; set; }
 
         /// <summary>
-        /// Gets or sets the element value.
+        /// Gets or sets the create time.
         /// </summary>
-        /// <value>The element value.</value>
-        public long? ElementValue { get; set; }
+        /// <value>The create time.</value>
+        public DateTime CreateTime { get; set; }
     }
 }

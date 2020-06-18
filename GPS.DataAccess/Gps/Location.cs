@@ -1,75 +1,107 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+﻿// ***********************************************************************
+// Assembly         : Map.DataAccess
+// Author           : U12178
+// Created          : 06-18-2020
+//
+// Last Modified By : U12178
+// Last Modified On : 06-18-2020
+// ***********************************************************************
 // <copyright file="Location.cs" company="Golriz">
-//   Copy-right © 2020
+//     Copyright (c) . All rights reserved.
 // </copyright>
-// <summary>
-//   The avl data.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
+// <summary></summary>
+// ***********************************************************************
 namespace Map.DataAccess.Gps
 {
     using System;
-    using System.Collections.Generic;
 
     /// <summary>
-    /// The Location of the device.
+    /// Class Location.
     /// </summary>
     public class Location
     {
         /// <summary>
-        /// Gets or sets the Time.
+        /// Gets or sets the identifier.
         /// </summary>
-        public DateTime Time { get; set; }
+        /// <value>The identifier.</value>
+        public int ID { get; set; }
 
         /// <summary>
-        /// Gets or sets the Priority.
+        /// Gets or sets the log identifier.
         /// </summary>
+        /// <value>The log identifier.</value>
+        public int LogId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the device identifier.
+        /// </summary>
+        /// <value>The device identifier.</value>
+        public int DeviceId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the codec.
+        /// </summary>
+        /// <value>The codec.</value>
+        public byte Codec { get; set; }
+
+        /// <summary>
+        /// Gets or sets the timestamp.
+        /// </summary>
+        /// <value>The timestamp.</value>
+        public DateTime Timestamp { get; set; }
+
+        /// <summary>
+        /// Gets or sets the priority.
+        /// </summary>
+        /// <value>The priority.</value>
         public byte Priority { get; set; }
 
         /// <summary>
-        /// Gets or sets the Longitude.
+        /// Gets or sets the longitude.
         /// </summary>
+        /// <value>The longitude.</value>
         public double Longitude { get; set; }
 
         /// <summary>
-        /// Gets or sets the Latitude.
+        /// Gets or sets the latitude.
         /// </summary>
+        /// <value>The latitude.</value>
         public double Latitude { get; set; }
 
         /// <summary>
-        /// Gets or sets the Altitude.
+        /// Gets or sets the altitude.
         /// </summary>
+        /// <value>The altitude.</value>
         public short Altitude { get; set; }
 
         /// <summary>
-        /// Gets or sets the Angle.
+        /// Gets or sets the angle.
         /// </summary>
+        /// <value>The angle.</value>
         public short Angle { get; set; }
 
         /// <summary>
-        /// Gets or sets the Satellites.
+        /// Gets or sets the satellites.
         /// </summary>
+        /// <value>The satellites.</value>
         public byte Satellites { get; set; }
 
         /// <summary>
-        /// Gets or sets the Speed.
+        /// Gets or sets the speed.
         /// </summary>
+        /// <value>The speed.</value>
         public short Speed { get; set; }
 
         /// <summary>
-        /// Gets or sets the EventIOID.
+        /// Gets or sets the event io.
         /// </summary>
-        public byte EventIOID { get; set; }
+        /// <value>The event io.</value>
+        public byte EventIo { get; set; }
 
         /// <summary>
-        /// Gets or sets the TotalIOElement.
+        /// Gets or sets the total io elements.
         /// </summary>
-        public byte TotalIOElements { get; set; }
-
-        /// <summary>
-        /// Gets or sets the IoElements.
-        /// </summary>
-        public List<LocationElement> Elements { get; set; }
+        /// <value>The total io elements.</value>
+        public byte TotalIoElements { get; set; }
     }
 }
