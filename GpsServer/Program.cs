@@ -15,7 +15,6 @@
 namespace Map.Server
 {
     using System;
-    using System.Threading.Tasks;
 
     using Map.DataAccess;
     using Map.DataAccess.Gps;
@@ -32,10 +31,7 @@ namespace Map.Server
         /// <param name="args">
         /// The args<see cref="string"/>.
         /// </param>
-        /// <returns>
-        /// The <see cref="Task"/>.
-        /// </returns>
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             const string Cs = "server=dm1server1;uid=dbUser;pwd=1234;database=GPS";
 
@@ -64,7 +60,7 @@ namespace Map.Server
                                              };
                                 device = await uow.DeviceRepository.SyncAsync(device);
                                 uow.Commit();
-                                Log($"New device registered\n{device.ToJson()}", ConsoleColor.Magenta);
+                                Log($"New device registered:\n{device.ToJson()}", ConsoleColor.Magenta);
                             }
                             e.Accepted = true;
                         }
@@ -74,7 +70,6 @@ namespace Map.Server
                             e.Accepted = false;
                         }
                     };
-
                 server.ClientPacketReceived += async (sender, e) =>
                     {
                         try
@@ -86,7 +81,7 @@ namespace Map.Server
                             var device = await db.DeviceRepository.GetByIMEI(e.Packet.IMEI);
                             if (device == null)
                             {
-                                Log("Device not found.", ConsoleColor.Red);
+                                Log($"IMEI '{e.Packet.IMEI}' not found.", ConsoleColor.Red);
                                 e.Accepted = false;
                                 return;
                             }
@@ -108,7 +103,10 @@ namespace Map.Server
 
                                 foreach (var element in location.Elements)
                                 {
-                                    var el = new LocationElement(element) { LocationId = locationId };
+                                    var el = new LocationElement(element)
+                                                 {
+                                                     LocationId = locationId
+                                                 };
                                     await db.LocationElementRepository.Insert(el);
                                 }
                             }
