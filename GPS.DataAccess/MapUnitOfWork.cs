@@ -48,6 +48,9 @@ namespace Map.DataAccess
         /// The device repository.
         /// </summary>
         private DeviceRepo deviceRepo;
+        private RawDataRepo rawDataRepo;
+        private LocationRepo locationRepo;
+        private LocationElementRepo locationElementRepo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapUnitOfWork"/> class.
@@ -119,6 +122,10 @@ namespace Map.DataAccess
         /// </summary>
         /// <value>The device repository.</value>
         public DeviceRepo DeviceRepository => this.deviceRepo ??= new DeviceRepo(this.transaction);
+        
+        public RawDataRepo RawDataRepository => this.rawDataRepo ??= new RawDataRepo(this.transaction);
+        public LocationRepo LocationRepository => this.locationRepo ??= new LocationRepo(this.transaction);
+        public LocationElementRepo LocationElementRepository => this.locationElementRepo ??= new LocationElementRepo(this.transaction);
         
         #region ►| IDisposable |◄
 

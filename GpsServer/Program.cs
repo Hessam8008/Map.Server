@@ -15,8 +15,6 @@
 namespace Map.Server
 {
     using System;
-    using System.Linq;
-    using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
 
     using Map.DataAccess;
@@ -45,18 +43,18 @@ namespace Map.Server
             {
                 MapUnitOfWork uow = new MapUnitOfWork(Cs);
 
-                var device = await uow.DeviceRepository.GetByIMEI(358480085786194) ??
-                             new Device
-                             {
-                                 IMEI = 358480085786194,
-                                 Model = "TMT250",
-                                 SN = "1102323094"
-                             };
+                //var device = await uow.DeviceRepository.GetByIMEI("358480085786194") ??
+                //             new Device
+                //             {
+                //                 IMEI = "358480085786194",
+                //                 Model = "TMT250",
+                //                 SN = "1102323094"
+                //             };
 
-                device.Nickname = "حسام حسینی2";
+                //device.Nickname = "حسام حسینی2";
 
-                device = await uow.DeviceRepository.SyncAsync(device);
-                uow.Commit();
+                //device = await uow.DeviceRepository.SyncAsync(device);
+                //uow.Commit();
 
 
                 var server = new Server();
@@ -64,17 +62,59 @@ namespace Map.Server
                 server.ServerStopped += (sender, e) => Log($"Server stopped.", ConsoleColor.Yellow);
                 server.ConnectionAccepted += (sender, e) => Log($"Client accepted {e.RemoteIP}, port {e.Port}, Ttl {e.Ttl}", ConsoleColor.Yellow);
                 server.ClientError += (sender, e) => Log($"Error> IMEI={e.IMEI}, Error={e.Error}", ConsoleColor.Magenta);
-                server.ClientAuthenticated += (sender, e) =>
+                server.ClientAuthenticated += async (sender, e) =>
                     {
                         Log($"Authentication OK. [IMEI: {e.Imei}]", ConsoleColor.Red);
                         e.Accepted = true;
+                        var device = await uow.DeviceRepository.GetByIMEI(e.Imei);
+                        e.Accepted = device != null;
                     };
-                server.ClientPacketReceived += (sender, e) =>
+
+                server.ClientPacketReceived += async (sender, e) =>
                     {
-                        Log(
-                                $"Packet [IMEI: {e.Packet.IMEI}, AVLs: {e.Packet.NumberOfData1}]: {e.Packet}",
+                        try
+                        {
+                            Log($"Packet [IMEI: {e.Packet.IMEI}, AVLs: {e.Packet.NumberOfData1}]: {e.Packet}",
                                 ConsoleColor.Green);
-                        e.Accepted = true;
+
+                            using MapUnitOfWork db = new MapUnitOfWork(Cs);
+                            var device = await db.DeviceRepository.GetByIMEI(e.Packet.IMEI);
+                            if (device == null)
+                            {
+                                Log("Device not found.", ConsoleColor.Red);
+                                e.Accepted = false;
+                                return;
+                            }
+
+                            var rawData = new RawData { IMEI = e.Packet.IMEI, PrimitiveMessage = e.Packet.HexMessage };
+
+                            var rawDataId = await db.RawDataRepository.Insert(rawData);
+                            db.Commit();
+
+                            foreach (var location in e.Packet.Locations)
+                            {
+                                var loc = new Location(location)
+                                              {
+                                                  DeviceId = device.ID,
+                                                  RawDataID = rawDataId,
+                                                  Codec = e.Packet.Codec
+                                              };
+                                var locationId = await db.LocationRepository.Insert(loc);
+
+                                foreach (var element in location.Elements)
+                                {
+                                    var el = new LocationElement(element) { LocationId = locationId };
+                                    await db.LocationElementRepository.Insert(el);
+                                }
+                            }
+                            db.Commit();
+                            e.Accepted = true;
+                            Log("Data has been saved.", ConsoleColor.Green);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log(ex.Message, ConsoleColor.Red);
+                        }
                     };
                 server.ClientDisconnected += (sender, e) =>
                     {

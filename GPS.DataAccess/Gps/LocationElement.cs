@@ -19,6 +19,30 @@ namespace Map.DataAccess.Gps
     public class LocationElement
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="LocationElement"/> class.
+        /// </summary>
+        public LocationElement()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocationElement"/> class.
+        /// </summary>
+        /// <param name="element">
+        /// The element.
+        /// </param>
+        public LocationElement(Models.AVL.LocationElement element)
+        {
+            this.ElementId = element.Id;
+            this.ElementValue = element.Value;
+        }
+
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        public int ID { get; set; }
+
+        /// <summary>
         /// Gets or sets the location identifier.
         /// </summary>
         /// <value>The location identifier.</value>
@@ -34,6 +58,6 @@ namespace Map.DataAccess.Gps
         /// Gets or sets the element value.
         /// </summary>
         /// <value>The element value.</value>
-        public long? ElementValue { get; set; }
+        public object ElementValue { get; set; }
     }
 }

@@ -6,8 +6,8 @@
 // Last Modified By : U12178
 // Last Modified On : 06-18-2020
 // ***********************************************************************
-// <copyright file="Log.cs" company="Golriz">
-//     Copyright (c) . All rights reserved.
+// <copyright file="RawData.cs" company="Golriz">
+//     Copyright (c) 2020. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
@@ -16,10 +16,18 @@ namespace Map.DataAccess.Gps
     using System;
 
     /// <summary>
-    /// Class Log.
+    /// Class RawData.
     /// </summary>
-    public class Log
+    public class RawData
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RawData"/> class.
+        /// </summary>
+        public RawData()
+        {
+            this.CreateTime = DateTime.Now;
+        }
+
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
@@ -27,10 +35,15 @@ namespace Map.DataAccess.Gps
         public int ID { get; set; }
 
         /// <summary>
+        /// Gets or sets the IMEI.
+        /// </summary>
+        public string IMEI { get; set; }
+
+        /// <summary>
         /// Gets or sets the raw data.
         /// </summary>
         /// <value>The raw data.</value>
-        public string RawData { get; set; }
+        public string PrimitiveMessage { get; set; }
 
         /// <summary>
         /// Gets or sets the create time.

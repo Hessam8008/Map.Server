@@ -60,7 +60,7 @@ namespace Map.DataAccess.Repositories
         /// </summary>
         /// <param name="imei">The IMEI.</param>
         /// <returns>Task of device.</returns>
-        public async Task<Device> GetByIMEI(long imei)
+        public async Task<Device> GetByIMEI(string imei)
         {
             return await this.QueryFirstOrDefaultAsync<Device>("[gps].[stpDevice_GetByIMEI]", new { imei });
         }

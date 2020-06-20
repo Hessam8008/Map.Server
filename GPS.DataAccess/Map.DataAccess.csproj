@@ -5,6 +5,7 @@
     <AssemblyName>Map.DataAccess</AssemblyName>
     <RootNamespace>Map.DataAccess</RootNamespace>
     <Company>Golriz</Company>
+    <Copyright>2020</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

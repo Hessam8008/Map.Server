@@ -42,7 +42,7 @@ namespace Map.DataAccess.Gps
         /// Gets or sets the IMEI.
         /// </summary>
         /// <value>The IMEI.</value>
-        public long IMEI { get; set; }
+        public string IMEI { get; set; }
         
         /// <summary>
         /// Gets or sets the create time.

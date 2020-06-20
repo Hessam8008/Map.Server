@@ -21,16 +21,43 @@ namespace Map.DataAccess.Gps
     public class Location
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="Location"/> class.
+        /// </summary>
+        public Location()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Location"/> class.
+        /// </summary>
+        /// <param name="location">
+        /// The location.
+        /// </param>
+        public Location(Models.AVL.Location location)
+        {
+            this.Timestamp = location.Time;
+            this.Priority = (byte)location.Priority;
+            this.Longitude = location.Longitude;
+            this.Latitude = location.Latitude;
+            this.Altitude = location.Altitude;
+            this.Angle = location.Angle;
+            this.Satellites = location.Satellites;
+            this.Speed = location.Speed;
+            this.EventIo = location.EventIOID;
+            this.TotalIoElements = location.TotalIOElements;
+        }
+
+        /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
         /// <value>The identifier.</value>
         public int ID { get; set; }
 
         /// <summary>
-        /// Gets or sets the log identifier.
+        /// Gets or sets the RawData identifier.
         /// </summary>
-        /// <value>The log identifier.</value>
-        public int LogId { get; set; }
+        /// <value>The RawData identifier.</value>
+        public int RawDataID { get; set; }
 
         /// <summary>
         /// Gets or sets the device identifier.
