@@ -41,22 +41,6 @@ namespace Map.Server
 
             try
             {
-                MapUnitOfWork uow = new MapUnitOfWork(Cs);
-
-                //var device = await uow.DeviceRepository.GetByIMEI("358480085786194") ??
-                //             new Device
-                //             {
-                //                 IMEI = "358480085786194",
-                //                 Model = "TMT250",
-                //                 SN = "1102323094"
-                //             };
-
-                //device.Nickname = "حسام حسینی2";
-
-                //device = await uow.DeviceRepository.SyncAsync(device);
-                //uow.Commit();
-
-
                 var server = new Server();
                 server.ServerStarted += (sender, e) => Log($"Server started on {e.IP}, port {e.Port}", ConsoleColor.Yellow);
                 server.ServerStopped += (sender, e) => Log($"Server stopped.", ConsoleColor.Yellow);
@@ -65,9 +49,30 @@ namespace Map.Server
                 server.ClientAuthenticated += async (sender, e) =>
                     {
                         Log($"Authentication OK. [IMEI: {e.Imei}]", ConsoleColor.Red);
-                        e.Accepted = true;
-                        var device = await uow.DeviceRepository.GetByIMEI(e.Imei);
-                        e.Accepted = device != null;
+                        try
+                        {
+                            using MapUnitOfWork uow = new MapUnitOfWork(Cs);
+                            var device = await uow.DeviceRepository.GetByIMEI(e.Imei);
+                            if (device == null)
+                            {
+                                device = new Device
+                                             {
+                                                 Model = "N/A",
+                                                 MobileNumber = "0000000000",
+                                                 Nickname = "N/A",
+                                                 SN = "N/A"
+                                             };
+                                device = await uow.DeviceRepository.SyncAsync(device);
+                                uow.Commit();
+                                Log($"New device registered\n{device.ToJson()}", ConsoleColor.Magenta);
+                            }
+                            e.Accepted = true;
+                        }
+                        catch (Exception exception)
+                        {
+                            Log(exception.Message, ConsoleColor.Red);
+                            e.Accepted = false;
+                        }
                     };
 
                 server.ClientPacketReceived += async (sender, e) =>
