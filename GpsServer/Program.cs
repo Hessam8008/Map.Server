@@ -33,7 +33,12 @@ namespace Map.Server
         /// </param>
         public static void Main(string[] args)
         {
+#if DEBUG
             const string Cs = "server=dm1server1;uid=dbUser;pwd=1234;database=GPS";
+#else
+            const string Cs = "server=10.10.1.12\\GCAS;database=GPSTrackerDB;uid=DVP1;pwd=Fly#3592;MultipleActiveResultSets=True;";
+#endif
+            Log(Cs);
 
             try
             {
@@ -42,33 +47,40 @@ namespace Map.Server
                 server.ServerStopped += (sender, e) => Log($"Server stopped.", ConsoleColor.Yellow);
                 server.ConnectionAccepted += (sender, e) => Log($"Client accepted {e.RemoteIP}, port {e.Port}, Ttl {e.Ttl}", ConsoleColor.Yellow);
                 server.ClientError += (sender, e) => Log($"Error> IMEI={e.IMEI}, Error={e.Error}", ConsoleColor.Magenta);
-                server.ClientAuthenticated += async (sender, e) =>
+                server.ClientAuthenticated += (sender, e) =>
                     {
-                        Log($"Authentication OK. [IMEI: {e.Imei}]", ConsoleColor.Red);
+                        var message = $"IMEI: {e.Imei}";
                         try
                         {
                             using MapUnitOfWork uow = new MapUnitOfWork(Cs);
-                            var device = await uow.DeviceRepository.GetByIMEI(e.Imei);
+                            var device = uow.DeviceRepository.GetByIMEI(e.Imei).ConfigureAwait(false).GetAwaiter().GetResult();
                             if (device == null)
                             {
+                                message += ", new device";
                                 device = new Device
                                              {
+                                                 IMEI = e.Imei,
                                                  Model = "N/A",
                                                  MobileNumber = "0000000000",
                                                  Nickname = "N/A",
                                                  SN = "N/A"
                                              };
-                                device = await uow.DeviceRepository.SyncAsync(device);
+                                device = uow.DeviceRepository.SyncAsync(device).ConfigureAwait(false).GetAwaiter().GetResult();
                                 uow.Commit();
-                                Log($"New device registered:\n{device.ToJson()}", ConsoleColor.Magenta);
+                                message += $"\n{device.ToJson()}";
+                            }
+                            else
+                            {
+                                message += ", exists device";
                             }
                             e.Accepted = true;
                         }
                         catch (Exception exception)
                         {
-                            Log(exception.Message, ConsoleColor.Red);
+                            message += $", error: {exception.Message}";
                             e.Accepted = false;
                         }
+                        Log(message, ConsoleColor.Red);
                     };
                 server.ClientPacketReceived += async (sender, e) =>
                     {
