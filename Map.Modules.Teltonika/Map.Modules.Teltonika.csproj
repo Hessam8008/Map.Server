@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="DataAccess\**" />
+    <Compile Remove="Models\**" />
+    <Compile Remove="Host\Args\**" />
+    <EmbeddedResource Remove="DataAccess\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="Host\Args\**" />
+    <None Remove="DataAccess\**" />
+    <None Remove="Models\**" />
+    <None Remove="Host\Args\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.35" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Map.Models\Map.Models.csproj" />
+  </ItemGroup>
+
+</Project>
