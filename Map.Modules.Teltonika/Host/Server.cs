@@ -46,6 +46,13 @@ namespace Map.Modules.Teltonika.Host
 
         private bool stopped = false;
 
+        private IConfig config;
+        public Server(IConfig Config)
+        {
+            this.config = Config;
+        }
+
+
         /// <summary>
         /// The Start.
         /// </summary>
@@ -56,9 +63,6 @@ namespace Map.Modules.Teltonika.Host
             if (listener != null)
                 throw new Exception("Call Stop() before start.");
 
-            this.listener = new TcpListener(IPAddress.Parse(ip), port);
-            this.listener.Start();
-            this.ServerStarted?.Invoke(this, new ServerStartedArgs(listener));
             var mainThread = new Task(async () => await Listening(ip, port));
             mainThread.Start();
         }
@@ -66,6 +70,10 @@ namespace Map.Modules.Teltonika.Host
 
         private async Task Listening(string ip, int port)
         {
+            this.listener = new TcpListener(IPAddress.Parse(ip), port);
+            this.listener.Start();
+            this.ServerStarted?.Invoke(this, new ServerStartedArgs(listener));
+
             while (!stopped)
             {
                 TcpClient client;
@@ -103,7 +111,7 @@ namespace Map.Modules.Teltonika.Host
         /// <returns>The <see cref="Task" />.</returns>
         private async Task HandleClient(TcpClient client)
         {
-            var device = new Client(client);
+            var device = new Client(client, config);
             device.Connected += (sender, args) => this.ClientConnected?.Invoke(device, args);
             device.Error += (sender, args) => this.Error?.Invoke(device, args);
             device.PacketReceived += (sender, args) => this.ClientPacketReceived?.Invoke(device, args);

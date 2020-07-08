@@ -18,7 +18,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using Map.Models.Args;
+using Map.Modules.Teltonika.DataAccess;
 using Map.Modules.Teltonika.Host.Parsers;
+using Map.Modules.Teltonika.Models;
 
 namespace Map.Modules.Teltonika.Host
 {
@@ -65,13 +67,16 @@ namespace Map.Modules.Teltonika.Host
         /// </summary>
         private string imei;
 
+
+        private IConfig config;
         /// <summary>
         /// Initializes a new instance of the <see cref="Client" /> class.
         /// </summary>
         /// <param name="client">The client<see cref="Client" />.</param>
-        public Client(TcpClient client)
+        public Client(TcpClient client, IConfig Config)
         {
             this.client = client;
+            this.config = Config;
         }
 
         /// <summary>
@@ -155,10 +160,14 @@ namespace Map.Modules.Teltonika.Host
                  *  →│ PHASE 02 │←
                  */
                 var parser = new FmxParserCodec8();
+                using var uow = new TeltonikaUnitOfWork(config.ConnectionString);
                 while ((counter = await stream.ReadAsync(bytes, 0, bytes.Length).ConfigureAwait(false)) != 0)
                 {
                     var hexData = BitConverter.ToString(bytes, 0, counter).Replace("-", string.Empty);
-                    var data = parser.Parse(hexData);
+                    var rawMessage = new RawData(imei, hexData);
+                    await uow.RawDataRepository.Insert(rawMessage);
+                    uow.Commit();
+                    var data = parser.Parse(rawMessage);
                     var packetArgs = new ClientPacketReceivedArgs(imei, data.ToAvlLocation());
                     this.PacketReceived?.Invoke(this, packetArgs);
                     if (packetArgs.Accepted)

@@ -14,6 +14,7 @@
 
 using System;
 using System.Data;
+using System.Data.SqlClient;
 using Map.Modules.Teltonika.DataAccess.Repositories;
 
 namespace Map.Modules.Teltonika.DataAccess
@@ -25,7 +26,7 @@ namespace Map.Modules.Teltonika.DataAccess
     /// </summary>
     /// <seealso cref="System.IDisposable" />
     /// <seealso cref="System.ICloneable" />
-    public class MapUnitOfWork : IDisposable, ICloneable
+    internal class TeltonikaUnitOfWork : IDisposable, ICloneable
     {
         /// <summary>
         /// The transaction
@@ -42,19 +43,15 @@ namespace Map.Modules.Teltonika.DataAccess
         /// </summary>
         private readonly string connectionString;
 
-        /// <summary>
-        /// The device repository.
-        /// </summary>
-        private DeviceRepo deviceRepo;
+        
         private RawDataRepo rawDataRepo;
-        private LocationRepo locationRepo;
-        private LocationElementRepo locationElementRepo;
+        
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MapUnitOfWork"/> class.
+        /// Initializes a new instance of the <see cref="TeltonikaUnitOfWork"/> class.
         /// </summary>
         /// <param name="cs">The cs.</param>
-        public MapUnitOfWork(string cs)
+        public TeltonikaUnitOfWork(string cs)
         {
             this.connectionString = cs;
             this.BeginTransaction();
@@ -115,21 +112,13 @@ namespace Map.Modules.Teltonika.DataAccess
             BeginTransaction();
         }
 
-        /// <summary>
-        /// Gets the device repository.
-        /// </summary>
-        /// <value>The device repository.</value>
-        public DeviceRepo DeviceRepository => this.deviceRepo ??= new DeviceRepo(this.transaction);
-        
         public RawDataRepo RawDataRepository => this.rawDataRepo ??= new RawDataRepo(this.transaction);
-        public LocationRepo LocationRepository => this.locationRepo ??= new LocationRepo(this.transaction);
-        public LocationElementRepo LocationElementRepository => this.locationElementRepo ??= new LocationElementRepo(this.transaction);
         
         #region ►| IDisposable |◄
 
-        ~MapUnitOfWork() => this.dispose(false);
+        ~TeltonikaUnitOfWork() => this.dispose(false);
 
-        public object Clone() => (MapUnitOfWork)Activator.CreateInstance(this.GetType());
+        public object Clone() => (TeltonikaUnitOfWork)Activator.CreateInstance(this.GetType());
 
         private void dispose(bool disposing)
         {
@@ -145,7 +134,7 @@ namespace Map.Modules.Teltonika.DataAccess
 
 
             //Dispose all repositories.
-            this.deviceRepo = null;
+            this.rawDataRepo = null;
         }
 
         public void Dispose()

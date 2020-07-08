@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Map.Modules.Teltonika.Host.Models
+namespace Map.Modules.Teltonika.Models
 {
     /// <summary>Priority of GPS packet.</summary>
     internal enum Priority : byte

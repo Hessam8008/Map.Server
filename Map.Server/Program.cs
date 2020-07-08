@@ -14,6 +14,7 @@
 
 
 using System.Net;
+using System.Net.Http.Headers;
 using Map.Models.Args;
 using Map.Models.AVL;
 
@@ -43,10 +44,10 @@ namespace Map.Server
         {
 
             Log(Cs);
-
+            var config = new TeltonikaConfig(Cs);
             try
             {
-                Models.IServer server = new Modules.Teltonika.Host.Server();
+                Models.IServer server = new Modules.Teltonika.Host.Server(config);
                 server.ServerStarted += (sender, e) => Log($"Server started on {e.IP}, port {e.Port}", ConsoleColor.Yellow);
                 server.ServerStopped += (sender, e) => Log($"Server stopped.", ConsoleColor.Yellow);
                 server.ConnectionAccepted += (sender, e) => Log($"Client accepted {e.RemoteIP}, port {e.Port}, Ttl {e.Ttl}", ConsoleColor.Yellow);

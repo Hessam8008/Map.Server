@@ -13,13 +13,14 @@
 // ***********************************************************************
 
 using Map.Modules.Teltonika.DataAccess.Dapper;
+using Map.Modules.Teltonika.Models;
 
 namespace Map.Modules.Teltonika.DataAccess.DAO
 {
     /// <summary>
     /// Class LocationElement.
     /// </summary>
-    public class LocationElementDAO
+    internal class LocationElementDAO
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LocationElementDAO"/> class.
@@ -34,7 +35,7 @@ namespace Map.Modules.Teltonika.DataAccess.DAO
         /// <param name="element">
         /// The element.
         /// </param>
-        public LocationElementDAO(Models.AVL.LocationElement element)
+        public LocationElementDAO(LocationElement element)
         {
             this.ElementId = element.Id;
             this.ElementValue = element.Value;

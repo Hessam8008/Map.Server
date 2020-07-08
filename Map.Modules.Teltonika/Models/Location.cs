@@ -10,8 +10,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Map.Modules.Teltonika.DataAccess.Dapper;
 
-namespace Map.Modules.Teltonika.Host.Models
+namespace Map.Modules.Teltonika.Models
 {
     /// <summary>
     /// The Location of the device.
@@ -19,9 +20,24 @@ namespace Map.Modules.Teltonika.Host.Models
     internal class Location
     {
         /// <summary>
-        /// Gets or sets the Time.
+        /// Gets or sets the identifier.
         /// </summary>
-        public DateTime Time { get; set; }
+        /// <value>The identifier.</value>
+        [DapperFieldInfo("ID", true)]
+        public int ID { get; set; }
+
+        /// <summary>
+        /// Gets or sets the RawData identifier.
+        /// </summary>
+        /// <value>The RawData identifier.</value>
+        public int RawDataID { get; set; }
+        
+
+        /// <summary>
+        /// Gets or sets the timestamp.
+        /// </summary>
+        /// <value>The timestamp.</value>
+        public DateTime Timestamp { get; set; }
 
         /// <summary>
         /// Gets or sets the Priority.
@@ -29,50 +45,54 @@ namespace Map.Modules.Teltonika.Host.Models
         public Priority Priority { get; set; }
 
         /// <summary>
-        /// Gets or sets the Longitude.
+        /// Gets or sets the longitude.
         /// </summary>
+        /// <value>The longitude.</value>
         public double Longitude { get; set; }
 
         /// <summary>
-        /// Gets or sets the Latitude.
+        /// Gets or sets the latitude.
         /// </summary>
+        /// <value>The latitude.</value>
         public double Latitude { get; set; }
 
         /// <summary>
-        /// Gets or sets the Altitude.
+        /// Gets or sets the altitude.
         /// </summary>
+        /// <value>The altitude.</value>
         public short Altitude { get; set; }
 
         /// <summary>
-        /// Gets or sets the Angle.
+        /// Gets or sets the angle.
         /// </summary>
+        /// <value>The angle.</value>
         public short Angle { get; set; }
 
         /// <summary>
-        /// Gets or sets the Satellites.
+        /// Gets or sets the satellites.
         /// </summary>
+        /// <value>The satellites.</value>
         public byte Satellites { get; set; }
 
         /// <summary>
-        /// Gets or sets the Speed.
+        /// Gets or sets the speed.
         /// </summary>
+        /// <value>The speed.</value>
         public short Speed { get; set; }
 
         /// <summary>
-        /// Gets or sets the EventIOID.
+        /// Gets or sets the event io.
         /// </summary>
-        public byte EventIOID { get; set; }
+        /// <value>The event io.</value>
+        public byte EventIoId { get; set; }
 
         /// <summary>
-        /// Gets or sets the TotalIOElement.
+        /// Gets or sets the total io elements.
         /// </summary>
-        public byte TotalIOElements { get; set; }
+        /// <value>The total io elements.</value>
+        public byte TotalIoElements { get; set; }
 
-        /// <summary>
-        /// Gets or sets the IoElements.
-        /// </summary>
-        public List<LocationElement> Elements { get; set; }
-        
+        public List<LocationElement> LocationElements { get; set; }
 
         public Map.Models.AVL.Location ToAvlLocation()
         {
@@ -80,12 +100,12 @@ namespace Map.Modules.Teltonika.Host.Models
             {
                 Altitude = Altitude,
                 Angle = Angle,
-                Elements = (from e in Elements select e.ToAvlLocationElement()).ToList(),
+                Elements = (from e in LocationElements select e.ToAvlLocationElement()).ToList(),
                 Latitude = Latitude,
                 Longitude = Longitude,
                 Satellites = Satellites,
                 Speed = Speed,
-                Time = Time
+                Time = Timestamp
             };
         }
 

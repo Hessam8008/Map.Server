@@ -13,15 +13,16 @@
 // ***********************************************************************
 
 using System;
-using Map.Models.AVL;
 using Map.Modules.Teltonika.DataAccess.Dapper;
+using Map.Modules.Teltonika.Models;
+using Location = Map.Models.AVL.Location;
 
 namespace Map.Modules.Teltonika.DataAccess.DAO
 {
     /// <summary>
     /// Class Location.
     /// </summary>
-    public class LocationDAO
+    internal class LocationDAO
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LocationDAO"/> class.
@@ -30,25 +31,6 @@ namespace Map.Modules.Teltonika.DataAccess.DAO
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LocationDAO"/> class.
-        /// </summary>
-        /// <param name="location">
-        /// The location.
-        /// </param>
-        public LocationDAO(Location location)
-        {
-            this.Timestamp = location.Time;
-            this.Priority = (byte)location.Priority;
-            this.Longitude = location.Longitude;
-            this.Latitude = location.Latitude;
-            this.Altitude = location.Altitude;
-            this.Angle = location.Angle;
-            this.Satellites = location.Satellites;
-            this.Speed = location.Speed;
-            this.EventIo = location.EventIOID;
-            this.TotalIoElements = location.TotalIOElements;
-        }
 
         /// <summary>
         /// Gets or sets the identifier.
@@ -63,11 +45,6 @@ namespace Map.Modules.Teltonika.DataAccess.DAO
         /// <value>The RawData identifier.</value>
         public int RawDataID { get; set; }
 
-        /// <summary>
-        /// Gets or sets the device identifier.
-        /// </summary>
-        /// <value>The device identifier.</value>
-        public int DeviceId { get; set; }
 
         /// <summary>
         /// Gets or sets the codec.
@@ -135,9 +112,9 @@ namespace Map.Modules.Teltonika.DataAccess.DAO
         /// <value>The total io elements.</value>
         public byte TotalIoElements { get; set; }
 
-        public Location ToLocation()
+        public Models.Location ToLocation()
         {
-            return new Location
+            return new Models.Location
             {
                 Time = Timestamp,
                 Priority = (Priority) Priority,

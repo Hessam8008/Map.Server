@@ -104,8 +104,8 @@
 
 using System;
 using System.Collections.Generic;
-using Map.Modules.Teltonika.Host.Models;
 using Map.Modules.Teltonika.Host.Tools;
+using Map.Modules.Teltonika.Models;
 
 namespace Map.Modules.Teltonika.Host.Parsers
 {
@@ -126,16 +126,16 @@ namespace Map.Modules.Teltonika.Host.Parsers
         /// <summary>
         /// The Parse.
         /// </summary>
-        /// <param name="hexData">The hexData<see cref="string"/>.</param>
+        /// <param name="hexMessage">The hexData<see cref="string"/>.</param>
         /// <returns>The <see cref="TcpPacket"/>.</returns>
-        public TcpPacket Parse(string hexData)
+        public TcpPacket Parse(RawData hexMessage)
         {
-            var result = new TcpPacket { HexMessage = hexData };
-            var hc = new HexCrawler(hexData);
+            var result = new TcpPacket { RawMessage = hexMessage};
+            var hc = new HexCrawler(hexMessage.PrimitiveMessage);
 
             /* ■■ Warning : Order of variables and assumptions is important.
-                 * ■■           Don't reorder them.
-                 */
+             * ■■           Don't reorder them.
+             */
 
             result.Preamble = hc.PopAsInt();
             result.DataFieldLength = hc.PopAsInt();
@@ -148,7 +148,7 @@ namespace Map.Modules.Teltonika.Host.Parsers
             {
                 var avl = new Location
                 {
-                    Time = this.utcDate.AddMilliseconds(hc.PopAsLong()).ToLocalTime(),
+                    Timestamp = this.utcDate.AddMilliseconds(hc.PopAsLong()).ToLocalTime(),
                     Priority = (Priority)hc.PopAsByte(),
                     Longitude = hc.PopAsInt() / 10000000d,
                     Latitude = hc.PopAsInt() / 10000000d,
@@ -162,11 +162,11 @@ namespace Map.Modules.Teltonika.Host.Parsers
                      * For example, when ignition state changed and it generate event, Event IO ID will be 0xEF (AVL ID: 239).
                      * If it’s not eventual record – the value is 0.
                      */
-                    EventIOID = hc.PopAsByte(),
+                    EventIoId = hc.PopAsByte(),
 
                     /* N – a total number of properties coming with record (N = N1 + N2 + N4 + N8). */
-                    TotalIOElements = hc.PopAsByte(),
-                    Elements = new List<LocationElement>()
+                    TotalIoElements = hc.PopAsByte(),
+                    LocationElements = new List<LocationElement>()
                 };
 
                 /* N1 – number of properties, which length is 1 byte. */
@@ -178,7 +178,7 @@ namespace Map.Modules.Teltonika.Host.Parsers
                         Id = hc.PopAsByte(),
                         Value = hc.PopAsByte()
                     };
-                    avl.Elements.Add(element);
+                    avl.LocationElements.Add(element);
                 }
 
                 /* N2 – number of properties, which length is 2 bytes. */
@@ -190,7 +190,7 @@ namespace Map.Modules.Teltonika.Host.Parsers
                         Id = hc.PopAsByte(),
                         Value = hc.PopAsShort()
                     };
-                    avl.Elements.Add(element);
+                    avl.LocationElements.Add(element);
                 }
 
                 /* N4 – number of properties, which length is 4 bytes. */
@@ -202,7 +202,7 @@ namespace Map.Modules.Teltonika.Host.Parsers
                         Id = hc.PopAsByte(),
                         Value = hc.PopAsInt()
                     };
-                    avl.Elements.Add(element);
+                    avl.LocationElements.Add(element);
                 }
 
                 /* N8 – number of properties, which length is 8 bytes. */
@@ -214,7 +214,7 @@ namespace Map.Modules.Teltonika.Host.Parsers
                         Id = hc.PopAsByte(),
                         Value = hc.PopAsLong()
                     };
-                    avl.Elements.Add(element);
+                    avl.LocationElements.Add(element);
                 }
 
                 result.Locations.Add(avl);
@@ -223,14 +223,14 @@ namespace Map.Modules.Teltonika.Host.Parsers
             /*
                  A number which defines how many records is in the packet. 
                  This number must be the same as “Number of Data 1”.
-                 */
+             */
             result.NumberOfData2 = hc.PopAsByte();
 
             /*
                  CRC - 16 – calculated from Codec ID to the Second Number of Data.
                  CRC(Cyclic Redundancy Check) is an error - detecting code using for detect accidental changes to RAW data.
                  For calculation we are using CRC-16 / IBM. 
-                 */
+             */
             result.CRC16 = hc.PopAsInt();
 
             return result;

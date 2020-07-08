@@ -13,24 +13,25 @@
 // ***********************************************************************
 
 using System;
+using System.Data;
 using Map.Modules.Teltonika.DataAccess.Dapper;
 
-namespace Map.Modules.Teltonika.DataAccess.DAO
+namespace Map.Modules.Teltonika.Models
 {
     /// <summary>
     /// Class RawData.
     /// </summary>
-    internal class RawDataDAO
+    internal class RawData
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RawDataDAO"/> class.
+        /// Initializes a new instance of the <see cref="RawData"/> class.
         /// </summary>
-        public RawDataDAO()
+        public RawData()
         {
             this.CreateTime = DateTime.Now;
         }
 
-        public RawDataDAO(string imei, string primitiveMessage)
+        public RawData(string imei, string primitiveMessage)
         {
             IMEI = imei;
             PrimitiveMessage = primitiveMessage;
@@ -41,7 +42,7 @@ namespace Map.Modules.Teltonika.DataAccess.DAO
         /// Gets or sets the identifier.
         /// </summary>
         /// <value>The identifier.</value>
-        [DapperFieldInfo("ID", true)]
+        [DapperFieldInfo("ID", true, 4, DataType = DbType.Int32)]
         public int ID { get; set; }
 
         /// <summary>

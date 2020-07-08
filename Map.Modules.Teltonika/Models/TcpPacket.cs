@@ -1,23 +1,17 @@
-﻿namespace Map.Modules.Teltonika.Models
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Map.Modules.Teltonika.Models
 {
-    using System.Collections.Generic;
-
-    using Map.Models.AVL;
-
     /// <summary>
     /// Defines the <see cref="TcpPacket" />.
     /// </summary>
-    public class TcpPacket
+    internal class TcpPacket
     {
-        /// <summary>
-        /// Gets or sets the IMEI.
-        /// </summary>
-        public string IMEI { get; set; }
-
         /// <summary>
         /// Gets or sets the HexMessage.
         /// </summary>
-        public string HexMessage { get; set; }
+        public RawData RawMessage { get; set; }
 
         /// <summary>
         /// Gets or sets the Preamble.
@@ -62,12 +56,18 @@
         {
             var result = string.Empty;
 
-            foreach (var avl in this.Locations)
+            foreach (var location in this.Locations)
             {
-                result += $"\n\tTime: {avl.Time}, Location: {avl.Longitude}, {avl.Latitude}";
+                result += $"\n\tTime: {location.Timestamp}, Location: {location.Longitude}, {location.Latitude}";
             }
 
             return result;
         }
+
+        public List<Map.Models.AVL.Location> ToAvlLocation()
+        {
+            return (from l in Locations select l.ToAvlLocation()).ToList();
+        }
+
     }
 }

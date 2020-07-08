@@ -14,8 +14,8 @@
 
 using System.Data;
 using System.Threading.Tasks;
-using Map.Modules.Teltonika.DataAccess.DAO;
 using Map.Modules.Teltonika.DataAccess.Dapper;
+using Map.Modules.Teltonika.Models;
 
 namespace Map.Modules.Teltonika.DataAccess.Repositories
 {
@@ -24,7 +24,7 @@ namespace Map.Modules.Teltonika.DataAccess.Repositories
     /// Implements the <see cref="DapperRepository" />
     /// </summary>
     /// <seealso cref="DapperRepository" />
-    public class RawDataRepo : DapperRepository
+    internal class RawDataRepo : DapperRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RawDataRepo"/> class.
@@ -38,16 +38,22 @@ namespace Map.Modules.Teltonika.DataAccess.Repositories
         /// <summary>
         /// Insert a primitive message to the RawData.
         /// </summary>
-        /// <param name="data">
-        /// The data.
-        /// </param>
+        /// <param name="imei">IMEI of the device.</param>
+        /// <param name="primitiveData">Hex string.</param>
         /// <returns>
         /// Integer as identity of the record.
         /// </returns>
         public async Task<int> Insert(string imei, string primitiveData)
         {
-            var param = new RawDataDAO(imei, primitiveData).DynamicParameters();
-            await this.ExecuteAsync("[gps].[stpRawData_Insert]", param);
+            var rawData = new RawData(imei, primitiveData);
+            var result = await Insert(rawData);
+            return result;
+        }
+
+        public async Task<int> Insert(RawData rawData)
+        {
+            var param = rawData.DynamicParameters();
+            await this.ExecuteAsync("[teltonika].[stpRawData_Insert]", param);
             return param.Get<int>("ID");
         }
     }

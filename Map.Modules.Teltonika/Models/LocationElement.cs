@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Map.Modules.Teltonika.Host.Models
+namespace Map.Modules.Teltonika.Models
 {
     /// <summary>
     /// The location element such as fuel, doors, oil, etc.
@@ -23,8 +23,7 @@ namespace Map.Modules.Teltonika.Host.Models
         /// Gets or sets the io value..
         /// </summary>
         public object Value { get; set; }
-
-
+        
         public Map.Models.AVL.LocationElement ToAvlLocationElement()
         {
             return new Map.Models.AVL.LocationElement

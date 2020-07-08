@@ -5,19 +5,34 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DataAccess\**" />
+    <Compile Remove="DataAccess\DAO\**" />
     <Compile Remove="Models\**" />
     <Compile Remove="Host\Args\**" />
-    <EmbeddedResource Remove="DataAccess\**" />
+    <EmbeddedResource Remove="DataAccess\DAO\**" />
     <EmbeddedResource Remove="Models\**" />
     <EmbeddedResource Remove="Host\Args\**" />
-    <None Remove="DataAccess\**" />
+    <None Remove="DataAccess\DAO\**" />
     <None Remove="Models\**" />
     <None Remove="Host\Args\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="DataAccess\Repositories\DeviceRepo.cs" />
+    <Compile Remove="DataAccess\Repositories\LocationElementRepo.cs" />
+    <Compile Remove="DataAccess\Repositories\LocationRepo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\LocationElement.cs" />
+    <Compile Include="Models\Priority.cs" />
+    <Compile Include="Models\RawData.cs" />
+    <Compile Include="Models\TcpPacket.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.35" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
   </ItemGroup>
 
   <ItemGroup>
