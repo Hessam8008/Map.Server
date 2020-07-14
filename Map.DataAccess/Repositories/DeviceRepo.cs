@@ -15,7 +15,7 @@
 using Map.DataAccess.DAO;
 using Map.DataAccess.Dapper;
 using Map.Models.AVL;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+
 
 namespace Map.DataAccess.Repositories
 {
@@ -50,7 +50,7 @@ namespace Map.DataAccess.Repositories
             var devices = await this.QueryAsync<DeviceDAO>(proc);
             var result = 
                 from d in devices 
-                select d.ToDevice();
+                select d?.ToDevice();
             return result;
         }
 
@@ -64,7 +64,7 @@ namespace Map.DataAccess.Repositories
             const string proc = "[gps].[stpDevice_GetById]";
             var param = new { id };
             var device = await this.QueryFirstOrDefaultAsync<DeviceDAO>(proc, param);
-            return device.ToDevice();
+            return device?.ToDevice();
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Map.DataAccess.Repositories
             const string proc = "[gps].[stpDevice_GetByIMEI]";
             var param = new { imei };
             var device = await this.QueryFirstOrDefaultAsync<DeviceDAO>(proc, param);
-            return device.ToDevice();
+            return device?.ToDevice();
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Map.DataAccess.Repositories
             const string proc = "[gps].[stpDevice_Sync]";
             var param = new DeviceDAO(device).DynamicParameters();
             var result = await this.QueryFirstOrDefaultAsync<DeviceDAO>(proc, param);
-            return result.ToDevice();
+            return result?.ToDevice();
         }
     }
 }

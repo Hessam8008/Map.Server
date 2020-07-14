@@ -17,6 +17,7 @@ using System.Data;
 using System.Data.SqlClient;
 using Map.Modules.Teltonika.DataAccess.Repositories;
 
+
 namespace Map.Modules.Teltonika.DataAccess
 {
     /// <summary>

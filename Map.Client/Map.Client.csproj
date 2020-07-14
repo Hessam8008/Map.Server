@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="GpsContext.cs" />
     <Compile Remove="Models\TeltonikaAvlData.cs" />
     <Compile Remove="Models\TeltonikaIoElement.cs" />
     <Compile Remove="Models\TeltonikaTcpPacket.cs" />
@@ -42,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GPS.Models\Map.Models.csproj" />
+    <ProjectReference Include="..\Map.Models\Map.Models.csproj" />
   </ItemGroup>
 
 </Project>

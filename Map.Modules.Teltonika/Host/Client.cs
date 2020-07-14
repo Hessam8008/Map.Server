@@ -66,17 +66,17 @@ namespace Map.Modules.Teltonika.Host
         /// The IMEI of the device.
         /// </summary>
         private string imei;
+        
+        private IBlackBox blackBox;
 
-
-        private IConfig config;
         /// <summary>
         /// Initializes a new instance of the <see cref="Client" /> class.
         /// </summary>
         /// <param name="client">The client<see cref="Client" />.</param>
-        public Client(TcpClient client, IConfig Config)
+        public Client(TcpClient client, IBlackBox blackBox)
         {
             this.client = client;
-            this.config = Config;
+            this.blackBox = blackBox;
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Map.Modules.Teltonika.Host
         /// The GetData.
         /// </summary>
         /// <returns>The <see cref="Task" />.</returns>
-        public async Task GetData()
+        public async Task GetDataAsync()
         {
             try
             {
@@ -113,8 +113,8 @@ namespace Map.Modules.Teltonika.Host
                 /*
                  * →│ PHASE 01 │←
                  */
-                var counter = await stream.ReadAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
-                
+                var counter = await stream.ReadAsync(bytes, 0, bytes.Length);//.ConfigureAwait(false);
+
                 // Socket disconnected
                 if (counter == 0)
                 {
@@ -147,38 +147,47 @@ namespace Map.Modules.Teltonika.Host
 
                 this.Connected?.Invoke(this, connectedArg);
 
-                if (!connectedArg.Accepted)
+                if (!await blackBox.ApprovedIMEIAsync(imei).ConfigureAwait(false))
                 {
-                    await stream.WriteAsync(BitConverter.GetBytes(0)).ConfigureAwait(false);
+                    await stream.WriteAsync(BitConverter.GetBytes(0));//.ConfigureAwait(false);
+                    Console.WriteLine("IMEI Rejected.");
                     return;
                 }
 
+                Console.WriteLine("IMEI Approved.");
                 /* Reply acknowledge byte (01 = accept, 00 = reject) */
-                await stream.WriteAsync(BitConverter.GetBytes(1)).ConfigureAwait(false);
+                await stream.WriteAsync(BitConverter.GetBytes(1));//.ConfigureAwait(false);
 
                 /*
                  *  →│ PHASE 02 │←
                  */
                 var parser = new FmxParserCodec8();
-                using var uow = new TeltonikaUnitOfWork(config.ConnectionString);
-                while ((counter = await stream.ReadAsync(bytes, 0, bytes.Length).ConfigureAwait(false)) != 0)
+                using var uow = new TeltonikaUnitOfWork(blackBox.ConnectionString);
+                while ((counter = await stream.ReadAsync(bytes, 0, bytes.Length)) != 0)
                 {
                     var hexData = BitConverter.ToString(bytes, 0, counter).Replace("-", string.Empty);
                     var rawMessage = new RawData(imei, hexData);
-                    await uow.RawDataRepository.Insert(rawMessage);
+                    await uow.RawDataRepository.Insert(rawMessage).ConfigureAwait(false);
                     uow.Commit();
+                    Console.WriteLine("New message saved.");
                     var data = parser.Parse(rawMessage);
                     var packetArgs = new ClientPacketReceivedArgs(imei, data.ToAvlLocation());
                     this.PacketReceived?.Invoke(this, packetArgs);
-                    if (packetArgs.Accepted)
+                    var acceptedLocation = await blackBox.AcceptedLocationsAsync(imei, packetArgs.Locations).ConfigureAwait(false);
+                    if (acceptedLocation)
                     {
-                        await stream.WriteAsync(BitConverter.GetBytes((int)data.NumberOfData1)).ConfigureAwait(false);
+                        Console.WriteLine("Accepted, NumberOfData1: {0}, NumberOfData2: {1}", (int)data.NumberOfData1, data.NumberOfData2);
+                        await stream.WriteAsync(BitConverter.GetBytes((int)data.NumberOfData1));//.ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Locations not accepted.");
                     }
                 }
             }
             catch (Exception ex)
             {
-                this.Error?.Invoke(this, new ErrorArgs($"Client error. IMEI = {imei}",ex));
+                this.Error?.Invoke(this, new ErrorArgs($"Client error. IMEI = {imei}", ex));
             }
             finally
             {

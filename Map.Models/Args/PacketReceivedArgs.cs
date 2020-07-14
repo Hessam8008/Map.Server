@@ -41,12 +41,6 @@ namespace Map.Models.Args
         /// <value>The packet.</value>
         public List<Location> Locations { get; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether Accepted.
-        /// </summary>
-        /// <value><c>true</c> if accepted; otherwise, <c>false</c>.</value>
-        public bool Accepted { get; set; } = false;
-
 
         public override string ToString()
         {

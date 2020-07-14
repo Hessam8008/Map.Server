@@ -28,11 +28,7 @@ namespace Map.Server
     /// </summary>
     public class Program
     {
-#if DEBUG
-        const string Cs = "server=dm1server1;uid=dbUser;pwd=1234;database=GPS;MultipleActiveResultSets=True;Application Name=MAP.SERVER";
-#else
-        const string Cs = "server=10.10.1.12\\GCAS;database=GPSTrackerDB;uid=DVP1;pwd=Fly#3592;MultipleActiveResultSets=True;Application Name=MAP.SERVER";
-#endif
+
 
         /// <summary>
         /// The main method.
@@ -43,11 +39,12 @@ namespace Map.Server
         public static void Main(string[] args)
         {
 
-            Log(Cs);
-            var config = new TeltonikaConfig(Cs);
+            var bb = new TeltonikaBlackBox();
+            Log(bb.ConnectionString);
+
             try
             {
-                Models.IServer server = new Modules.Teltonika.Host.Server(config);
+                Models.IServer server = new Modules.Teltonika.Host.Server(bb);
                 server.ServerStarted += (sender, e) => Log($"Server started on {e.IP}, port {e.Port}", ConsoleColor.Yellow);
                 server.ServerStopped += (sender, e) => Log($"Server stopped.", ConsoleColor.Yellow);
                 server.ConnectionAccepted += (sender, e) => Log($"Client accepted {e.RemoteIP}, port {e.Port}, Ttl {e.Ttl}", ConsoleColor.Yellow);
@@ -92,66 +89,25 @@ namespace Map.Server
 
         private static void ClientConnected(object sender, ClientConnectedArgs e)
         {
-            var message = $"IMEI: {e.IMEI}";
+            var message = $"{e.IMEI} connected.";
             try
             {
-                using var uow = new MapUnitOfWork(Cs);
-                var device = uow.DeviceRepository.GetByIMEIAsync(e.IMEI).ConfigureAwait(false).GetAwaiter().GetResult();
-                if (device == null)
-                {
-                    message += ", new device";
-                    device = new Device
-                    {
-                        IMEI = e.IMEI,
-                        Model = "N/A",
-                        SimNumber = "0000000000",
-                        OwnerMobileNumber = "0000000000",
-                        Nickname = "N/A",
-                        SN = "N/A"
-                    };
-                    device = uow.DeviceRepository.SyncAsync(device).ConfigureAwait(false).GetAwaiter().GetResult();
-                    uow.Commit();
-                    message += $"\n{device.ToJson()}";
-                }
-                else
-                {
-                    message += ", exists device";
-                }
-                e.Accepted = true;
-                //NotifierService.BroadcastIMEI(e.IMEI).ConfigureAwait(false).GetAwaiter().GetResult();
+                NotifierService.BroadcastIMEI(e.IMEI).ConfigureAwait(false).GetAwaiter().GetResult();
             }
             catch (Exception exception)
             {
-                message += $", error: {exception.Message}";
-                e.Accepted = false;
+                message += $"\n * error: {exception.Message}";
             }
             Log(message, ConsoleColor.Red);
         }
 
 
-        private static async void ClientPacketReceived(object sender, ClientPacketReceivedArgs e)
+        private static void ClientPacketReceived(object sender, ClientPacketReceivedArgs e)
         {
             try
             {
                 Log(e.ToString(), ConsoleColor.Green);
-
-                using var db = new MapUnitOfWork(Cs);
-                var device = await db.DeviceRepository.GetByIMEIAsync(e.IMEI).ConfigureAwait(false);
-                if (device == null)
-                {
-                    Log($"IMEI '{e.IMEI}' not found.", ConsoleColor.Red);
-                    e.Accepted = false;
-                    return;
-                }
-                foreach (var location in e.Locations)
-                {
-                    location.Device = device;
-                    var locationId = await db.LocationRepository.Insert(location).ConfigureAwait(false);
-                }
-                db.Commit();
-                e.Accepted = true;
-                Log("Data has been saved.", ConsoleColor.Green);
-                //await NotifierService.BroadcastPacket(e);
+                NotifierService.BroadcastPacket(e).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {

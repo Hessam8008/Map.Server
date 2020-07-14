@@ -7,11 +7,6 @@
 
     public class IMEIMessage : IMessage<IMEI>
     {
-        public IMEIMessage()
-        {
-            //Console.WriteLine($"{nameof(IMEIMessage)} Created.");
-        }
-
         public IMEI MessageObject { get; private set; }
 
         public virtual bool CanParse(PlainMessage msg)

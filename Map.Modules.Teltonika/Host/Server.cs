@@ -46,10 +46,10 @@ namespace Map.Modules.Teltonika.Host
 
         private bool stopped = false;
 
-        private IConfig config;
-        public Server(IConfig Config)
+        private IBlackBox blackBox;
+        public Server(IBlackBox blackBox)
         {
-            this.config = Config;
+            this.blackBox = blackBox;
         }
 
 
@@ -111,13 +111,13 @@ namespace Map.Modules.Teltonika.Host
         /// <returns>The <see cref="Task" />.</returns>
         private async Task HandleClient(TcpClient client)
         {
-            var device = new Client(client, config);
+            var device = new Client(client, blackBox);
             device.Connected += (sender, args) => this.ClientConnected?.Invoke(device, args);
             device.Error += (sender, args) => this.Error?.Invoke(device, args);
             device.PacketReceived += (sender, args) => this.ClientPacketReceived?.Invoke(device, args);
             device.Disconnected += (sender, args) => this.ClientDisconnected?.Invoke(device, args);
 
-            await device.GetData();
+            await device.GetDataAsync();
         }
     }
 }

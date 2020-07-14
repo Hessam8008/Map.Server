@@ -11,6 +11,9 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+
+using System.Data.SqlClient;
+
 namespace Map.DataAccess
 {
     using System;
@@ -18,7 +21,7 @@ namespace Map.DataAccess
 
     using Map.DataAccess.Repositories;
 
-    using Microsoft.Data.SqlClient;
+    
 
     /// <summary>
     /// Class MapUnitOfWork.
