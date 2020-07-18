@@ -17,6 +17,7 @@ using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Map.Models;
 using Map.Models.Args;
 using Map.Modules.Teltonika.DataAccess;
 using Map.Modules.Teltonika.Host.Parsers;
@@ -37,13 +38,6 @@ namespace Map.Modules.Teltonika.Host
     /// <param name="sender">The sender<see cref="object" />.</param>
     /// <param name="e">The e<see cref="ClientPacketReceivedArgs" />.</param>
     public delegate void OnPacketReceived(object sender, ClientPacketReceivedArgs e);
-
-    /// <summary>
-    /// The OnError.
-    /// </summary>
-    /// <param name="sender">The sender<see cref="object" />.</param>
-    /// <param name="e">The e<see cref="ErrorArgs" />.</param>
-    public delegate void OnError(object sender, ErrorArgs e);
 
     /// <summary>
     /// The OnDisconnected.
@@ -67,16 +61,18 @@ namespace Map.Modules.Teltonika.Host
         /// </summary>
         private string imei;
         
-        private IBlackBox blackBox;
+        private readonly IBlackBox blackBox;
+        private readonly IConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Client" /> class.
         /// </summary>
         /// <param name="client">The client<see cref="Client" />.</param>
-        public Client(TcpClient client, IBlackBox blackBox)
+        public Client(TcpClient client, IBlackBox blackBox, IConfiguration configuration)
         {
             this.client = client;
             this.blackBox = blackBox;
+            this.configuration = configuration;
         }
 
         /// <summary>
@@ -90,14 +86,11 @@ namespace Map.Modules.Teltonika.Host
         public event OnPacketReceived PacketReceived;
 
         /// <summary>
-        /// Defines the Error.
-        /// </summary>
-        public event OnError Error;
-
-        /// <summary>
         /// Defines the Disconnected.
         /// </summary>
         public event OnDisconnected Disconnected;
+
+        public event OnLogged Logged;
 
         /// <summary>
         /// The GetData.
@@ -113,7 +106,7 @@ namespace Map.Modules.Teltonika.Host
                 /*
                  * →│ PHASE 01 │←
                  */
-                var counter = await stream.ReadAsync(bytes, 0, bytes.Length);//.ConfigureAwait(false);
+                var counter = await stream.ReadAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
 
                 // Socket disconnected
                 if (counter == 0)
@@ -125,69 +118,71 @@ namespace Map.Modules.Teltonika.Host
                     Sample: 000F333536333037303432343431303133 (HEX)
                  */
                 if (counter != 17)
-                {
-                    this.Error?.Invoke(this, new ErrorArgs("Invalid IMEI format to open communication."));
-                    return;
-                }
+                    throw new Exception("Invalid IMEI format to open communication.");
+                
 
                 var hexImeiLen = BitConverter.ToString(bytes, 0, 2).Replace("-", string.Empty);
                 var imeiLen = int.Parse(hexImeiLen, NumberStyles.HexNumber);
 
                 /* Validate IMEI length has received by GPS */
                 if (imeiLen != 15)
-                {
-                    this.Error?.Invoke(this, new ErrorArgs($"Invalid IMEI length. IMEI must be 15 but it is {imeiLen}."));
-                    return;
-                }
+                    throw new Exception($"Invalid IMEI length. IMEI must be 15 but it is {imeiLen}.");
+                
 
                 /* Decode IMEI */
                 this.imei = Encoding.ASCII.GetString(bytes, 2, 15);
 
-                var connectedArg = new ClientConnectedArgs(this.imei);
-
-                this.Connected?.Invoke(this, connectedArg);
+                this.Connected?.Invoke(this, new ClientConnectedArgs(imei));
 
                 if (!await blackBox.ApprovedIMEIAsync(imei).ConfigureAwait(false))
                 {
-                    await stream.WriteAsync(BitConverter.GetBytes(0));//.ConfigureAwait(false);
-                    Console.WriteLine("IMEI Rejected.");
+                    await stream.WriteAsync(BitConverter.GetBytes(0)).ConfigureAwait(false);
+                    Logged?.Invoke(this, new LoggedArgs($"IMEI {imei} Rejected."));
                     return;
                 }
+                Logged?.Invoke(this, new LoggedArgs($"IMEI {imei} Approved."));
 
-                Console.WriteLine("IMEI Approved.");
                 /* Reply acknowledge byte (01 = accept, 00 = reject) */
-                await stream.WriteAsync(BitConverter.GetBytes(1));//.ConfigureAwait(false);
+                await stream.WriteAsync(BitConverter.GetBytes(1)).ConfigureAwait(false);
 
                 /*
                  *  →│ PHASE 02 │←
                  */
                 var parser = new FmxParserCodec8();
-                using var uow = new TeltonikaUnitOfWork(blackBox.ConnectionString);
-                while ((counter = await stream.ReadAsync(bytes, 0, bytes.Length)) != 0)
+                using var uow = new TeltonikaUnitOfWork(configuration.ConnectionString);
+                while ((counter = await stream.ReadAsync(bytes, 0, bytes.Length)
+                        .ConfigureAwait(false)) != 0)
                 {
                     var hexData = BitConverter.ToString(bytes, 0, counter).Replace("-", string.Empty);
                     var rawMessage = new RawData(imei, hexData);
+                    /* Save as log */
                     await uow.RawDataRepository.Insert(rawMessage).ConfigureAwait(false);
                     uow.Commit();
-                    Console.WriteLine("New message saved.");
+                    Logged?.Invoke(this, new LoggedArgs($"{imei}: Message saved in log table."));
+
+                    /* Parse message */
                     var data = parser.Parse(rawMessage);
+                    Logged?.Invoke(this, new LoggedArgs($"{imei}: Message parsed."));
+                    
+                    /* Create a packet */
                     var packetArgs = new ClientPacketReceivedArgs(imei, data.ToAvlLocation());
+                    Logged?.Invoke(this, new LoggedArgs($"{imei}: Packed created, locations > {data.Locations.Count}."));
+
+                    /* Raise an event */
                     this.PacketReceived?.Invoke(this, packetArgs);
+
+                    /* Check server action */
                     var acceptedLocation = await blackBox.AcceptedLocationsAsync(imei, packetArgs.Locations).ConfigureAwait(false);
                     if (acceptedLocation)
                     {
-                        Console.WriteLine("Accepted, NumberOfData1: {0}, NumberOfData2: {1}", (int)data.NumberOfData1, data.NumberOfData2);
-                        await stream.WriteAsync(BitConverter.GetBytes((int)data.NumberOfData1));//.ConfigureAwait(false);
+                        Logged?.Invoke(this, new LoggedArgs($"{imei}: Locations accepted."));
+                        await stream.WriteAsync(BitConverter.GetBytes((int)data.NumberOfData1)).ConfigureAwait(false);
                     }
                     else
                     {
-                        Console.WriteLine("Locations not accepted.");
+                        Logged?.Invoke(this, new LoggedArgs($"{imei}: Locations rejected."));
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                this.Error?.Invoke(this, new ErrorArgs($"Client error. IMEI = {imei}", ex));
             }
             finally
             {
@@ -200,16 +195,9 @@ namespace Map.Modules.Teltonika.Host
         /// </summary>
         private void CloseConnection()
         {
-            try
-            {
-                this.client?.Close();
-                this.client?.Dispose();
-                this.Disconnected?.Invoke(this, new DisconnectedArgs(this.imei));
-            }
-            catch (Exception e)
-            {
-                this.Error?.Invoke(this, new ErrorArgs($"Client close connection error. IMEI = {imei}", e));
-            }
+            this.client?.Close();
+            this.client?.Dispose();
+            this.Disconnected?.Invoke(this, new DisconnectedArgs(this.imei));
         }
     }
 }

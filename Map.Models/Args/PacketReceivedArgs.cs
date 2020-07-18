@@ -12,6 +12,7 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
 using System.Collections.Generic;
 using Map.Models.AVL;
 
@@ -20,7 +21,7 @@ namespace Map.Models.Args
     /// <summary>
     /// Defines the <see cref="ClientPacketReceivedArgs" />.
     /// </summary>
-    public class ClientPacketReceivedArgs
+    public class ClientPacketReceivedArgs: EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientPacketReceivedArgs" /> class.

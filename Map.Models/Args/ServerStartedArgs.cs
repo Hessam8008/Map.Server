@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace Map.Models.Args
@@ -6,7 +7,7 @@ namespace Map.Models.Args
     /// <summary>
     /// The start server args.
     /// </summary>
-    public class ServerStartedArgs
+    public class ServerStartedArgs: EventArgs
     {
 
         public string IP { get; }

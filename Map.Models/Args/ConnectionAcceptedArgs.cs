@@ -1,9 +1,10 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Sockets;
 
 namespace Map.Models.Args
 {
-    public class ConnectionAcceptedArgs
+    public class ConnectionAcceptedArgs: EventArgs
     {
         public string RemoteIP { get; }
 

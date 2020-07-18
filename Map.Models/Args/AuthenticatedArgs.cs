@@ -11,12 +11,15 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+
+using System;
+
 namespace Map.Models.Args
 {
     /// <summary>
     /// Defines the <see cref="ClientConnectedArgs" />.
     /// </summary>
-    public class ClientConnectedArgs
+    public class ClientConnectedArgs : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ClientConnectedArgs" /> class.

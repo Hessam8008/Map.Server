@@ -8,22 +8,34 @@ using Map.Modules.Teltonika;
 
 namespace Map.Server
 {
-    class TeltonikaBlackBox : IBlackBox
+
+    class TeltonikaConfiguration : IConfiguration
     {
         public string ConnectionString { get; }
 
-        public TeltonikaBlackBox()
+        public TeltonikaConfiguration()
         {
 #if DEBUG
             ConnectionString = "server=dm1server1;uid=dbUser;pwd=1234;database=GPS;MultipleActiveResultSets=True;Application Name=MAP.SERVER";
 #else
             ConnectionString = "server=10.10.1.12\\GCAS;database=GPSTrackerDB;uid=DVP1;pwd=Fly#3592;MultipleActiveResultSets=True;Application Name=MAP.SERVER";
 #endif
+
+        }
+    }
+
+    class TeltonikaBlackBox : IBlackBox
+    {
+        public IConfiguration Configuration { get; }
+
+        public TeltonikaBlackBox(IConfiguration configuration)
+        {
+            Configuration = configuration;
         }
 
         public async Task<bool> ApprovedIMEIAsync(string imei)
         {
-            using var uow = new MapUnitOfWork(ConnectionString);
+            using var uow = new MapUnitOfWork(Configuration.ConnectionString);
             var device = await uow.DeviceRepository.GetByIMEIAsync(imei).ConfigureAwait(false);
             if (device != null)
                 return true;
@@ -39,13 +51,13 @@ namespace Map.Server
             };
             await uow.DeviceRepository.SyncAsync(device).ConfigureAwait(false);
             uow.Commit();
-            Console.WriteLine($"BB: ApprovedIMEIAsync {imei}");
+            //Console.WriteLine($"BB: ApprovedIMEIAsync {imei}");
             return true;
         }
 
         public async Task<bool> AcceptedLocationsAsync(string imei, List<Location> locations)
         {
-            using var db = new MapUnitOfWork(ConnectionString);
+            using var db = new MapUnitOfWork(Configuration.ConnectionString);
             var device = await db.DeviceRepository.GetByIMEIAsync(imei).ConfigureAwait(false);
             if (device == null)
             {
@@ -57,7 +69,7 @@ namespace Map.Server
                 var locationId = await db.LocationRepository.Insert(location).ConfigureAwait(false);
             }
             db.Commit();
-            Console.WriteLine($"BB: AcceptedLocationsAsync {imei}, count: {locations.Count}");
+            //Console.WriteLine($"BB: AcceptedLocationsAsync {imei}, count: {locations.Count}");
 
             return true;
         }

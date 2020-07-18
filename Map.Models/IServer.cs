@@ -24,7 +24,9 @@ namespace Map.Models
     /// </summary>
     /// <param name="sender">The sender<see cref="object" />.</param>
     /// <param name="e">The e<see cref="ErrorArgs" />.</param>
-    public delegate void OnError(object sender, ErrorArgs e);
+    public delegate void OnErrorOccured(object sender, ErrorOccuredArgs e);
+    
+    public delegate void OnLogged(object sender, LoggedArgs e);
     
     /// <summary>
     /// The OnDisconnected.
@@ -70,7 +72,9 @@ namespace Map.Models
         /// <summary>
         /// The client error.
         /// </summary>
-        event OnError Error;
+        event OnErrorOccured ErrorOccured;
+
+        event OnLogged Logged;
 
         /// <summary>
         /// The client disconnected.

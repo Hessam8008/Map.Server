@@ -8,4 +8,8 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Args\ErrorArgs.cs" />
+  </ItemGroup>
+
 </Project>

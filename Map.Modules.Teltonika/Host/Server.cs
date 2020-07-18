@@ -27,18 +27,16 @@ namespace Map.Modules.Teltonika.Host
     /// </summary>
     public sealed class Server : IServer
     {
-
+        
+        public event OnServerStarted ServerStarted;
+        public event OnServerStopped ServerStopped;
         public event OnConnectionAccepted ConnectionAccepted;
         public event OnClientConnected ClientConnected;
         public event OnClientPacketReceived ClientPacketReceived;
+        public event OnErrorOccured ErrorOccured;
+        public event OnLogged Logged;
         public event OnClientDisconnected ClientDisconnected;
-
-
-        public event Map.Models.OnError Error;
-        public event OnServerStarted ServerStarted;
-        public event OnServerStopped ServerStopped;
-
-
+        
         /// <summary>
         /// Defines the listener.
         /// </summary>
@@ -46,10 +44,13 @@ namespace Map.Modules.Teltonika.Host
 
         private bool stopped = false;
 
-        private IBlackBox blackBox;
-        public Server(IBlackBox blackBox)
+        private readonly IBlackBox blackBox;
+        private readonly IConfiguration configuration;
+
+        public Server(IBlackBox blackBox, IConfiguration configuration)
         {
             this.blackBox = blackBox;
+            this.configuration = configuration;
         }
 
 
@@ -87,7 +88,7 @@ namespace Map.Modules.Teltonika.Host
                 catch (Exception ex)
                 {
                     if (!stopped)
-                        Error?.Invoke(this, new ErrorArgs("Server error.", ex));
+                        ErrorOccured?.Invoke(this, new ErrorOccuredArgs(ex));
                     break;
                 }
             }
@@ -107,17 +108,24 @@ namespace Map.Modules.Teltonika.Host
         /// <summary>
         /// Handle device connected to server.
         /// </summary>
-        /// <param name="client">The client<see cref="TcpClient" />.</param>
+        /// <param name="tcpClient">The client<see cref="TcpClient" />.</param>
         /// <returns>The <see cref="Task" />.</returns>
-        private async Task HandleClient(TcpClient client)
+        private async Task HandleClient(TcpClient tcpClient)
         {
-            var device = new Client(client, blackBox);
-            device.Connected += (sender, args) => this.ClientConnected?.Invoke(device, args);
-            device.Error += (sender, args) => this.Error?.Invoke(device, args);
-            device.PacketReceived += (sender, args) => this.ClientPacketReceived?.Invoke(device, args);
-            device.Disconnected += (sender, args) => this.ClientDisconnected?.Invoke(device, args);
-
-            await device.GetDataAsync();
+            var client = new Client(tcpClient, blackBox, configuration);
+            client.Connected += (sender, args) => this.ClientConnected?.Invoke(client, args);
+            client.PacketReceived += (sender, args) => this.ClientPacketReceived?.Invoke(client, args);
+            client.Disconnected += (sender, args) => this.ClientDisconnected?.Invoke(client, args);
+            client.Logged += (sender, args) => this.Logged?.Invoke(client, args);
+            try
+            {
+                await client.GetDataAsync();
+            }
+            catch (Exception e)
+            {
+                ErrorOccured?.Invoke(client, new ErrorOccuredArgs(e));
+            }
+            
         }
     }
 }

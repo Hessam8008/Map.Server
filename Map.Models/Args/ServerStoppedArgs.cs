@@ -1,6 +1,8 @@
-﻿namespace Map.Models.Args
+﻿using System;
+
+namespace Map.Models.Args
 {
-    public class ServerStoppedArgs
+    public class ServerStoppedArgs : EventArgs
     {
         public ServerStoppedArgs()
         {

@@ -8,11 +8,8 @@ namespace Map.Modules.Teltonika
 {
     public interface IBlackBox
     {
-        public string ConnectionString { get; }
-
         public Task<bool> ApprovedIMEIAsync(string imei);
 
         public Task<bool> AcceptedLocationsAsync(string imei, List<Location> locations);
-
     }
 }

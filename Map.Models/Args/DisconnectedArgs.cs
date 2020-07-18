@@ -11,12 +11,15 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+
+using System;
+
 namespace Map.Models.Args
 {
     /// <summary>
     /// The disconnected args.
     /// </summary>
-    public class DisconnectedArgs
+    public class DisconnectedArgs : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DisconnectedArgs" /> class.
