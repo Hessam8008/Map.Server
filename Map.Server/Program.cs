@@ -81,9 +81,7 @@ namespace Map.Server
             }
 
         }
-
-
-
+        
         private static async Task Listening(string ip, int port)
         {
             var listener = new TcpListener(IPAddress.Parse(ip), port);
@@ -109,6 +107,7 @@ namespace Map.Server
                 }
             }
         }
+        
         private static async Task HandleClient(object obj)
         {
             Log($"Handling {obj.GetHashCode()}...");
@@ -207,7 +206,7 @@ namespace Map.Server
                 server.ServerStopped += (sender, e) => Log($"Server stopped.", ConsoleColor.Yellow);
                 server.ConnectionAccepted += (sender, e) => Log($"Client accepted {e.RemoteIP}, port {e.Port}, Ttl {e.Ttl}", ConsoleColor.Green);
                 server.ErrorOccured += (sender, e) => Log($"Error>\n{e.Exception}", ConsoleColor.Red);
-                server.ClientDisconnected += (sender, e) => Log($"Disconnected {e.IMEI}", ConsoleColor.Green);
+                server.ClientDisconnected += (sender, e) => Log($"{e.IMEI} Disconnected.", ConsoleColor.Green);
                 server.ClientConnected += ClientConnected;
                 server.ClientPacketReceived += ClientPacketReceived;
                 server.Logged += Server_Logged;
@@ -235,7 +234,7 @@ namespace Map.Server
 
         private static async void ClientConnected(object sender, ClientConnectedArgs e)
         {
-            var message = $"{e.IMEI} connected.";
+            var message = $"{e.IMEI} Connected.";
             try
             {
                 await NotifierService.BroadcastIMEI(e.IMEI).ConfigureAwait(false);
@@ -247,8 +246,7 @@ namespace Map.Server
 
             Log(message, ConsoleColor.Green);
         }
-
-
+        
         private static async void ClientPacketReceived(object sender, ClientPacketReceivedArgs e)
         {
             try
