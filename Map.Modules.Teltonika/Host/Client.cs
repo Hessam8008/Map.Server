@@ -62,17 +62,17 @@ namespace Map.Modules.Teltonika.Host
         private string imei;
         
         private readonly IBlackBox blackBox;
-        private readonly IConfiguration configuration;
+        private readonly IDatabaseSettings dbSettings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Client" /> class.
         /// </summary>
         /// <param name="client">The client<see cref="Client" />.</param>
-        public Client(TcpClient client, IBlackBox blackBox, IConfiguration configuration)
+        public Client(TcpClient client, IBlackBox blackBox, IDatabaseSettings dbSettings)
         {
             this.client = client;
             this.blackBox = blackBox;
-            this.configuration = configuration;
+            this.dbSettings = dbSettings;
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Map.Modules.Teltonika.Host
                  *  →│ PHASE 02 │←
                  */
                 var parser = new FmxParserCodec8();
-                using var uow = new TeltonikaUnitOfWork(configuration.ConnectionString);
+                using var uow = new TeltonikaUnitOfWork(dbSettings.ConnectionString);
                 while ((counter = await stream.ReadAsync(bytes, 0, bytes.Length)
                         .ConfigureAwait(false)) != 0)
                 {

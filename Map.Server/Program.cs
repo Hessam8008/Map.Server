@@ -199,7 +199,7 @@ namespace Map.Server
 
             try
             {
-                var c = new TeltonikaConfiguration();
+                var c = new DatabaseSettings();
                 var bb = new TeltonikaBlackBox(c);
 
                 IServer server = new Modules.Teltonika.Host.Server(bb, c);

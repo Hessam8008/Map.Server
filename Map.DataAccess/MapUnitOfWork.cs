@@ -54,15 +54,15 @@ namespace Map.DataAccess
         /// </summary>
         private IDeviceRepository deviceRepo;
         private ILocationRepository locationRepo;
-        
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MapUnitOfWork"/> class.
         /// </summary>
-        /// <param name="cs">The cs.</param>
-        public MapUnitOfWork(string cs)
+        /// <param name="dbSettings"></param>
+        public MapUnitOfWork(IDatabaseSettings dbSettings)
         {
-            this.connectionString = cs;
+            this.connectionString = dbSettings.ConnectionString;
             this.BeginTransaction();
         }
 

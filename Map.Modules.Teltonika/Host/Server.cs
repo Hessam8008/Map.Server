@@ -45,12 +45,12 @@ namespace Map.Modules.Teltonika.Host
         private bool stopped = false;
 
         private readonly IBlackBox blackBox;
-        private readonly IConfiguration configuration;
+        private readonly IDatabaseSettings dbSettings;
 
-        public Server(IBlackBox blackBox, IConfiguration configuration)
+        public Server(IBlackBox blackBox, IDatabaseSettings dbSettings)
         {
             this.blackBox = blackBox;
-            this.configuration = configuration;
+            this.dbSettings = dbSettings;
         }
 
 
@@ -112,7 +112,7 @@ namespace Map.Modules.Teltonika.Host
         /// <returns>The <see cref="Task" />.</returns>
         private async Task HandleClient(TcpClient tcpClient)
         {
-            var client = new Client(tcpClient, blackBox, configuration);
+            var client = new Client(tcpClient, blackBox, dbSettings);
             client.Connected += (sender, args) => this.ClientConnected?.Invoke(client, args);
             client.PacketReceived += (sender, args) => this.ClientPacketReceived?.Invoke(client, args);
             client.Disconnected += (sender, args) => this.ClientDisconnected?.Invoke(client, args);

@@ -22,24 +22,33 @@ namespace Map.Service.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Device>> GetAllAsync()
+        public async Task<ActionResult<IEnumerable<Device>>> GetAllAsync()
         {
             var result = await unitOfWork.DeviceRepository.GetAllAsync();
-            return result;
+            if (result == null)
+                return NotFound();
+
+            return Ok(result);
         }
         
-        [HttpGet]
-        public async Task<Device> GetByIMEIAsync(string imei)
+        [HttpGet("imei/{imei}")]
+        public async Task<ActionResult<Device>> GetByIMEIAsync(string imei)
         {
             var result = await unitOfWork.DeviceRepository.GetByIMEIAsync(imei);
-            return result;
+            if (result == null)
+                return NotFound();
+
+            return Ok(result);
         }
         
-        [HttpGet]
-        public async Task<Device> GetByIdAsync(int id)
+        [HttpGet("id/{id:int}")]
+        public async Task<ActionResult<Device>> GetByIdAsync(int id)
         {
             var result = await unitOfWork.DeviceRepository.GetByIdAsync(id);
-            return result;
+            if (result == null)
+                return NotFound();
+
+            return Ok(result);
         }
 
     }

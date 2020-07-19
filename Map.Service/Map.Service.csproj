@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Map.DataAccess\Map.DataAccess.csproj" />
     <ProjectReference Include="..\Map.Models\Map.Models.csproj" />
   </ItemGroup>
 
