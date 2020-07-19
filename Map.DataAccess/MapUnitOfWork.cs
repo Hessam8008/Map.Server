@@ -13,13 +13,15 @@
 // ***********************************************************************
 
 using System.Data.SqlClient;
+using Map.Models;
+using Map.Models.Repositories;
 
 namespace Map.DataAccess
 {
     using System;
     using System.Data;
 
-    using Map.DataAccess.Repositories;
+    using Repositories;
 
     
 
@@ -30,7 +32,7 @@ namespace Map.DataAccess
     /// </summary>
     /// <seealso cref="System.IDisposable" />
     /// <seealso cref="System.ICloneable" />
-    public class MapUnitOfWork : IDisposable, ICloneable
+    public class MapUnitOfWork : IDisposable, ICloneable, IMapUnitOfWork
     {
         /// <summary>
         /// The transaction
@@ -123,7 +125,7 @@ namespace Map.DataAccess
         /// Gets the device repository.
         /// </summary>
         /// <value>The device repository.</value>
-        public DeviceRepo DeviceRepository => this.deviceRepo ??= new DeviceRepo(this.transaction);
+        public IDeviceRepository DeviceRepository => this.deviceRepo ??= new DeviceRepo(this.transaction);
         public LocationRepo LocationRepository => this.locationRepo ??= new LocationRepo(this.transaction);
 
         #region ►| IDisposable |◄
