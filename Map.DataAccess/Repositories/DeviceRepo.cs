@@ -30,7 +30,7 @@ namespace Map.DataAccess.Repositories
     /// Implements the <see cref="DapperRepository" />
     /// </summary>
     /// <seealso cref="DapperRepository" />
-    public class DeviceRepo : DapperRepository, IDeviceRepository
+    internal class DeviceRepo : DapperRepository, IDeviceRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceRepo"/> class.
@@ -49,8 +49,8 @@ namespace Map.DataAccess.Repositories
         {
             const string proc = "[gps].[stpDevice_GetAll]";
             var devices = await this.QueryAsync<DeviceDAO>(proc);
-            var result = 
-                from d in devices 
+            var result =
+                from d in devices
                 select d?.ToDevice();
             return result;
         }
