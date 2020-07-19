@@ -15,6 +15,7 @@
 using Map.DataAccess.DAO;
 using Map.DataAccess.Dapper;
 using Map.Models.AVL;
+using Map.Models.Repositories;
 
 
 namespace Map.DataAccess.Repositories
@@ -29,7 +30,7 @@ namespace Map.DataAccess.Repositories
     /// Implements the <see cref="DapperRepository" />
     /// </summary>
     /// <seealso cref="DapperRepository" />
-    public class DeviceRepo : DapperRepository
+    public class DeviceRepo : DapperRepository, IDeviceRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceRepo"/> class.
