@@ -33,7 +33,7 @@ namespace Map.DataAccess.Repositories
     /// Implements the <see cref="DapperRepository" />
     /// </summary>
     /// <seealso cref="DapperRepository" />
-    public class LocationRepo : DapperRepository, ILocationRepository
+    internal class LocationRepo : DapperRepository, ILocationRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LocationRepo"/> class.

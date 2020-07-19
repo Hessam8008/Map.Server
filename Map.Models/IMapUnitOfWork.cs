@@ -7,8 +7,7 @@ namespace Map.Models
 {
     public interface IMapUnitOfWork
     {
-
         public IDeviceRepository DeviceRepository { get; }
-
+        public ILocationRepository LocationRepository { get; }
     }
 }
