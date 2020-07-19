@@ -30,6 +30,7 @@
     <PackageReference Include="Notifier.Client.Libs.Windows" Version="1.0.2" />
     <PackageReference Include="Services.Core" Version="0.1.4" />
     <PackageReference Include="Services.WebApiCaller" Version="0.1.11" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.0" />
   </ItemGroup>
 
   <ItemGroup>
