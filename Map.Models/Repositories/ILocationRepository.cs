@@ -10,7 +10,7 @@ namespace Map.Models.Repositories
     {
         public Task<int> InsertAsync(Location location);
 
-        public Task<IEnumerable<Location>> GetAsync(int deviceId, DateTime from, DateTime to);
+        public Task<IEnumerable<Location>> GetByDeviceAsync(int deviceId, DateTime from, DateTime to);
 
     }
 }

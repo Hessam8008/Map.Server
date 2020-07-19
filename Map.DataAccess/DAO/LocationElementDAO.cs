@@ -14,6 +14,7 @@
 
 using System.Data;
 using Map.DataAccess.Dapper;
+using Map.Models.AVL;
 
 namespace Map.DataAccess.DAO
 {
@@ -64,5 +65,15 @@ namespace Map.DataAccess.DAO
         /// </summary>
         /// <value>The element value.</value>
         public object ElementValue { get; set; }
+
+        public LocationElement ToLocationElement()
+        {
+            return new LocationElement
+            {
+                Id = ElementId,
+                Value = ElementValue
+            };
+        }
+
     }
 }

@@ -12,9 +12,14 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Sockets;
 using Dapper;
 using Map.DataAccess.DAO;
 using Map.Models.AVL;
+using Map.Models.Repositories;
 
 namespace Map.DataAccess.Repositories
 {
@@ -28,7 +33,7 @@ namespace Map.DataAccess.Repositories
     /// Implements the <see cref="DapperRepository" />
     /// </summary>
     /// <seealso cref="DapperRepository" />
-    public class LocationRepo : DapperRepository
+    public class LocationRepo : DapperRepository, ILocationRepository
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LocationRepo"/> class.
@@ -39,7 +44,7 @@ namespace Map.DataAccess.Repositories
         {
         }
 
-        public async Task<int> Insert(Location location)
+        public async Task<int> InsertAsync(Location location)
         {
             const string proc1 = "[gps].[stpLocation_Insert]";
             const string proc2 = "[gps].[stpLocationElement_Insert]";
@@ -63,6 +68,21 @@ namespace Map.DataAccess.Repositories
             return dao.ID;
 
 
+        }
+
+        public async Task<IEnumerable<Location>> GetByDeviceAsync(int deviceId, DateTime @from, DateTime to)
+        {
+            const string proc = "[gps].[stpLocation_GetByDevice]";
+            var reader = await QueryMultipleAsync(proc, new {deviceId, from, to});
+            var locations = (await reader.ReadAsync<LocationDAO>()).ToList();
+            var elements = (await reader.ReadAsync<LocationElementDAO>()).ToList();
+
+            foreach (var location in locations)
+            {
+                location.Elements = elements.Where(e => e.LocationId == location.ID).ToList();
+            }
+
+            return from l in locations select l.ToLocation();
         }
     }
 }

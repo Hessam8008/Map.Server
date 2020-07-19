@@ -123,7 +123,8 @@ namespace Map.DataAccess.DAO
                 Altitude = Altitude,
                 Angle = Angle,
                 Satellites = Satellites,
-                Speed = Speed
+                Speed = Speed,
+                Elements = (from e in Elements select e.ToLocationElement()).ToList()
             };
         }
 
