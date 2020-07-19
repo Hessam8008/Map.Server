@@ -36,7 +36,6 @@ namespace Map.Server
             };
             await uow.DeviceRepository.SyncAsync(device).ConfigureAwait(false);
             uow.Commit();
-            //Console.WriteLine($"BB: ApprovedIMEIAsync {imei}");
             return true;
         }
 
@@ -50,12 +49,9 @@ namespace Map.Server
             }
             foreach (var location in locations)
             {
-                location.Device = device;
-                var locationId = await db.LocationRepository.InsertAsync(location).ConfigureAwait(false);
+                var locationId = await db.LocationRepository.InsertAsync(device.ID, location).ConfigureAwait(false);
             }
             db.Commit();
-            //Console.WriteLine($"BB: AcceptedLocationsAsync {imei}, count: {locations.Count}");
-
             return true;
         }
     }

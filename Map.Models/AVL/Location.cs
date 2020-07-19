@@ -17,7 +17,7 @@ namespace Map.Models.AVL
     /// </summary>
     public class Location
     {
-        public Device Device { get; set; }
+        //public Device Device { get; set; }
         /// <summary>
         /// Gets or sets the Time.
         /// </summary>

@@ -36,10 +36,11 @@ namespace Map.DataAccess.DAO
         /// <summary>
         /// Initializes a new instance of the <see cref="LocationDAO"/> class.
         /// </summary>
+        /// <param name="deviceId">Device ID</param>
         /// <param name="location">
         /// The location.
         /// </param>
-        public LocationDAO(Location location)
+        public LocationDAO(int deviceId, Location location)
         {
             this.Timestamp = location.Time;
             this.Longitude = location.Longitude;
@@ -48,7 +49,7 @@ namespace Map.DataAccess.DAO
             this.Angle = location.Angle;
             this.Satellites = location.Satellites;
             this.Speed = location.Speed;
-            this.DeviceId = location.Device.ID;
+            this.DeviceId = deviceId;
             this.Elements = (from e in location.Elements select new LocationElementDAO(e)).ToList();
         }
 

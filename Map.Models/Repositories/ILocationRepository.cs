@@ -8,7 +8,7 @@ namespace Map.Models.Repositories
 {
     public interface ILocationRepository
     {
-        public Task<int> InsertAsync(Location location);
+        public Task<int> InsertAsync(int deviceId, Location location);
 
         public Task<IEnumerable<Location>> GetByDeviceAsync(int deviceId, DateTime from, DateTime to);
 

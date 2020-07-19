@@ -44,12 +44,12 @@ namespace Map.DataAccess.Repositories
         {
         }
 
-        public async Task<int> InsertAsync(Location location)
+        public async Task<int> InsertAsync(int deviceId, Location location)
         {
             const string proc1 = "[gps].[stpLocation_Insert]";
             const string proc2 = "[gps].[stpLocationElement_Insert]";
 
-            var dao = new LocationDAO(location);
+            var dao = new LocationDAO(deviceId, location);
             var param1 = dao.DynamicParameters();
             await this.ExecuteAsync(proc1, param1);
             dao.ID = param1.Get<int>("ID");
