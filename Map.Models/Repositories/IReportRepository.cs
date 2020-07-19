@@ -10,6 +10,6 @@ namespace Map.Models.Repositories
     {
         public Task<IEnumerable<Point>> GetLastLocationsAsync(List<int> devices);
 
-        public Task<IEnumerable<AvlPackage>> GetPathAsync(List<int> devices);
+        public Task<IEnumerable<AvlPackage>> GetPathAsync(List<int> devices, DateTime from, DateTime to);
     }
 }

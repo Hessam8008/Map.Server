@@ -9,5 +9,6 @@ namespace Map.Models
     {
         public IDeviceRepository DeviceRepository { get; }
         public ILocationRepository LocationRepository { get; }
+        public IReportRepository ReportRepository { get; }
     }
 }

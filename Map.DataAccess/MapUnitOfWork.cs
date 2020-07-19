@@ -54,6 +54,7 @@ namespace Map.DataAccess
         /// </summary>
         private IDeviceRepository deviceRepo;
         private ILocationRepository locationRepo;
+        private IReportRepository reportRepo;
 
 
         /// <summary>
@@ -127,6 +128,7 @@ namespace Map.DataAccess
         /// <value>The device repository.</value>
         public IDeviceRepository DeviceRepository => this.deviceRepo ??= new DeviceRepo(this.transaction);
         public ILocationRepository LocationRepository => this.locationRepo ??= new LocationRepo(this.transaction);
+        public IReportRepository ReportRepository => this.reportRepo ??= new ReportRepo(this.transaction);
 
         #region ►| IDisposable |◄
 
