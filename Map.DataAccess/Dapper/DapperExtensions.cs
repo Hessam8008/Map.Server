@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Reflection;
@@ -9,6 +10,47 @@ namespace Map.DataAccess.Dapper
 {
     public static class DapperExtensions
     {
+
+        public static DataTable ToDataTable(this List<int> iList)
+        {
+            var dataTable = new DataTable();
+            dataTable.Columns.Add("ID", typeof(int));
+            
+            foreach (var i in iList)
+            {
+                dataTable.Rows.Add(i);
+            }
+            return dataTable;
+        }
+
+        public static DataTable ToDataTable<T>(this List<T> iList)
+        {
+            var dataTable = new DataTable();
+            var propertyDescriptorCollection =
+                TypeDescriptor.GetProperties(typeof(T));
+            for (var i = 0; i < propertyDescriptorCollection.Count; i++)
+            {
+                var propertyDescriptor = propertyDescriptorCollection[i];
+                var type = propertyDescriptor.PropertyType;
+
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    type = Nullable.GetUnderlyingType(type);
+
+
+                dataTable.Columns.Add(propertyDescriptor.Name, type);
+            }
+            var values = new object[propertyDescriptorCollection.Count];
+            foreach (var iListItem in iList)
+            {
+                for (var i = 0; i < values.Length; i++)
+                {
+                    values[i] = propertyDescriptorCollection[i].GetValue(iListItem);
+                }
+                dataTable.Rows.Add(values);
+            }
+            return dataTable;
+        }
+
         /// <summary>
         /// This extension converts an enumerable set to a Dapper TVP
         /// </summary>

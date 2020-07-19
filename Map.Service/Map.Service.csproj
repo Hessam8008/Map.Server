@@ -6,6 +6,10 @@
 		<NoWarn>$(NoWarn);1591</NoWarn>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <Optimize>false</Optimize>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
 	</ItemGroup>

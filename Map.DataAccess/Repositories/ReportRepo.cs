@@ -40,28 +40,41 @@ namespace Map.DataAccess.Repositories
         /// <param name="transaction">The transaction.</param>
         public ReportRepo(IDbTransaction transaction)
             : base(transaction)
-        {
-        }
-
-
+        { }
+        
         public async Task<IEnumerable<Point>> GetLastLocationsAsync(List<int> devices)
         {
             const string proc = "[gps].[stpReport_GetLastLocations]";
-            var reader = await QueryMultipleAsync(proc, new { deviceList = devices.ToArray()});
+            var reader = await QueryMultipleAsync(proc, new { deviceList = devices.ToDataTable() });
             var deviceList = (await reader.ReadAsync<DeviceDAO>()).ToList();
             var locationList = (await reader.ReadAsync<LocationDAO>()).ToList();
+            var elementList = (await reader.ReadAsync<LocationElementDAO>()).ToList();
 
-            return deviceList.Select(device => new Point
+            var result = new List<Point>();
+            foreach (var daoDevice in deviceList)
             {
-                Device = device.ToDevice(),
-                Location = locationList.FirstOrDefault(l => l.DeviceId == device.ID)?.ToLocation()
-            });
+                var p = new Point { Device = daoDevice.ToDevice() };
+
+                var daoLocation = locationList.FirstOrDefault(x => x.DeviceId == daoDevice.ID);
+                if (daoLocation != null)
+                {
+                    var daoElements = elementList.Where(x => x.LocationId == daoLocation.ID).ToList();
+                    
+                    p.Location = daoLocation.ToLocation();
+                    p.Location.Elements = (from x in daoElements select x.ToLocationElement()).ToList();
+                }
+
+                result.Add(p);
+            }
+
+            return result;
+
         }
 
         public async Task<IEnumerable<AvlPackage>> GetPathAsync(List<int> devices, DateTime from, DateTime to)
         {
             const string proc = "[gps].[stpReport_GetPath]";
-            var reader = await QueryMultipleAsync(proc, new { deviceList = devices.ToArray() });
+            var reader = await QueryMultipleAsync(proc, new { deviceList = devices.ToDataTable(), from, to });
             var deviceList = (await reader.ReadAsync<DeviceDAO>()).ToList();
             var locationList = (await reader.ReadAsync<LocationDAO>()).ToList();
 
@@ -69,7 +82,7 @@ namespace Map.DataAccess.Repositories
             {
                 Device = device.ToDevice(),
                 Locations = (from location in locationList.Where(l => l.DeviceId == device.ID)
-                        select location.ToLocation())
+                             select location.ToLocation())
                     .ToList()
             });
         }

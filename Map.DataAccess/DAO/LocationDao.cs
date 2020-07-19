@@ -31,6 +31,7 @@ namespace Map.DataAccess.DAO
         /// </summary>
         public LocationDAO()
         {
+            Elements = new List<LocationElementDAO>();
         }
 
         /// <summary>
@@ -125,7 +126,7 @@ namespace Map.DataAccess.DAO
                 Angle = Angle,
                 Satellites = Satellites,
                 Speed = Speed,
-                Elements = (from e in Elements select e.ToLocationElement()).ToList()
+                Elements = (from e in Elements select e.ToLocationElement())?.ToList()
             };
         }
 
