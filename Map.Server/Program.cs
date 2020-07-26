@@ -13,6 +13,9 @@
 // ***********************************************************************
 
 
+using System.Collections.Concurrent;
+using Map.DataAccess;
+using Map.Models.AVL;
 
 namespace Map.Server
 {
@@ -33,6 +36,9 @@ namespace Map.Server
     /// </summary>
     public class Program
     {
+        private static readonly ConcurrentDictionary<string, DeviceCache> cache = new ConcurrentDictionary<string, DeviceCache>();
+
+
         /// <summary>
         /// The main method.
         /// </summary>
@@ -95,10 +101,8 @@ namespace Map.Server
                     Log("Waiting....");
                     var client = await listener.AcceptTcpClientAsync().ConfigureAwait(false);
                     Log($"New client: {client.GetHashCode()}");
-                    //var t = new Thread(HandleClient);
-                    //t.Start(client);
-                    var t = new Task(async () => { await HandleClient(client); });
-                    t.Start();
+                    //var t = new Task(async () => { await HandleClient(client); });
+                    //t.Start();
                 }
                 catch (Exception ex)
                 {
@@ -108,86 +112,86 @@ namespace Map.Server
             }
         }
         
-        private static async Task HandleClient(object obj)
-        {
-            Log($"Handling {obj.GetHashCode()}...");
-            var imei = "";
-            var client = (TcpClient)obj;
+        //private static async Task HandleClient(object obj)
+        //{
+        //    Log($"Handling {obj.GetHashCode()}...");
+        //    var imei = "";
+        //    var client = (TcpClient)obj;
 
-            try
-            {
-                var bytes = new byte[2048];
-                var stream = client.GetStream();
+        //    try
+        //    {
+        //        var bytes = new byte[2048];
+        //        var stream = client.GetStream();
 
-                /*
-                 * →│ PHASE 01 │←
-                 */
-                var counter = await stream.ReadAsync(bytes, 0, bytes.Length);//.ConfigureAwait(false);
+        //        /*
+        //         * →│ PHASE 01 │←
+        //         */
+        //        var counter = await stream.ReadAsync(bytes, 0, bytes.Length);//.ConfigureAwait(false);
 
-                // Socket disconnected
-                if (counter == 0)
-                {
-                    return;
-                }
+        //        // Socket disconnected
+        //        if (counter == 0)
+        //        {
+        //            return;
+        //        }
 
-                /* First 2 bytes are IMEI length + next 15 bytes are IMEI  == 17 bytes
-                    Sample: 000F333536333037303432343431303133 (HEX)
-                 */
-                if (counter != 17)
-                {
-                    Log("Invalid IMEI format to open communication.");
-                    return;
-                }
+        //        /* First 2 bytes are IMEI length + next 15 bytes are IMEI  == 17 bytes
+        //            Sample: 000F333536333037303432343431303133 (HEX)
+        //         */
+        //        if (counter != 17)
+        //        {
+        //            Log("Invalid IMEI format to open communication.");
+        //            return;
+        //        }
 
-                var hexImeiLen = BitConverter.ToString(bytes, 0, 2).Replace("-", string.Empty);
-                var imeiLen = int.Parse(hexImeiLen, NumberStyles.HexNumber);
+        //        var hexImeiLen = BitConverter.ToString(bytes, 0, 2).Replace("-", string.Empty);
+        //        var imeiLen = int.Parse(hexImeiLen, NumberStyles.HexNumber);
 
-                /* Validate IMEI length has received by GPS */
-                if (imeiLen != 15)
-                {
-                    Log($"Invalid IMEI length. IMEI must be 15 but it is {imeiLen}.");
-                    return;
-                }
+        //        /* Validate IMEI length has received by GPS */
+        //        if (imeiLen != 15)
+        //        {
+        //            Log($"Invalid IMEI length. IMEI must be 15 but it is {imeiLen}.");
+        //            return;
+        //        }
 
-                /* Decode IMEI */
-                imei = Encoding.ASCII.GetString(bytes, 2, 15);
+        //        /* Decode IMEI */
+        //        imei = Encoding.ASCII.GetString(bytes, 2, 15);
 
-                var connectedArg = new ClientConnectedArgs(imei);
+        //        var connectedArg = new ClientConnectedArgs(imei);
 
-                Log($"Connected {imei}");
+        //        Log($"Connected {imei}");
 
-                /* Reply acknowledge byte (01 = accept, 00 = reject) */
-                await stream.WriteAsync(BitConverter.GetBytes(1));
+        //        /* Reply acknowledge byte (01 = accept, 00 = reject) */
+        //        await stream.WriteAsync(BitConverter.GetBytes(1));
 
-                await NotifierService.BroadcastIMEI(imei).ConfigureAwait(false);
+        //        await NotifierService.BroadcastIMEI(imei).ConfigureAwait(false);
 
-                /*
-                 *  →│ PHASE 02 │←
-                 */
-                var parser = new FmxParserCodec8();
-                while ((counter = await stream.ReadAsync(bytes, 0, bytes.Length)) != 0)
-                {
-                    var hexData = BitConverter.ToString(bytes, 0, counter).Replace("-", string.Empty);
-                    var data = parser.Parse(hexData);
-                    Log($"Data received from {imei}: {data.NumberOfData2} records. First: {data.Locations.First().Timestamp} ");
+        //        /*
+        //         *  →│ PHASE 02 │←
+        //         */
+        //        var parser = new FmxParserCodec8();
+        //        while ((counter = await stream.ReadAsync(bytes, 0, bytes.Length)) != 0)
+        //        {
+        //            var hexData = BitConverter.ToString(bytes, 0, counter).Replace("-", string.Empty);
+        //            var data = parser.Parse(hexData);
+        //            Log($"Data received from {imei}: {data.NumberOfData2} records. First: {data.Locations.First().Timestamp} ");
 
-                    await NotifierService.BroadcastPacket(new ClientPacketReceivedArgs(imei, data.ToAvlLocation()));
+        //            await NotifierService.BroadcastPacket(new ClientPacketReceivedArgs(imei, data.ToAvlLocation()));
 
-                    await stream.WriteAsync(BitConverter.GetBytes((int)data.NumberOfData1));
-                }
-            }
-            catch (Exception ex)
-            {
-                Log($"Error: IMEI = {imei}, {ex.Message}");
-            }
-            finally
-            {
-                client?.Close();
-                client?.Dispose();
-                Log($"Disconnected {imei}.");
-            }
+        //            await stream.WriteAsync(BitConverter.GetBytes((int)data.NumberOfData1));
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log($"Error: IMEI = {imei}, {ex.Message}");
+        //    }
+        //    finally
+        //    {
+        //        client?.Close();
+        //        client?.Dispose();
+        //        Log($"Disconnected {imei}.");
+        //    }
 
-        }
+        //}
 
         #endregion
 
@@ -252,6 +256,45 @@ namespace Map.Server
             try
             {
                 Log(e.ToString(), ConsoleColor.Green);
+
+
+                if (e.Locations.Count == 0)
+                {
+                    return;
+                }
+
+                cache.TryGetValue(e.IMEI, out var dc);
+                if (dc == null)
+                {
+                    dc = new DeviceCache();
+                    using var uow = new MapUnitOfWork(new DatabaseSettings());
+                    dc.Device = await uow.DeviceRepository.GetByIMEIAsync(e.IMEI);
+                    cache.TryAdd(e.IMEI, dc);
+                }
+
+                var last = e.Locations.OrderBy(a=>a.Time).Last();
+                if (dc.LastLocation == null)
+                {
+                    dc.LastLocation = last;
+                    dc.LastStatus = last;
+                    await NotifierService.BroadcastLastLocation(e.IMEI, last);
+                    
+                }
+                else if (last.Time >= dc.LastLocation.Time)
+                {
+                    if (last.Latitude > 0 && last.Longitude > 0)
+                    {
+                        dc.LastLocation = last;
+                        dc.LastStatus = last;
+                        await NotifierService.BroadcastLastLocation(e.IMEI, last);
+                    }
+                    else
+                    {
+                        dc.LastStatus = last;
+                        await NotifierService.BroadcastLastStatus(e.IMEI, last);
+                    }
+                }
+
                 await NotifierService.BroadcastPacket(e);
             }
             catch (Exception ex)
@@ -264,4 +307,15 @@ namespace Map.Server
 
 
     }
+
+    internal class DeviceCache
+    {
+        public Device Device { get; set; }
+
+        public Location LastLocation { get; set; }
+
+        public Location LastStatus { get; set; }
+    }
+
+
 }

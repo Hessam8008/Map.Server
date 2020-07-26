@@ -15,7 +15,7 @@ namespace Map.Models.AVL
     /// <summary>
     /// The Location of the device.
     /// </summary>
-    public class Location
+    public class Location 
     {
         //public Device Device { get; set; }
         /// <summary>

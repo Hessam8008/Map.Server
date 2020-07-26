@@ -52,8 +52,7 @@ namespace Map.Modules.Teltonika.Host
             this.blackBox = blackBox;
             this.dbSettings = dbSettings;
         }
-
-
+        
         /// <summary>
         /// The Start.
         /// </summary>
@@ -67,7 +66,6 @@ namespace Map.Modules.Teltonika.Host
             var mainThread = new Task(async () => await Listening(ip, port));
             mainThread.Start();
         }
-
 
         private async Task Listening(string ip, int port)
         {

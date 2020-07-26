@@ -12,7 +12,7 @@
 
             List<IMessage<IEntity>> list = new List<IMessage<IEntity>>
             {
-                new IMEIMessage(), new TcpPacketMessage()
+                new IMEIMessage(), new TcpPacketMessage(), new LastLocationMessage(), new StatusMessage()
             };
 
             var result = list.Find(x=>x.CanParse(message));

@@ -13,8 +13,6 @@
         public string IMEI { get; set; }
 
         public List<Location> Locations { get; set; }
-
-        public bool Accepted { get; set; } = false;
     }
 
 

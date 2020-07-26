@@ -1,5 +1,6 @@
 ﻿
 using Map.Models.Args;
+using Map.Models.AVL;
 
 namespace Map.Server
 {
@@ -97,6 +98,26 @@ namespace Map.Server
             await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
         }
 
+        public static async Task BroadcastLastLocation(string imei, Location location)
+        {
+            var obj = new
+            {
+                TYPE = "LAST_LOCATION",
+                TIME = DateTime.UtcNow,
+                OBJ = new {imei, Location = location}.ToJson()
+            };
+            await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
+        }
+        public static async Task BroadcastLastStatus(string imei, Location location)
+        {
+            var obj = new
+            {
+                TYPE = "LAST_STATUS",
+                TIME = DateTime.UtcNow,
+                OBJ = new {imei, Location = location}.ToJson()
+            };
+            await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
+        }
         /// <summary>
         /// The ToJson.
         /// </summary>

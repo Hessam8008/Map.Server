@@ -14,7 +14,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Models\**" />
+    <EmbeddedResource Remove="Models\**" />
+    <None Remove="Models\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Client.cs" />
+    <Compile Remove="FmxParserCodec8.cs" />
+    <Compile Remove="HexCrawler.cs" />
     <Compile Remove="MyServer_bak.cs" />
   </ItemGroup>
 

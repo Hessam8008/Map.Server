@@ -1,4 +1,6 @@
-﻿namespace Map.Client.Services
+﻿using Map.Models.AVL;
+
+namespace Map.Client.Services
 {
     using System;
 
