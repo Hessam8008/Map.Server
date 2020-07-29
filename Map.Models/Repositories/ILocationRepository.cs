@@ -40,6 +40,5 @@ namespace Map.Models.Repositories
         /// <param name="to">To time.</param>
         /// <returns>Task of IEnumerable Location.</returns>
         public Task<IEnumerable<Location>> GetByDeviceAsync(int deviceId, DateTime from, DateTime to);
-
     }
 }
