@@ -1,50 +1,41 @@
 ﻿// ***********************************************************************
-// Assembly         : GpsServer
+// Assembly         : Map.Server
 // Author           : U12178
-// Created          : 05-19-2020
+// Created          : 07-28-2020
 //
 // Last Modified By : U12178
-// Last Modified On : 06-15-2020
+// Last Modified On : 07-29-2020
 // ***********************************************************************
 // <copyright file="Program.cs" company="Golriz">
-//     Copyright (c) . All rights reserved.
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-
-using System.Collections.Concurrent;
-using Map.DataAccess;
-using Map.Models.AVL;
-
 namespace Map.Server
 {
-
+    using System;
+    using System.Collections.Concurrent;
     using System.Linq;
     using System.Net;
-    using System.Net.Sockets;
-    using System.Threading.Tasks;
+
+    using Map.DataAccess;
     using Map.Models;
     using Map.Models.Args;
-    using System;
-    using System.Globalization;
-    using System.Text;
-    using System.Threading;
 
     /// <summary>
     /// The program.
     /// </summary>
     public class Program
     {
-        private static readonly ConcurrentDictionary<string, DeviceCache> cache = new ConcurrentDictionary<string, DeviceCache>();
-
-
+        /// <summary>
+        /// The cache
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, DeviceCache> Cache = new ConcurrentDictionary<string, DeviceCache>();
+        
         /// <summary>
         /// The main method.
         /// </summary>
-        /// <param name="args">
-        /// The args<see cref="string"/>.
-        /// </param>
+        /// <param name="args">The args<see cref="string" />.</param>
         public static void Main(string[] args)
         {
             ObjectiveMain();
@@ -53,12 +44,8 @@ namespace Map.Server
         /// <summary>
         /// Log the text.
         /// </summary>
-        /// <param name="text">
-        /// The text.
-        /// </param>
-        /// <param name="color">
-        /// The color.
-        /// </param>
+        /// <param name="text">The text.</param>
+        /// <param name="color">The color.</param>
         private static void Log(string text, ConsoleColor color = ConsoleColor.Gray)
         {
             var tempColor = Console.ForegroundColor;
@@ -67,139 +54,11 @@ namespace Map.Server
             Console.ForegroundColor = tempColor;
         }
 
-        #region Simple
-
-        public static void simpleMain()
-        {
-            try
-            {
-                new Thread(async () =>
-                {
-                    await Listening(IPAddress.Any.ToString(), 3343).ConfigureAwait(false);
-                }).Start();
-
-                Console.WriteLine("Press any key to close...");
-                Console.ReadKey();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-
-        }
-        
-        private static async Task Listening(string ip, int port)
-        {
-            var listener = new TcpListener(IPAddress.Parse(ip), port);
-            listener.Start();
-            Log("Server started...");
-
-            while (true)
-            {
-                try
-                {
-                    Log("Waiting....");
-                    var client = await listener.AcceptTcpClientAsync().ConfigureAwait(false);
-                    Log($"New client: {client.GetHashCode()}");
-                    //var t = new Task(async () => { await HandleClient(client); });
-                    //t.Start();
-                }
-                catch (Exception ex)
-                {
-                    Log(ex.Message, ConsoleColor.Red);
-                    break;
-                }
-            }
-        }
-        
-        //private static async Task HandleClient(object obj)
-        //{
-        //    Log($"Handling {obj.GetHashCode()}...");
-        //    var imei = "";
-        //    var client = (TcpClient)obj;
-
-        //    try
-        //    {
-        //        var bytes = new byte[2048];
-        //        var stream = client.GetStream();
-
-        //        /*
-        //         * →│ PHASE 01 │←
-        //         */
-        //        var counter = await stream.ReadAsync(bytes, 0, bytes.Length);//.ConfigureAwait(false);
-
-        //        // Socket disconnected
-        //        if (counter == 0)
-        //        {
-        //            return;
-        //        }
-
-        //        /* First 2 bytes are IMEI length + next 15 bytes are IMEI  == 17 bytes
-        //            Sample: 000F333536333037303432343431303133 (HEX)
-        //         */
-        //        if (counter != 17)
-        //        {
-        //            Log("Invalid IMEI format to open communication.");
-        //            return;
-        //        }
-
-        //        var hexImeiLen = BitConverter.ToString(bytes, 0, 2).Replace("-", string.Empty);
-        //        var imeiLen = int.Parse(hexImeiLen, NumberStyles.HexNumber);
-
-        //        /* Validate IMEI length has received by GPS */
-        //        if (imeiLen != 15)
-        //        {
-        //            Log($"Invalid IMEI length. IMEI must be 15 but it is {imeiLen}.");
-        //            return;
-        //        }
-
-        //        /* Decode IMEI */
-        //        imei = Encoding.ASCII.GetString(bytes, 2, 15);
-
-        //        var connectedArg = new ClientConnectedArgs(imei);
-
-        //        Log($"Connected {imei}");
-
-        //        /* Reply acknowledge byte (01 = accept, 00 = reject) */
-        //        await stream.WriteAsync(BitConverter.GetBytes(1));
-
-        //        await NotifierService.BroadcastIMEI(imei).ConfigureAwait(false);
-
-        //        /*
-        //         *  →│ PHASE 02 │←
-        //         */
-        //        var parser = new FmxParserCodec8();
-        //        while ((counter = await stream.ReadAsync(bytes, 0, bytes.Length)) != 0)
-        //        {
-        //            var hexData = BitConverter.ToString(bytes, 0, counter).Replace("-", string.Empty);
-        //            var data = parser.Parse(hexData);
-        //            Log($"Data received from {imei}: {data.NumberOfData2} records. First: {data.Locations.First().Timestamp} ");
-
-        //            await NotifierService.BroadcastPacket(new ClientPacketReceivedArgs(imei, data.ToAvlLocation()));
-
-        //            await stream.WriteAsync(BitConverter.GetBytes((int)data.NumberOfData1));
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Log($"Error: IMEI = {imei}, {ex.Message}");
-        //    }
-        //    finally
-        //    {
-        //        client?.Close();
-        //        client?.Dispose();
-        //        Log($"Disconnected {imei}.");
-        //    }
-
-        //}
-
-        #endregion
-
-        #region Objective
-
+        /// <summary>
+        /// Objectives the main.
+        /// </summary>
         private static void ObjectiveMain()
         {
-
             try
             {
                 var c = new DatabaseSettings();
@@ -231,11 +90,21 @@ namespace Map.Server
             Console.ReadKey();
         }
 
+        /// <summary>
+        /// Servers the logged.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
         private static void Server_Logged(object sender, LoggedArgs e)
         {
             Log($"LOG: {e.Message}");
         }
 
+        /// <summary>
+        /// Clients the connected.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
         private static async void ClientConnected(object sender, ClientConnectedArgs e)
         {
             var message = $"{e.IMEI} Connected.";
@@ -250,35 +119,42 @@ namespace Map.Server
 
             Log(message, ConsoleColor.Green);
         }
-        
+
+        /// <summary>
+        /// Clients the packet received.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The e.</param>
         private static async void ClientPacketReceived(object sender, ClientPacketReceivedArgs e)
         {
             try
             {
                 Log(e.ToString(), ConsoleColor.Green);
 
-
                 if (e.Locations.Count == 0)
                 {
                     return;
                 }
 
-                cache.TryGetValue(e.IMEI, out var dc);
+                Cache.TryGetValue(e.IMEI, out var dc);
                 if (dc == null)
                 {
                     dc = new DeviceCache();
-                    using var uow = new MapUnitOfWork(new DatabaseSettings());
-                    dc.Device = await uow.DeviceRepository.GetByIMEIAsync(e.IMEI);
-                    cache.TryAdd(e.IMEI, dc);
+                    MapUnitOfWork uow;
+                    using (uow = new MapUnitOfWork(new DatabaseSettings()))
+                    {
+                        dc.Device = await uow.DeviceRepository.GetByIMEIAsync(e.IMEI);
+                    }
+
+                    Cache.TryAdd(e.IMEI, dc);
                 }
 
-                var last = e.Locations.OrderBy(a=>a.Time).Last();
+                var last = e.Locations.OrderBy(a => a.Time).Last();
                 if (dc.LastLocation == null)
                 {
                     dc.LastLocation = last;
                     dc.LastStatus = last;
                     await NotifierService.BroadcastLastLocation(e.IMEI, last);
-                    
                 }
                 else if (last.Time >= dc.LastLocation.Time)
                 {
@@ -301,21 +177,6 @@ namespace Map.Server
             {
                 Log(ex.Message, ConsoleColor.Red);
             }
-
         }
-        #endregion
-
-
     }
-
-    internal class DeviceCache
-    {
-        public Device Device { get; set; }
-
-        public Location LastLocation { get; set; }
-
-        public Location LastStatus { get; set; }
-    }
-
-
 }

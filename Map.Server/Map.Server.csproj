@@ -5,8 +5,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Company>Golriz</Company>
     <Authors>Hessam Hosseini</Authors>
-    <Product>Golriz Map</Product>
+    <Product>Map.Server</Product>
     <PackageId>Map.Server</PackageId>
+    <Copyright>Copyright (c) 2020 Golriz,Inc. All rights reserved.</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

@@ -1,57 +1,107 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Map.DataAccess;
-using Map.Models;
-using Map.Models.AVL;
-using Map.Modules.Teltonika;
-
+﻿// ***********************************************************************
+// Assembly         : Map.Server
+// Author           : U12178
+// Created          : 07-28-2020
+//
+// Last Modified By : U12178
+// Last Modified On : 07-29-2020
+// ***********************************************************************
+// <copyright file="TeltonikaBlackBox.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
 namespace Map.Server
 {
-    class TeltonikaBlackBox : IBlackBox
-    {
-        public IDatabaseSettings dbSettings { get; }
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
 
+    using Map.DataAccess;
+    using Map.Models;
+    using Map.Models.AVL;
+    using Map.Modules.Teltonika;
+
+    /// <summary>
+    /// Class Teltonika Black Box.
+    /// Implements the <see cref="IBlackBox" />
+    /// </summary>
+    /// <seealso cref="IBlackBox" />
+    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed. Suppression is OK here.")]
+    internal class TeltonikaBlackBox : IBlackBox
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TeltonikaBlackBox"/> class.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
         public TeltonikaBlackBox(IDatabaseSettings settings)
         {
-            dbSettings = settings;
+            this.DatabaseSettings = settings;
         }
 
+        /// <summary>
+        /// Gets the database settings.
+        /// </summary>
+        /// <value>The database settings.</value>
+        public IDatabaseSettings DatabaseSettings { get; }
+
+        /// <summary>
+        /// approved IMEI as an asynchronous operation.
+        /// </summary>
+        /// <param name="imei">The IMEI.</param>
+        /// <returns>The task of boolean.</returns>
         public async Task<bool> ApprovedIMEIAsync(string imei)
         {
-            using var uow = new MapUnitOfWork(dbSettings);
-            var device = await uow.DeviceRepository.GetByIMEIAsync(imei).ConfigureAwait(false);
-            if (device != null)
-                return true;
-
-            device = new Device
+            MapUnitOfWork uow;
+            using (uow = new MapUnitOfWork(this.DatabaseSettings))
             {
-                IMEI = imei,
-                Model = "N/A",
-                SimNumber = "0000000000",
-                OwnerMobileNumber = "0000000000",
-                Nickname = "N/A",
-                SN = "N/A"
-            };
-            await uow.DeviceRepository.SyncAsync(device).ConfigureAwait(false);
-            uow.Commit();
+                var device = await uow.DeviceRepository.GetByIMEIAsync(imei).ConfigureAwait(false);
+                if (device != null)
+                {
+                    return true;
+                }
+
+                device = new Device
+                             {
+                                 IMEI = imei,
+                                 Model = "N/A",
+                                 SimNumber = "0000000000",
+                                 OwnerMobileNumber = "0000000000",
+                                 Nickname = "N/A",
+                                 SN = "N/A"
+                             };
+                await uow.DeviceRepository.SyncAsync(device).ConfigureAwait(false);
+                uow.Commit();
+            }
+
             return true;
         }
 
+        /// <summary>
+        /// accepted locations asynchronously.
+        /// </summary>
+        /// <param name="imei">The IMEI.</param>
+        /// <param name="locations">The locations.</param>
+        /// <returns>The task of boolean.</returns>
         public async Task<bool> AcceptedLocationsAsync(string imei, List<Location> locations)
         {
-            using var db = new MapUnitOfWork(dbSettings);
-            var device = await db.DeviceRepository.GetByIMEIAsync(imei).ConfigureAwait(false);
-            if (device == null)
+            MapUnitOfWork db;
+            using (db = new MapUnitOfWork(this.DatabaseSettings))
             {
-                return false;
+                var device = await db.DeviceRepository.GetByIMEIAsync(imei).ConfigureAwait(false);
+                if (device == null)
+                {
+                    return false;
+                }
+
+                foreach (var location in locations)
+                {
+                    var locationId = await db.LocationRepository.InsertAsync(device.ID, location).ConfigureAwait(false);
+                }
+
+                db.Commit();
             }
-            foreach (var location in locations)
-            {
-                var locationId = await db.LocationRepository.InsertAsync(device.ID, location).ConfigureAwait(false);
-            }
-            db.Commit();
+
             return true;
         }
     }

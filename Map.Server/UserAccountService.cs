@@ -1,13 +1,13 @@
 ﻿// ***********************************************************************
-// Assembly         : GpsServer
+// Assembly         : Map.Server
 // Author           : U12178
-// Created          : 06-15-2020
+// Created          : 07-28-2020
 //
 // Last Modified By : U12178
-// Last Modified On : 05-20-2020
+// Last Modified On : 07-29-2020
 // ***********************************************************************
-// <copyright file="UAC.cs" company="Golriz">
-//     Copyright (c) . All rights reserved.
+// <copyright file="UserAccountService.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
@@ -26,19 +26,19 @@ namespace Map.Server
     public class UserAccountService
     {
         /// <summary>
+        /// The User Account Service.
+        /// </summary>
+        private readonly IUacService uac;
+
+        /// <summary>
         /// The token
         /// </summary>
         private string token = "NO_TOKEN";
 
         /// <summary>
-        /// The uac
+        /// Initializes a new instance of the <see cref="UserAccountService" /> class.
         /// </summary>
-        private readonly IUacService uac;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UserAccountService"/> class.
-        /// </summary>
-        /// <param name="uacService">The uac service.</param>
+        /// <param name="uacService">The User Account Service.</param>
         public UserAccountService(IUacService uacService)
         {
             this.uac = uacService;
@@ -47,10 +47,10 @@ namespace Map.Server
         /// <summary>
         /// Gets the token.
         /// </summary>
-        /// <returns>Task&lt;System.String&gt;.</returns>
+        /// <returns>Task of string.</returns>
         public async Task<string> GetToken()
         {
-            var isValidToken = false;
+            bool isValidToken;
             try
             {
                 isValidToken = await this.uac.UserSessionService.ValidateToken(this.token).ConfigureAwait(false);
@@ -61,11 +61,13 @@ namespace Map.Server
                 isValidToken = false;
             }
 
-            if (!isValidToken)
+            if (isValidToken)
             {
-                var login = await this.uac.UserAccountService.LoginAsync(new LoginUserArg { Username = "hessam", Password = "3592", Platform = PlatformType.Windows }).ConfigureAwait(false);
-                this.token = login.Token;
+                return this.token;
             }
+
+            var login = await this.uac.UserAccountService.LoginAsync(new LoginUserArg { Username = "hessam", Password = "3592", Platform = PlatformType.Windows }).ConfigureAwait(false);
+            this.token = login.Token;
 
             return this.token;
         }

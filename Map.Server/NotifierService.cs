@@ -1,11 +1,25 @@
-﻿
-using Map.Models.Args;
-using Map.Models.AVL;
-
+﻿// ***********************************************************************
+// Assembly         : Map.Server
+// Author           : U12178
+// Created          : 07-28-2020
+//
+// Last Modified By : U12178
+// Last Modified On : 07-28-2020
+// ***********************************************************************
+// <copyright file="NotifierService.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
 namespace Map.Server
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
+
+    using Map.Models.Args;
+    using Map.Models.AVL;
+
     using Notifier.EndPoints.Service.Base;
     using Notifier.EndPoints.Service.Notification.Enums;
     using Notifier.EndPoints.Service.Notification.RequestsArg;
@@ -21,20 +35,132 @@ namespace Map.Server
     /// </summary>
     public static class NotifierService
     {
+        /// <summary>
+        /// The notifier service
+        /// </summary>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed. Suppression is OK here.")]
         private static INotifierService notifierService;
+
+        /// <summary>
+        /// The API caller
+        /// </summary>
         private static IApiCaller apiCaller;
+
+        /// <summary>
+        /// The API configuration
+        /// </summary>
         private static IApiConfiguration apiConfiguration;
+
+        /// <summary>
+        /// The UAC service.
+        /// </summary>
         private static UserAccountService uac;
 
         /// <summary>
-        /// The broadcast message.
+        /// The Broadcast IMEI.
         /// </summary>
-        /// <param name="message">
-        /// The message of the notification.
+        /// <param name="imei">
+        /// The IMEI of the device.<see cref="string"/>.
         /// </param>
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
+        public static async Task BroadcastIMEI(string imei)
+        {
+            var obj = new
+            {
+                TYPE = "IMEI",
+                TIME = DateTime.UtcNow,
+                OBJ = imei
+            };
+            await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Broadcast packet asynchronously.
+        /// </summary>
+        /// <param name="arg">
+        /// The argument.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        public static async Task BroadcastPacket(ClientPacketReceivedArgs arg)
+        {
+            var obj = new
+            {
+                TYPE = "PACKET",
+                TIME = DateTime.UtcNow,
+                OBJ = arg.ToJson()
+            };
+            await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Broadcasts the last location.
+        /// </summary>
+        /// <param name="imei">
+        /// The IMEI.
+        /// </param>
+        /// <param name="location">
+        /// The location.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        public static async Task BroadcastLastLocation(string imei, Location location)
+        {
+            var obj = new
+            {
+                TYPE = "LAST_LOCATION",
+                TIME = DateTime.UtcNow,
+                OBJ = new { imei, Location = location }.ToJson()
+            };
+            await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Broadcasts the last status asynchronously.
+        /// </summary>
+        /// <param name="imei">
+        /// The IMEI.
+        /// </param>
+        /// <param name="location">
+        /// The location.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        public static async Task BroadcastLastStatus(string imei, Location location)
+        {
+            var obj = new
+            {
+                TYPE = "LAST_STATUS",
+                TIME = DateTime.UtcNow,
+                OBJ = new { imei, Location = location }.ToJson()
+            };
+            await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Cast objects to JSON format.
+        /// </summary>
+        /// <param name="obj">
+        /// The object.
+        /// </param>
+        /// <returns>
+        /// The <see cref="string"/>.
+        /// </returns>
+        internal static string ToJson(this object obj)
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+        }
+
+        /// <summary>
+        /// The broadcast message.
+        /// </summary>
+        /// <param name="message">The message of the notification.</param>
+        /// <returns>The <see cref="Task" />.</returns>
         private static async Task BroadcastMessage(string message)
         {
             if (notifierService == null)
@@ -66,66 +192,6 @@ namespace Map.Server
             {
                 Console.WriteLine(e);
             }
-        }
-
-        /// <summary>
-        /// The Broadcast IMEI.
-        /// </summary>
-        /// <param name="imei">The IMEI of the device.<see cref="string"/>.</param>
-        public static async Task BroadcastIMEI(string imei)
-        {
-            var obj = new
-            {
-                TYPE = "IMEI",
-                TIME = DateTime.UtcNow,
-                OBJ = imei
-            };
-            await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// The BroadcastPacket.
-        /// </summary>
-        /// <param name="tcp">The tcp<see cref="ClientPacketReceivedArgs"/>.</param>
-        public static async Task BroadcastPacket(ClientPacketReceivedArgs arg)
-        {
-            var obj = new
-            {
-                TYPE = "PACKET",
-                TIME = DateTime.UtcNow,
-                OBJ = arg.ToJson()
-            };
-            await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
-        }
-
-        public static async Task BroadcastLastLocation(string imei, Location location)
-        {
-            var obj = new
-            {
-                TYPE = "LAST_LOCATION",
-                TIME = DateTime.UtcNow,
-                OBJ = new {imei, Location = location}.ToJson()
-            };
-            await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
-        }
-        public static async Task BroadcastLastStatus(string imei, Location location)
-        {
-            var obj = new
-            {
-                TYPE = "LAST_STATUS",
-                TIME = DateTime.UtcNow,
-                OBJ = new {imei, Location = location}.ToJson()
-            };
-            await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
-        }
-        /// <summary>
-        /// The ToJson.
-        /// </summary>
-        /// <param name="obj">The obj<see cref="object"/>.</param>
-        /// <returns>The <see cref="string"/>.</returns>
-        internal static string ToJson(this object obj)
-        {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
         }
     }
 }
