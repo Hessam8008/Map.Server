@@ -1,19 +1,24 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+﻿// ***********************************************************************
+// Assembly         : Map.Modules.Teltonika
+// Author           : U12178
+// Created          : 07-28-2020
+//
+// Last Modified By : U12178
+// Last Modified On : 07-29-2020
+// ***********************************************************************
 // <copyright file="Location.cs" company="Golriz">
-//   Copy-right © 2020
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
-// <summary>
-//   The avl data.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Map.Modules.Teltonika.DataAccess.Dapper;
-
+// <summary></summary>
+// ***********************************************************************
 namespace Map.Modules.Teltonika.Models
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using Map.Modules.Teltonika.DataAccess.Dapper;
+
     /// <summary>
     /// The Location of the device.
     /// </summary>
@@ -31,7 +36,6 @@ namespace Map.Modules.Teltonika.Models
         /// </summary>
         /// <value>The RawData identifier.</value>
         public int RawDataID { get; set; }
-        
 
         /// <summary>
         /// Gets or sets the timestamp.
@@ -42,6 +46,7 @@ namespace Map.Modules.Teltonika.Models
         /// <summary>
         /// Gets or sets the Priority.
         /// </summary>
+        /// <value>The priority.</value>
         public Priority Priority { get; set; }
 
         /// <summary>
@@ -92,22 +97,29 @@ namespace Map.Modules.Teltonika.Models
         /// <value>The total io elements.</value>
         public byte TotalIoElements { get; set; }
 
+        /// <summary>
+        /// Gets or sets the location elements.
+        /// </summary>
+        /// <value>The location elements.</value>
         public List<LocationElement> LocationElements { get; set; }
 
+        /// <summary>
+        /// Converts to AVL location.
+        /// </summary>
+        /// <returns>The <see cref="Map.Models.AVL.Location"/>.</returns>
         public Map.Models.AVL.Location ToAvlLocation()
         {
             return new Map.Models.AVL.Location
             {
-                Altitude = Altitude,
-                Angle = Angle,
-                Elements = (from e in LocationElements select e.ToAvlLocationElement()).ToList(),
-                Latitude = Latitude,
-                Longitude = Longitude,
-                Satellites = Satellites,
-                Speed = Speed,
-                Time = Timestamp
+                Altitude = this.Altitude,
+                Angle = this.Angle,
+                Elements = (from e in this.LocationElements select e.ToAvlLocationElement()).ToList(),
+                Latitude = this.Latitude,
+                Longitude = this.Longitude,
+                Satellites = this.Satellites,
+                Speed = this.Speed,
+                Time = this.Timestamp
             };
         }
-
     }
 }

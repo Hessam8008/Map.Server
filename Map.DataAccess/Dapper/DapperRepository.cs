@@ -1,31 +1,32 @@
 ﻿// ***********************************************************************
 // Assembly         : Map.DataAccess
 // Author           : U12178
-// Created          : 06-18-2020
+// Created          : 07-28-2020
 //
 // Last Modified By : U12178
-// Last Modified On : 06-18-2020
+// Last Modified On : 07-28-2020
 // ***********************************************************************
 // <copyright file="DapperRepository.cs" company="Golriz">
-//     Copyright (c) 2020 . All rights reserved.
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
 
-using System.Collections.Generic;
-using System.Data;
-using System.Threading.Tasks;
-using Dapper;
-
 namespace Map.DataAccess.Dapper
 {
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Threading.Tasks;
+
+    using global::Dapper;
+
     /// <summary>
     /// Class DapperRepository.
     /// </summary>
     public abstract class DapperRepository
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DapperRepository"/> class.
+        /// Initializes a new instance of the <see cref="DapperRepository" /> class.
         /// </summary>
         /// <param name="transaction">The transaction.</param>
         protected DapperRepository(IDbTransaction transaction) => this.Transaction = transaction;

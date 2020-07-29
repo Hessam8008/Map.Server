@@ -4,21 +4,21 @@
 // Created          : 06-18-2020
 //
 // Last Modified By : U12178
-// Last Modified On : 06-18-2020
+// Last Modified On : 07-28-2020
 // ***********************************************************************
-// <copyright file="DeviceRepo.cs" company="Golriz">
+// <copyright file="RawDataRepo.cs" company="Golriz">
 //     Copyright (c) . All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-using System.Data;
-using System.Threading.Tasks;
-using Map.Modules.Teltonika.DataAccess.Dapper;
-using Map.Modules.Teltonika.Models;
-
 namespace Map.Modules.Teltonika.DataAccess.Repositories
 {
+    using System.Data;
+    using System.Threading.Tasks;
+
+    using Map.Modules.Teltonika.DataAccess.Dapper;
+    using Map.Modules.Teltonika.Models;
+
     /// <summary>
     /// Class DeviceRepo.
     /// Implements the <see cref="DapperRepository" />
@@ -27,7 +27,7 @@ namespace Map.Modules.Teltonika.DataAccess.Repositories
     internal class RawDataRepo : DapperRepository
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RawDataRepo"/> class.
+        /// Initializes a new instance of the <see cref="RawDataRepo" /> class.
         /// </summary>
         /// <param name="transaction">The transaction.</param>
         public RawDataRepo(IDbTransaction transaction)
@@ -40,16 +40,19 @@ namespace Map.Modules.Teltonika.DataAccess.Repositories
         /// </summary>
         /// <param name="imei">IMEI of the device.</param>
         /// <param name="primitiveData">Hex string.</param>
-        /// <returns>
-        /// Integer as identity of the record.
-        /// </returns>
+        /// <returns>Integer as identity of the record.</returns>
         public async Task<int> Insert(string imei, string primitiveData)
         {
             var rawData = new RawData(imei, primitiveData);
-            var result = await Insert(rawData);
+            var result = await this.Insert(rawData);
             return result;
         }
 
+        /// <summary>
+        /// Inserts the specified raw data.
+        /// </summary>
+        /// <param name="rawData">The raw data.</param>
+        /// <returns>Returns task of integer.</returns>
         public async Task<int> Insert(RawData rawData)
         {
             var param = rawData.DynamicParameters();

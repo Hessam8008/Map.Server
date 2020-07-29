@@ -1,79 +1,147 @@
 ﻿// ***********************************************************************
-// Assembly         : GPS.Modules.Teltonika
+// Assembly         : Map.Modules.Teltonika
 // Author           : U12178
-// Created          : 06-15-2020
+// Created          : 07-28-2020
 //
 // Last Modified By : U12178
-// Last Modified On : 06-15-2020
+// Last Modified On : 07-29-2020
 // ***********************************************************************
-// <copyright file="Server.cs" company="GPS.Modules.Teltonika">
-//     Copyright (c) . All rights reserved.
+// <copyright file="Server.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-
-using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading.Tasks;
-using Map.Models;
-using Map.Models.Args;
-
 namespace Map.Modules.Teltonika.Host
 {
+    using System;
+    using System.Net;
+    using System.Net.Sockets;
+    using System.Threading.Tasks;
+
+    using Map.Models;
+    using Map.Models.Args;
+
     /// <summary>
     /// Defines the <see cref="Server" />.
     /// </summary>
     public sealed class Server : IServer
     {
-        
-        public event OnServerStarted ServerStarted;
-        public event OnServerStopped ServerStopped;
-        public event OnConnectionAccepted ConnectionAccepted;
-        public event OnClientConnected ClientConnected;
-        public event OnClientPacketReceived ClientPacketReceived;
-        public event OnErrorOccured ErrorOccured;
-        public event OnLogged Logged;
-        public event OnClientDisconnected ClientDisconnected;
-        
+        #region Private varables
+        /// <summary>
+        /// The black box
+        /// </summary>
+        private readonly IBlackBox blackBox;
+
+        /// <summary>
+        /// The database settings
+        /// </summary>
+        private readonly IDatabaseSettings databaseSettings;
+
         /// <summary>
         /// Defines the listener.
         /// </summary>
         private TcpListener listener;
 
-        private bool stopped = false;
+        /// <summary>
+        /// The stopped
+        /// </summary>
+        private bool stopped;
+        #endregion
 
-        private readonly IBlackBox blackBox;
-        private readonly IDatabaseSettings dbSettings;
-
-        public Server(IBlackBox blackBox, IDatabaseSettings dbSettings)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Server" /> class.
+        /// </summary>
+        /// <param name="blackBox">The black box.</param>
+        /// <param name="dataSettings">The database settings.</param>
+        public Server(IBlackBox blackBox, IDatabaseSettings dataSettings)
         {
             this.blackBox = blackBox;
-            this.dbSettings = dbSettings;
+            this.databaseSettings = dataSettings;
         }
-        
+
+        #region Events definition
+        /// <summary>
+        /// The start server.
+        /// </summary>
+        public event OnServerStarted ServerStarted;
+
+        /// <summary>
+        /// The stop server.
+        /// </summary>
+        public event OnServerStopped ServerStopped;
+
+        /// <summary>
+        /// The connection accepted.
+        /// </summary>
+        public event OnConnectionAccepted ConnectionAccepted;
+
+        /// <summary>
+        /// The client authenticated.
+        /// </summary>
+        public event OnClientConnected ClientConnected;
+
+        /// <summary>
+        /// The client packet received.
+        /// </summary>
+        public event OnClientPacketReceived ClientPacketReceived;
+
+        /// <summary>
+        /// The client error.
+        /// </summary>
+        public event OnErrorOccured ErrorOccured;
+
+        /// <summary>
+        /// The log process activities.
+        /// </summary>
+        public event OnLogged Logged;
+
+        /// <summary>
+        /// The client disconnected.
+        /// </summary>
+        public event OnClientDisconnected ClientDisconnected;
+        #endregion
+
         /// <summary>
         /// The Start.
         /// </summary>
         /// <param name="ip">IP for listening.</param>
-        /// <param name="port"> The port for listening. </param>
+        /// <param name="port">The port for listening.</param>
+        /// <exception cref="Exception">Call Stop() before start.</exception>
         public void Start(string ip, int port)
         {
-            if (listener != null)
+            if (this.listener != null)
+            {
                 throw new Exception("Call Stop() before start.");
+            }
 
-            var mainThread = new Task(async () => await Listening(ip, port));
+            var mainThread = new Task(async () => await this.Listening(ip, port));
             mainThread.Start();
         }
 
+        /// <summary>
+        /// The Stop.
+        /// </summary>
+        public void Stop()
+        {
+            this.stopped = true;
+            this.listener?.Stop();
+            this.listener = null;
+            this.ServerStopped?.Invoke(this, new ServerStoppedArgs());
+        }
+
+        /// <summary>
+        /// Listening the specified IP.
+        /// </summary>
+        /// <param name="ip">The IP.</param>
+        /// <param name="port">The port.</param>
+        /// <returns>The <see cref="Task" />.</returns>
         private async Task Listening(string ip, int port)
         {
             this.listener = new TcpListener(IPAddress.Parse(ip), port);
             this.listener.Start();
-            this.ServerStarted?.Invoke(this, new ServerStartedArgs(listener));
+            this.ServerStarted?.Invoke(this, new ServerStartedArgs(this.listener));
 
-            while (!stopped)
+            while (!this.stopped)
             {
                 TcpClient client;
                 try
@@ -85,22 +153,14 @@ namespace Map.Modules.Teltonika.Host
                 }
                 catch (Exception ex)
                 {
-                    if (!stopped)
-                        ErrorOccured?.Invoke(this, new ErrorOccurredArgs(ex));
+                    if (!this.stopped)
+                    {
+                        this.ErrorOccured?.Invoke(this, new ErrorOccurredArgs(ex));
+                    }
+
                     break;
                 }
             }
-        }
-
-        /// <summary>
-        /// The Stop.
-        /// </summary>
-        public void Stop()
-        {
-            stopped = true;
-            this.listener?.Stop();
-            listener = null;
-            this.ServerStopped?.Invoke(this, new ServerStoppedArgs());
         }
 
         /// <summary>
@@ -110,7 +170,7 @@ namespace Map.Modules.Teltonika.Host
         /// <returns>The <see cref="Task" />.</returns>
         private async Task HandleClient(TcpClient tcpClient)
         {
-            var client = new Client(tcpClient, blackBox, dbSettings);
+            var client = new Client(tcpClient, this.blackBox, this.databaseSettings);
             client.Connected += (sender, args) => this.ClientConnected?.Invoke(client, args);
             client.PacketReceived += (sender, args) => this.ClientPacketReceived?.Invoke(client, args);
             client.Disconnected += (sender, args) => this.ClientDisconnected?.Invoke(client, args);
@@ -121,9 +181,8 @@ namespace Map.Modules.Teltonika.Host
             }
             catch (Exception e)
             {
-                ErrorOccured?.Invoke(client, new ErrorOccurredArgs(e));
+                this.ErrorOccured?.Invoke(client, new ErrorOccurredArgs(e));
             }
-            
         }
     }
 }

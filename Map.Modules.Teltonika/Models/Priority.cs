@@ -1,15 +1,21 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Priority.cs" company="Golriz">
-//   Copy-right © 2020
+﻿// ***********************************************************************
+// Assembly         : Map.Modules.Teltonika
+// Author           : U12178
+// Created          : 07-28-2020
+//
+// Last Modified By : U12178
+// Last Modified On : 07-28-2020
+// ***********************************************************************
+// <copyright file="Priority.cs" company="Map.Modules.Teltonika">
+//     Copyright (c) . All rights reserved.
 // </copyright>
-// <summary>
-//   Defines the Priority type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
+// <summary></summary>
+// ***********************************************************************
 namespace Map.Modules.Teltonika.Models
 {
-    /// <summary>Priority of GPS packet.</summary>
+    /// <summary>
+    /// Priority of GPS packet.
+    /// </summary>
     internal enum Priority : byte
     {
         /// <summary>

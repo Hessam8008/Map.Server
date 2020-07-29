@@ -1,39 +1,39 @@
 ﻿// ***********************************************************************
 // Assembly         : Map.DataAccess
 // Author           : U12178
-// Created          : 06-18-2020
+// Created          : 07-28-2020
 //
 // Last Modified By : U12178
-// Last Modified On : 06-18-2020
+// Last Modified On : 07-29-2020
 // ***********************************************************************
-// <copyright file="MapDb.cs" company="Golriz">
-//     Copyright (c) . All rights reserved.
+// <copyright file="MapUnitOfWork.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-using System.Data.SqlClient;
-using Map.Models;
-using Map.Models.Repositories;
-
 namespace Map.DataAccess
 {
     using System;
     using System.Data;
+    using System.Data.SqlClient;
+
+    using Map.Models;
+    using Map.Models.Repositories;
 
     using Repositories;
 
-    
-
     /// <summary>
     /// Class MapUnitOfWork.
-    /// Implements the <see cref="System.IDisposable" />
     /// Implements the <see cref="System.ICloneable" />
     /// </summary>
     /// <seealso cref="System.IDisposable" />
-    /// <seealso cref="System.ICloneable" />
     public class MapUnitOfWork : IDisposable, ICloneable, IMapUnitOfWork
     {
+        /// <summary>
+        /// The connection string.
+        /// </summary>
+        private readonly string connectionString;
+
         /// <summary>
         /// The transaction
         /// </summary>
@@ -43,29 +43,57 @@ namespace Map.DataAccess
         /// The SQL connection.
         /// </summary>
         private IDbConnection connection;
-
-        /// <summary>
-        /// The connection string.
-        /// </summary>
-        private readonly string connectionString;
-
+        
         /// <summary>
         /// The device repository.
         /// </summary>
         private IDeviceRepository deviceRepo;
-        private ILocationRepository locationRepo;
-        private IReportRepository reportRepo;
-
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MapUnitOfWork"/> class.
+        /// The location repo
         /// </summary>
-        /// <param name="dbSettings"></param>
-        public MapUnitOfWork(IDatabaseSettings dbSettings)
+        private ILocationRepository locationRepo;
+
+        /// <summary>
+        /// The report repo
+        /// </summary>
+        private IReportRepository reportRepo;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MapUnitOfWork" /> class.
+        /// </summary>
+        /// <param name="dataSettings">The database settings.</param>
+        public MapUnitOfWork(IDatabaseSettings dataSettings)
         {
-            this.connectionString = dbSettings.ConnectionString;
+            this.connectionString = dataSettings.ConnectionString;
             this.BeginTransaction();
         }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="MapUnitOfWork"/> class.
+        /// </summary>
+        ~MapUnitOfWork() => this.Dispose(false);
+
+        /// <summary>
+        /// Gets the device repository.
+        /// </summary>
+        /// <value>The device repository.</value>
+        public IDeviceRepository DeviceRepository =>
+            this.deviceRepo = this.deviceRepo ?? new DeviceRepo(this.transaction);
+
+        /// <summary>
+        /// Gets the location repository.
+        /// </summary>
+        /// <value>The location repository.</value>
+        public ILocationRepository LocationRepository =>
+            this.locationRepo = this.locationRepo ?? new LocationRepo(this.transaction);
+
+        /// <summary>
+        /// Gets the report repository.
+        /// </summary>
+        /// <value>The report repository.</value>
+        public IReportRepository ReportRepository =>
+            this.reportRepo = this.reportRepo ?? new ReportRepo(this.transaction);
 
         /// <summary>
         /// Begins the transaction.
@@ -117,51 +145,54 @@ namespace Map.DataAccess
             }
             finally
             {
-                Dispose();
+                this.Dispose();
             }
-            BeginTransaction();
+
+            this.BeginTransaction();
+        }
+
+        #region ►| IDisposable |◄
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>A new object that is a copy of this instance.</returns>
+        public object Clone() => (MapUnitOfWork)Activator.CreateInstance(this.GetType());
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            // Dispose of unmanaged resources.
+            this.Dispose(true);
+
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
-        /// Gets the device repository.
+        /// Disposes the specified disposing.
         /// </summary>
-        /// <value>The device repository.</value>
-        public IDeviceRepository DeviceRepository => this.deviceRepo ??= new DeviceRepo(this.transaction);
-        public ILocationRepository LocationRepository => this.locationRepo ??= new LocationRepo(this.transaction);
-        public IReportRepository ReportRepository => this.reportRepo ??= new ReportRepo(this.transaction);
-
-        #region ►| IDisposable |◄
-
-        ~MapUnitOfWork() => this.dispose(false);
-
-        public object Clone() => (MapUnitOfWork)Activator.CreateInstance(this.GetType());
-
-        private void dispose(bool disposing)
+        /// <param name="disposing">if set to <c>true</c> [disposing].</param>
+        private void Dispose(bool disposing)
         {
-            if (!disposing) 
+            if (!disposing)
+            {
                 return;
+            }
 
-            //Sql
+            // Sql
             this.transaction?.Dispose();
             this.transaction = null;
             this.connection?.Close();
             this.connection?.Dispose();
             this.connection = null;
 
-
-            //Dispose all repositories.
+            // Dispose all repositories.
             this.deviceRepo = null;
             this.locationRepo = null;
         }
-
-        public void Dispose()
-        {
-            // Dispose of unmanaged resources.
-            dispose(true);
-            // Suppress finalization.
-            GC.SuppressFinalize(this);
-        }
-
+        
         #endregion
     }
 }

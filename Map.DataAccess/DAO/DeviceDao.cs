@@ -1,42 +1,32 @@
 ﻿// ***********************************************************************
 // Assembly         : Map.DataAccess
 // Author           : U12178
-// Created          : 06-18-2020
+// Created          : 07-28-2020
 //
 // Last Modified By : U12178
-// Last Modified On : 06-18-2020
+// Last Modified On : 07-29-2020
 // ***********************************************************************
-// <copyright file="Device.cs" company="Golriz">
-//     Copyright (c) . All rights reserved.
+// <copyright file="DeviceDao.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-
-using System;
-using Map.DataAccess.Dapper;
-using Map.Models.AVL;
-
 namespace Map.DataAccess.DAO
 {
+    using System;
+
+    using Map.DataAccess.Dapper;
+    using Map.Models.AVL;
+
     /// <summary>
     /// Class Device.
     /// </summary>
     internal class DeviceDAO
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeviceDAO"/> class.
+        /// Initializes a new instance of the <see cref="DeviceDAO" /> class.
         /// </summary>
-        public DeviceDAO()
-        {
-            this.CreateTime = DateTime.Now;
-            this.SimNumber = string.Empty;
-            this.Model = string.Empty;
-            this.SN = string.Empty;
-            this.OwnerMobileNumber = string.Empty;
-            this.Nickname = "Unknown";
-        }
-
+        /// <param name="device">The device.</param>
         public DeviceDAO(Device device)
         {
             this.ID = device.ID;
@@ -49,7 +39,6 @@ namespace Map.DataAccess.DAO
             this.Nickname = device.Nickname;
         }
 
-
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
@@ -61,26 +50,26 @@ namespace Map.DataAccess.DAO
         /// </summary>
         /// <value>The IMEI.</value>
         public string IMEI { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the create time.
         /// </summary>
         /// <value>The create time.</value>
         [DapperIgnoreParameter]
         public DateTime CreateTime { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the nickname.
         /// </summary>
         /// <value>The nickname.</value>
         public string Nickname { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the mobile number.
         /// </summary>
         /// <value>The mobile number.</value>
         public string SimNumber { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the model.
         /// </summary>
@@ -98,7 +87,11 @@ namespace Map.DataAccess.DAO
         /// </summary>
         /// <value>The owner mobile number.</value>
         public string OwnerMobileNumber { get; set; }
-        
+
+        /// <summary>
+        /// Converts to device.
+        /// </summary>
+        /// <returns>returns the <exception cref="Device">Device</exception>.</returns>
         public Device ToDevice()
         {
             var device = new Device

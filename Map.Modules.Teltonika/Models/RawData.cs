@@ -11,13 +11,13 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-using System;
-using System.Data;
-using Map.Modules.Teltonika.DataAccess.Dapper;
-
 namespace Map.Modules.Teltonika.Models
 {
+    using System;
+    using System.Data;
+
+    using Map.Modules.Teltonika.DataAccess.Dapper;
+
     /// <summary>
     /// Class RawData.
     /// </summary>
@@ -26,16 +26,17 @@ namespace Map.Modules.Teltonika.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="RawData"/> class.
         /// </summary>
-        public RawData()
-        {
-            this.CreateTime = DateTime.Now;
-        }
-
+        /// <param name="imei">
+        /// The IMEI.
+        /// </param>
+        /// <param name="primitiveMessage">
+        /// The primitive message.
+        /// </param>
         public RawData(string imei, string primitiveMessage)
         {
-            IMEI = imei;
-            PrimitiveMessage = primitiveMessage;
-            CreateTime= DateTime.Now;
+            this.IMEI = imei;
+            this.PrimitiveMessage = primitiveMessage;
+            this.CreateTime = DateTime.Now;
         }
 
         /// <summary>

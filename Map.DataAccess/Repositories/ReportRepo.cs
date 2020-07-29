@@ -1,32 +1,29 @@
 ﻿// ***********************************************************************
 // Assembly         : Map.DataAccess
 // Author           : U12178
-// Created          : 06-18-2020
+// Created          : 07-28-2020
 //
 // Last Modified By : U12178
-// Last Modified On : 06-18-2020
+// Last Modified On : 07-28-2020
 // ***********************************************************************
-// <copyright file="LocationRepo.cs" company="Golriz">
-//     Copyright (c) . All rights reserved.
+// <copyright file="ReportRepo.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-using System;
-using System.Collections.Generic;
-using Dapper;
-
-using Map.Models.AVL;
-using Map.Models.Repositories;
-using System.Data;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Map.DataAccess.DAO;
-using Map.DataAccess.Dapper;
-
 namespace Map.DataAccess.Repositories
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using Map.DataAccess.DAO;
+    using Map.DataAccess.Dapper;
+    using Map.Models.AVL;
+    using Map.Models.Repositories;
+
     /// <summary>
     /// Class DeviceRepo.
     /// Implements the <see cref="DapperRepository" />
@@ -35,17 +32,25 @@ namespace Map.DataAccess.Repositories
     internal class ReportRepo : DapperRepository, IReportRepository
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocationRepo"/> class.
+        /// Initializes a new instance of the <see cref="ReportRepo"/> class. 
         /// </summary>
-        /// <param name="transaction">The transaction.</param>
+        /// <param name="transaction">
+        /// The transaction.
+        /// </param>
         public ReportRepo(IDbTransaction transaction)
             : base(transaction)
-        { }
-        
+        {
+        }
+
+        /// <summary>
+        /// get last locations as an asynchronous operation.
+        /// </summary>
+        /// <param name="devices">The devices.</param>
+        /// <returns>Task of IEnumerable Point.</returns>
         public async Task<IEnumerable<Point>> GetLastLocationsAsync(List<int> devices)
         {
-            const string proc = "[gps].[stpReport_GetLastLocations]";
-            var reader = await QueryMultipleAsync(proc, new { deviceList = devices.ToDataTable() });
+            const string ProcedureName = "[gps].[stpReport_GetLastLocations]";
+            var reader = await QueryMultipleAsync(ProcedureName, new { deviceList = devices.ToDataTable() });
             var deviceList = (await reader.ReadAsync<DeviceDAO>()).ToList();
             var locationList = (await reader.ReadAsync<LocationDAO>()).ToList();
             var elementList = (await reader.ReadAsync<LocationElementDAO>()).ToList();
@@ -68,13 +73,19 @@ namespace Map.DataAccess.Repositories
             }
 
             return result;
-
         }
 
+        /// <summary>
+        /// get path as an asynchronous operation.
+        /// </summary>
+        /// <param name="devices">The devices.</param>
+        /// <param name="from">From time.</param>
+        /// <param name="to">To time.</param>
+        /// <returns>Task of IEnumerable AVL Package.</returns>
         public async Task<IEnumerable<AvlPackage>> GetPathAsync(List<int> devices, DateTime from, DateTime to)
         {
-            const string proc = "[gps].[stpReport_GetPath]";
-            var reader = await QueryMultipleAsync(proc, new { deviceList = devices.ToDataTable(), from, to });
+            const string ProcedureName = "[gps].[stpReport_GetPath]";
+            var reader = await this.QueryMultipleAsync(ProcedureName, new { deviceList = devices.ToDataTable(), from, to });
             var deviceList = (await reader.ReadAsync<DeviceDAO>()).ToList();
             var locationList = (await reader.ReadAsync<LocationDAO>()).ToList();
 

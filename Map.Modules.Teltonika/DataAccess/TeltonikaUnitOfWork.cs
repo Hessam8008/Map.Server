@@ -1,34 +1,38 @@
 ﻿// ***********************************************************************
-// Assembly         : Map.DataAccess
+// Assembly         : Map.Modules.Teltonika
 // Author           : U12178
-// Created          : 06-18-2020
+// Created          : 07-28-2020
 //
 // Last Modified By : U12178
-// Last Modified On : 06-18-2020
+// Last Modified On : 07-29-2020
 // ***********************************************************************
-// <copyright file="MapDb.cs" company="Golriz">
-//     Copyright (c) . All rights reserved.
+// <copyright file="TeltonikaUnitOfWork.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-using System;
-using System.Data;
-using System.Data.SqlClient;
-using Map.Modules.Teltonika.DataAccess.Repositories;
-
-
 namespace Map.Modules.Teltonika.DataAccess
 {
+    using System;
+    using System.Data;
+    using System.Data.SqlClient;
+
+    using Map.Modules.Teltonika.DataAccess.Repositories;
+
     /// <summary>
     /// Class MapUnitOfWork.
-    /// Implements the <see cref="System.IDisposable" />
-    /// Implements the <see cref="System.ICloneable" />
+    /// Implements the <see cref="IDisposable" />
+    /// Implements the <see cref="ICloneable" />
     /// </summary>
     /// <seealso cref="System.IDisposable" />
     /// <seealso cref="System.ICloneable" />
     internal class TeltonikaUnitOfWork : IDisposable, ICloneable
     {
+        /// <summary>
+        /// The connection string.
+        /// </summary>
+        private readonly string connectionString;
+
         /// <summary>
         /// The transaction
         /// </summary>
@@ -40,16 +44,12 @@ namespace Map.Modules.Teltonika.DataAccess
         private IDbConnection connection;
 
         /// <summary>
-        /// The connection string.
+        /// The raw data repo
         /// </summary>
-        private readonly string connectionString;
-
-        
         private RawDataRepo rawDataRepo;
-        
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TeltonikaUnitOfWork"/> class.
+        /// Initializes a new instance of the <see cref="TeltonikaUnitOfWork" /> class.
         /// </summary>
         /// <param name="cs">The cs.</param>
         public TeltonikaUnitOfWork(string cs)
@@ -57,6 +57,18 @@ namespace Map.Modules.Teltonika.DataAccess
             this.connectionString = cs;
             this.BeginTransaction();
         }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="TeltonikaUnitOfWork"/> class.
+        /// </summary>
+        ~TeltonikaUnitOfWork() => this.Dispose(false);
+
+        /// <summary>
+        /// Gets the raw data repository.
+        /// </summary>
+        /// <value>The raw data repository.</value>
+        public RawDataRepo RawDataRepository =>
+            this.rawDataRepo = this.rawDataRepo ?? new RawDataRepo(this.transaction);
 
         /// <summary>
         /// Begins the transaction.
@@ -108,42 +120,52 @@ namespace Map.Modules.Teltonika.DataAccess
             }
             finally
             {
-                Dispose();
+                this.Dispose();
             }
-            BeginTransaction();
+
+            this.BeginTransaction();
         }
 
-        public RawDataRepo RawDataRepository => this.rawDataRepo ??= new RawDataRepo(this.transaction);
-        
         #region ►| IDisposable |◄
 
-        ~TeltonikaUnitOfWork() => this.dispose(false);
-
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>A new object that is a copy of this instance.</returns>
         public object Clone() => (TeltonikaUnitOfWork)Activator.CreateInstance(this.GetType());
 
-        private void dispose(bool disposing)
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
         {
-            if (!disposing) 
-                return;
+            // Dispose of unmanaged resources.
+            this.Dispose(true);
 
-            //Sql
+            // Suppress finalization.
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Disposes the specified disposing.
+        /// </summary>
+        /// <param name="disposing">if set to <c>true</c> [disposing].</param>
+        private void Dispose(bool disposing)
+        {
+            if (!disposing)
+            {
+                return;
+            }
+
+            // Sql
             this.transaction?.Dispose();
             this.transaction = null;
             this.connection?.Close();
             this.connection?.Dispose();
             this.connection = null;
 
-
-            //Dispose all repositories.
+            // Dispose all repositories.
             this.rawDataRepo = null;
-        }
-
-        public void Dispose()
-        {
-            // Dispose of unmanaged resources.
-            dispose(true);
-            // Suppress finalization.
-            GC.SuppressFinalize(this);
         }
 
         #endregion

@@ -1,46 +1,36 @@
 ﻿// ***********************************************************************
 // Assembly         : Map.DataAccess
 // Author           : U12178
-// Created          : 06-18-2020
+// Created          : 07-28-2020
 //
 // Last Modified By : U12178
-// Last Modified On : 06-18-2020
+// Last Modified On : 07-28-2020
 // ***********************************************************************
-// <copyright file="Location.cs" company="Golriz">
-//     Copyright (c) . All rights reserved.
+// <copyright file="LocationDao.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Map.DataAccess.Dapper;
-using Map.Models.AVL;
-
 namespace Map.DataAccess.DAO
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+
+    using Map.DataAccess.Dapper;
+    using Map.Models.AVL;
+
     /// <summary>
     /// Class Location.
     /// </summary>
     internal class LocationDAO
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocationDAO"/> class.
-        /// </summary>
-        public LocationDAO()
-        {
-            Elements = new List<LocationElementDAO>();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LocationDAO"/> class.
+        /// Initializes a new instance of the <see cref="LocationDAO" /> class.
         /// </summary>
         /// <param name="deviceId">Device ID</param>
-        /// <param name="location">
-        /// The location.
-        /// </param>
+        /// <param name="location">The location.</param>
         public LocationDAO(int deviceId, Location location)
         {
             this.Timestamp = location.Time;
@@ -72,7 +62,6 @@ namespace Map.DataAccess.DAO
         /// </summary>
         /// <value>The timestamp.</value>
         public DateTime Timestamp { get; set; }
-
 
         /// <summary>
         /// Gets or sets the longitude.
@@ -109,26 +98,31 @@ namespace Map.DataAccess.DAO
         /// </summary>
         /// <value>The speed.</value>
         public short Speed { get; set; }
-
-     
+        
+        /// <summary>
+        /// Gets or sets the elements.
+        /// </summary>
+        /// <value>The elements.</value>
         [DapperIgnoreParameter]
         public List<LocationElementDAO> Elements { get; set; }
 
-
+        /// <summary>
+        /// Converts to location.
+        /// </summary>
+        /// <returns>return <exception cref="Location">Location</exception>.</returns>
         public Location ToLocation()
         {
             return new Location
             {
-                Time = Timestamp,
-                Longitude = Longitude,
-                Latitude = Latitude,
-                Altitude = Altitude,
-                Angle = Angle,
-                Satellites = Satellites,
-                Speed = Speed,
-                Elements = (from e in Elements select e.ToLocationElement())?.ToList()
+                Time = this.Timestamp,
+                Longitude = this.Longitude,
+                Latitude = this.Latitude,
+                Altitude = this.Altitude,
+                Angle = this.Angle,
+                Satellites = this.Satellites,
+                Speed = this.Speed,
+                Elements = (from e in this.Elements select e.ToLocationElement()).ToList()
             };
         }
-
     }
 }

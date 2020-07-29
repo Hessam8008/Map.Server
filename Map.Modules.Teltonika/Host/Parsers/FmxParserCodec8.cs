@@ -33,7 +33,7 @@
 //
 //   report to module the number of data received as integer (four bytes).
 //
-//   If sent data number and reported by server doesn’t match module resends data.
+//   If sent data number and reported by server does’t match module resend data.
 //
 //
 //   * Below table represents AVL Data Packet structure:
@@ -102,13 +102,14 @@
 // </summary>
 // **********************************************************************
 
-using System;
-using System.Collections.Generic;
-using Map.Modules.Teltonika.Host.Tools;
-using Map.Modules.Teltonika.Models;
-
 namespace Map.Modules.Teltonika.Host.Parsers
 {
+    using System;
+    using System.Collections.Generic;
+
+    using Map.Modules.Teltonika.Host.Tools;
+    using Map.Modules.Teltonika.Models;
+
     /// <summary>
     /// The FMX parser codec 8.
     /// </summary>
@@ -130,7 +131,7 @@ namespace Map.Modules.Teltonika.Host.Parsers
         /// <returns>The <see cref="TcpPacket"/>.</returns>
         public TcpPacket Parse(RawData hexMessage)
         {
-            var result = new TcpPacket { RawMessage = hexMessage};
+            var result = new TcpPacket { RawMessage = hexMessage };
             var hc = new HexCrawler(hexMessage.PrimitiveMessage);
 
             /* ■■ Warning : Order of variables and assumptions is important.

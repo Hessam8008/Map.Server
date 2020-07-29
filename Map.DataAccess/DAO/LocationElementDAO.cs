@@ -1,42 +1,40 @@
 ﻿// ***********************************************************************
 // Assembly         : Map.DataAccess
 // Author           : U12178
-// Created          : 06-18-2020
+// Created          : 07-28-2020
 //
 // Last Modified By : U12178
-// Last Modified On : 06-18-2020
+// Last Modified On : 07-29-2020
 // ***********************************************************************
-// <copyright file="LocationElement.cs" company="Golriz">
-//     Copyright (c) . All rights reserved.
+// <copyright file="LocationElementDAO.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-using System.Data;
-using Map.DataAccess.Dapper;
-using Map.Models.AVL;
-
 namespace Map.DataAccess.DAO
 {
+    using System.Data;
+
+    using Map.DataAccess.Dapper;
+    using Map.Models.AVL;
+
     /// <summary>
     /// Class LocationElement.
     /// </summary>
     internal class LocationElementDAO
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocationElementDAO"/> class.
+        /// Initializes a new instance of the <see cref="LocationElementDAO" /> class.
         /// </summary>
         public LocationElementDAO()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocationElementDAO"/> class.
+        /// Initializes a new instance of the <see cref="LocationElementDAO" /> class.
         /// </summary>
-        /// <param name="element">
-        /// The element.
-        /// </param>
-        public LocationElementDAO(Models.AVL.LocationElement element)
+        /// <param name="element">The element.</param>
+        public LocationElementDAO(LocationElement element)
         {
             this.ElementId = element.Id;
             this.ElementValue = element.Value;
@@ -45,7 +43,8 @@ namespace Map.DataAccess.DAO
         /// <summary>
         /// Gets or sets the id.
         /// </summary>
-        [DapperFieldInfo("ID", true,DataType =  DbType.Int32)]
+        /// <value>The identifier.</value>
+        [DapperFieldInfo("ID", true, DataType = DbType.Int32)]
         public int ID { get; set; }
 
         /// <summary>
@@ -66,14 +65,17 @@ namespace Map.DataAccess.DAO
         /// <value>The element value.</value>
         public object ElementValue { get; set; }
 
+        /// <summary>
+        /// Converts to location element.
+        /// </summary>
+        /// <returns>returns the <exception cref="LocationElement">LocationElement</exception>.</returns>
         public LocationElement ToLocationElement()
         {
             return new LocationElement
             {
-                Id = ElementId,
-                Value = ElementValue
+                Id = this.ElementId,
+                Value = this.ElementValue
             };
         }
-
     }
 }

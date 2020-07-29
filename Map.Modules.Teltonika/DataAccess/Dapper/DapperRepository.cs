@@ -11,14 +11,14 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-using Dapper;
-using System.Collections.Generic;
-using System.Data;
-using System.Threading.Tasks;
-
 namespace Map.Modules.Teltonika.DataAccess.Dapper
 {
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Threading.Tasks;
+
+    using global::Dapper;
+
     /// <summary>
     /// Class DapperRepository.
     /// </summary>

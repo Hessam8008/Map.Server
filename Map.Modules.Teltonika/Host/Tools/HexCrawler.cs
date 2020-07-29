@@ -1,22 +1,21 @@
 ﻿// ***********************************************************************
-// Assembly         : GPS.Modules.Teltonika
+// Assembly         : Map.Modules.Teltonika
 // Author           : U12178
-// Created          : 06-15-2020
+// Created          : 07-28-2020
 //
 // Last Modified By : U12178
-// Last Modified On : 06-15-2020
+// Last Modified On : 07-29-2020
 // ***********************************************************************
-// <copyright file="HexCrawler.cs" company="GPS.Modules.Teltonika">
-//     Copyright (c) . All rights reserved.
+// <copyright file="HexCrawler.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-using System;
-using System.Text;
-
 namespace Map.Modules.Teltonika.Host.Tools
 {
+    using System;
+    using System.Text;
+
     /// <summary>
     /// Defines the <see cref="HexCrawler" />.
     /// </summary>

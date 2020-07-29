@@ -5,7 +5,8 @@
     <AssemblyName>Map.DataAccess</AssemblyName>
     <RootNamespace>Map.DataAccess</RootNamespace>
     <Company>Golriz</Company>
-    <Copyright>2020</Copyright>
+    <Copyright>Copyright (c) 2020 Golriz,Inc. All rights reserved.</Copyright>
+    <Authors>Hessam Hosseini</Authors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
