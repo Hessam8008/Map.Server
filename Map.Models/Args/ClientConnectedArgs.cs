@@ -6,16 +6,16 @@
 // Last Modified By : U12178
 // Last Modified On : 06-15-2020
 // ***********************************************************************
-// <copyright file="AuthenticatedArgs.cs" company="GPS.Modules.Teltonika">
+// <copyright file="ClientConnectedArgs.cs" company="GPS.Modules.Teltonika">
 //     Copyright (c) . All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
 
-using System;
-
 namespace Map.Models.Args
 {
+    using System;
+
     /// <summary>
     /// Defines the <see cref="ClientConnectedArgs" />.
     /// </summary>
@@ -35,6 +35,5 @@ namespace Map.Models.Args
         /// </summary>
         /// <value>The IMEI of device.</value>
         public string IMEI { get; }
-
     }
 }

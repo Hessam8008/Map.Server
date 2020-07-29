@@ -1,12 +1,16 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+﻿// ***********************************************************************
+// Assembly         : Map.Models
+// Author           : U12178
+// Created          : 07-28-2020
+//
+// Last Modified By : U12178
+// Last Modified On : 07-28-2020
+// ***********************************************************************
 // <copyright file="Location.cs" company="Golriz">
-//   Copy-right © 2020
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
-// <summary>
-//   The avl data.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
+// <summary></summary>
+// ***********************************************************************
 namespace Map.Models.AVL
 {
     using System;
@@ -17,45 +21,52 @@ namespace Map.Models.AVL
     /// </summary>
     public class Location 
     {
-        //public Device Device { get; set; }
         /// <summary>
         /// Gets or sets the Time.
         /// </summary>
+        /// <value>The time.</value>
         public DateTime Time { get; set; }
 
         /// <summary>
         /// Gets or sets the Longitude.
         /// </summary>
+        /// <value>The longitude.</value>
         public double Longitude { get; set; }
 
         /// <summary>
         /// Gets or sets the Latitude.
         /// </summary>
+        /// <value>The latitude.</value>
         public double Latitude { get; set; }
 
         /// <summary>
         /// Gets or sets the Altitude.
         /// </summary>
+        /// <value>The altitude.</value>
         public short Altitude { get; set; }
 
         /// <summary>
         /// Gets or sets the Angle.
         /// </summary>
+        /// <value>The angle.</value>
         public short Angle { get; set; }
 
         /// <summary>
         /// Gets or sets the Satellites.
         /// </summary>
+        /// <value>The satellites.</value>
         public byte Satellites { get; set; }
 
         /// <summary>
         /// Gets or sets the Speed.
         /// </summary>
+        /// <value>The speed.</value>
         public short Speed { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the IoElements.
         /// </summary>
+        /// <value>The elements.</value>
         public List<LocationElement> Elements { get; set; }
     }
 }

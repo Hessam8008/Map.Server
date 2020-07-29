@@ -86,7 +86,7 @@ namespace Map.Modules.Teltonika.Host
                 catch (Exception ex)
                 {
                     if (!stopped)
-                        ErrorOccured?.Invoke(this, new ErrorOccuredArgs(ex));
+                        ErrorOccured?.Invoke(this, new ErrorOccurredArgs(ex));
                     break;
                 }
             }
@@ -121,7 +121,7 @@ namespace Map.Modules.Teltonika.Host
             }
             catch (Exception e)
             {
-                ErrorOccured?.Invoke(client, new ErrorOccuredArgs(e));
+                ErrorOccured?.Invoke(client, new ErrorOccurredArgs(e));
             }
             
         }

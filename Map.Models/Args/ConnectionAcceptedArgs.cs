@@ -1,17 +1,33 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
-
+﻿// ***********************************************************************
+// Assembly         : Map.Models
+// Author           : Hessam Hosseini
+// Created          : 07-28-2020
+//
+// Last Modified By : U12178
+// Last Modified On : 07-29-2020
+// ***********************************************************************
+// <copyright file="ConnectionAcceptedArgs.cs" company="Map.Models">
+//     Copyright (c) . All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
 namespace Map.Models.Args
 {
-    public class ConnectionAcceptedArgs: EventArgs
+    using System;
+    using System.Net;
+    using System.Net.Sockets;
+    
+    /// <summary>
+    /// Class ConnectionAcceptedArgs.
+    /// Implements the <see cref="System.EventArgs" />
+    /// </summary>
+    /// <seealso cref="EventArgs" />
+    public class ConnectionAcceptedArgs : EventArgs
     {
-        public string RemoteIP { get; }
-
-        public int Port { get; }
-
-        public short Ttl { get; }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConnectionAcceptedArgs"/> class.
+        /// </summary>
+        /// <param name="client">The client.</param>
         public ConnectionAcceptedArgs(TcpClient client)
         {
             var remote = client.Client.RemoteEndPoint as IPEndPoint;
@@ -19,5 +35,23 @@ namespace Map.Models.Args
             this.Port = remote?.Port ?? 0;
             this.Ttl = client.Client.Ttl;
         }
+
+        /// <summary>
+        /// Gets the remote IP.
+        /// </summary>
+        /// <value>The remote IP.</value>
+        public string RemoteIP { get; }
+
+        /// <summary>
+        /// Gets the port.
+        /// </summary>
+        /// <value>The port.</value>
+        public int Port { get; }
+
+        /// <summary>
+        /// Gets the TTL.
+        /// </summary>
+        /// <value>The TTL.</value>
+        public short Ttl { get; }
     }
 }

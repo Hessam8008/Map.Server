@@ -7,15 +7,14 @@
 // Last Modified On : 06-15-2020
 // ***********************************************************************
 // <copyright file="DisconnectedArgs.cs" company="GPS.Modules.Teltonika">
-//     Copyright (c) . All rights reserved.
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-using System;
-
 namespace Map.Models.Args
 {
+    using System;
+
     /// <summary>
     /// The disconnected args.
     /// </summary>

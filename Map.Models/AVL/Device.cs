@@ -45,9 +45,9 @@ namespace Map.Models.AVL
         public string Nickname { get; set; }
 
         /// <summary>
-        /// Gets or sets the sim number for device.
+        /// Gets or sets the SIM number for device.
         /// </summary>
-        /// <value>The sim number.</value>
+        /// <value>The SIM number.</value>
         public string SimNumber { get; set; }
 
         /// <summary>
@@ -67,6 +67,5 @@ namespace Map.Models.AVL
         /// </summary>
         /// <value>The owner mobile number.</value>
         public string OwnerMobileNumber { get; set; }
-
     }
 }

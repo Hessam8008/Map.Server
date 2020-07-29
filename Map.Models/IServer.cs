@@ -1,10 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Map.Models.Args;
-
+﻿// ***********************************************************************
+// Assembly         : Map.Models
+// Author           : U12178
+// Created          : 07-28-2020
+//
+// Last Modified By : U12178
+// Last Modified On : 07-29-2020
+// ***********************************************************************
+// <copyright file="IServer.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
 namespace Map.Models
 {
+    using System;
+
+    using Map.Models.Args;
+
     /// <summary>
     /// The client connected.
     /// </summary>
@@ -23,11 +35,16 @@ namespace Map.Models
     /// The OnError.
     /// </summary>
     /// <param name="sender">The sender<see cref="object" />.</param>
-    /// <param name="e">The e<see cref="ErrorArgs" />.</param>
-    public delegate void OnErrorOccured(object sender, ErrorOccuredArgs e);
-    
+    /// <param name="e">The e<see cref="ErrorOccurredArgs" />.</param>
+    public delegate void OnErrorOccured(object sender, ErrorOccurredArgs e);
+
+    /// <summary>
+    /// Log every thing.
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The e<see cref="LoggedArgs" /></param>
     public delegate void OnLogged(object sender, LoggedArgs e);
-    
+
     /// <summary>
     /// The OnDisconnected.
     /// </summary>
@@ -38,25 +55,27 @@ namespace Map.Models
     /// <summary>
     /// On connection accepted.
     /// </summary>
-    /// <param name="sender"> The sender. </param>
-    /// <param name="e"> The e. </param>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The e<see cref="ConnectionAcceptedArgs" />.</param>
     public delegate void OnConnectionAccepted(object sender, ConnectionAcceptedArgs e);
 
     /// <summary>
     /// On server started.
     /// </summary>
-    /// <param name="sender"> The sender. </param>
-    /// <param name="e"> The e. </param>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The e<see cref="ServerStartedArgs" />.</param>
     public delegate void OnServerStarted(object sender, ServerStartedArgs e);
 
     /// <summary>
     /// On server stop.
     /// </summary>
-    /// <param name="sender"> The sender. </param>
-    /// <param name="e"> The e. </param>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The e<see cref="ServerStoppedArgs" />.</param>
     public delegate void OnServerStopped(object sender, ServerStoppedArgs e);
 
-
+    /// <summary>
+    /// Interface IServer
+    /// </summary>
     public interface IServer
     {
         /// <summary>
@@ -74,6 +93,9 @@ namespace Map.Models
         /// </summary>
         event OnErrorOccured ErrorOccured;
 
+        /// <summary>
+        /// The log process activities.
+        /// </summary>
         event OnLogged Logged;
 
         /// <summary>
@@ -96,9 +118,16 @@ namespace Map.Models
         /// </summary>
         event OnServerStopped ServerStopped;
 
+        /// <summary>
+        /// Start listening for clients.
+        /// </summary>
+        /// <param name="ip">IP for listening.</param>
+        /// <param name="port">Port for listening.</param>
         void Start(string ip, int port);
 
+        /// <summary>
+        /// Stop listening.
+        /// </summary>
         void Stop();
-
     }
 }
