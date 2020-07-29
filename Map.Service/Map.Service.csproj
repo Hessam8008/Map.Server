@@ -4,6 +4,9 @@
 		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>$(NoWarn);1591</NoWarn>
+		<Copyright>Copyright (c) 2020 Golriz,Inc. All rights reserved.</Copyright>
+		<Company>Golriz</Company>
+		<Authors>Hessam Hosseini</Authors>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
