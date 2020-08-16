@@ -27,6 +27,13 @@ namespace Map.DataAccess.DAO
     internal class LocationDAO
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="LocationDAO"/> class.
+        /// </summary>
+        public LocationDAO()
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LocationDAO" /> class.
         /// </summary>
         /// <param name="deviceId">Device ID</param>

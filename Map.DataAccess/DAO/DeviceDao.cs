@@ -24,6 +24,13 @@ namespace Map.DataAccess.DAO
     internal class DeviceDAO
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="DeviceDAO"/> class.
+        /// </summary>
+        public DeviceDAO()
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DeviceDAO" /> class.
         /// </summary>
         /// <param name="device">The device.</param>
