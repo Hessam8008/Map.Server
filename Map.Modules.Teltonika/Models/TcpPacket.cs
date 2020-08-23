@@ -7,7 +7,7 @@
 // Last Modified On : 07-29-2020
 // ***********************************************************************
 // <copyright file="TcpPacket.cs" company="Map.Modules.Teltonika">
-//     Copyright (c) . All rights reserved.
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************

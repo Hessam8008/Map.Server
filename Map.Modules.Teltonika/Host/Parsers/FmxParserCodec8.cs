@@ -7,7 +7,7 @@
 // Last Modified On : 06-15-2020
 // ***********************************************************************
 // <copyright file="FmxParserCodec8.cs" company="GPS.Modules.Teltonika">
-//     Copyright (c) . All rights reserved.
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary>
 //

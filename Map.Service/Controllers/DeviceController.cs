@@ -7,7 +7,7 @@
 // Last Modified On : 07-28-2020
 // ***********************************************************************
 // <copyright file="DeviceController.cs" company="Map.Service">
-//     Copyright (c) . All rights reserved.
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
