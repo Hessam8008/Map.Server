@@ -6,7 +6,7 @@
 // Last Modified By : U12178
 // Last Modified On : 06-18-2020
 // ***********************************************************************
-// <copyright file="Device.cs" company="GPS.Models">
+// <copyright file="Device.cs" company="Golriz">
 //     Copyright (c) . All rights reserved.
 // </copyright>
 // <summary></summary>
