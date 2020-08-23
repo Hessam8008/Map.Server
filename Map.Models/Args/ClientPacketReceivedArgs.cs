@@ -6,7 +6,7 @@
 // Last Modified By : U12178
 // Last Modified On : 06-15-2020
 // ***********************************************************************
-// <copyright file="ClientPacketReceivedArgs.cs" company="Map.Models">
+// <copyright file="ClientPacketReceivedArgs.cs" company="Golriz">
 //     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>

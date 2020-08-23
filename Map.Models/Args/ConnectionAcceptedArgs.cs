@@ -6,7 +6,7 @@
 // Last Modified By : U12178
 // Last Modified On : 07-29-2020
 // ***********************************************************************
-// <copyright file="ConnectionAcceptedArgs.cs" company="Map.Models">
+// <copyright file="ConnectionAcceptedArgs.cs" company="Golriz">
 //     Copyright (c) . All rights reserved.
 // </copyright>
 // <summary></summary>

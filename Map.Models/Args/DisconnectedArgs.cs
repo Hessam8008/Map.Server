@@ -6,7 +6,7 @@
 // Last Modified By : U12178
 // Last Modified On : 06-15-2020
 // ***********************************************************************
-// <copyright file="DisconnectedArgs.cs" company="GPS.Modules.Teltonika">
+// <copyright file="DisconnectedArgs.cs" company="Golriz">
 //     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>

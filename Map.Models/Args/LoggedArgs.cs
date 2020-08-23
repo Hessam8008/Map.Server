@@ -6,7 +6,7 @@
 // Last Modified By : U12178
 // Last Modified On : 07-28-2020
 // ***********************************************************************
-// <copyright file="LoggedArgs.cs" company="Map.Models">
+// <copyright file="LoggedArgs.cs" company="Golriz">
 //     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
