@@ -68,17 +68,17 @@ namespace Map.Service.Controllers
         }
 
         /// <summary>
-        /// Get device by IMEI.
+        /// Get device by ID.
         /// </summary>
-        /// <param name="imei">IMEI of the device.</param>
+        /// <param name="id">ID of the device.</param>
         /// <returns>The <see cref="Device"/></returns>
         /// <response code="200">Returns the device.</response>
         /// <response code="204">If no device found.</response>
         [ProducesResponseType(typeof(Device), StatusCodes.Status200OK)]
-        [HttpGet("imei/{imei}")]
-        public async Task<IActionResult> GetByIMEIAsync([Required] string imei)
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetByIdAsync([Required] int id)
         {
-            var result = await this.unitOfWork.DeviceRepository.GetByIMEIAsync(imei);
+            var result = await this.unitOfWork.DeviceRepository.GetByIdAsync(id);
             if (result == null)
             {
                 return this.NoContent();
@@ -88,17 +88,17 @@ namespace Map.Service.Controllers
         }
 
         /// <summary>
-        /// Get device by ID.
+        /// Get device by IMEI.
         /// </summary>
-        /// <param name="id">ID of the device.</param>
+        /// <param name="imei">IMEI of the device.</param>
         /// <returns>The <see cref="Device"/></returns>
         /// <response code="200">Returns the device.</response>
         /// <response code="204">If no device found.</response>
         [ProducesResponseType(typeof(Device), StatusCodes.Status200OK)]
-        [HttpGet("id/{id:int}")]
-        public async Task<IActionResult> GetByIdAsync([Required] int id)
+        [HttpGet("GetByIMEI")]
+        public async Task<IActionResult> GetByIMEIAsync([Required][FromQuery] string imei)
         {
-            var result = await this.unitOfWork.DeviceRepository.GetByIdAsync(id);
+            var result = await this.unitOfWork.DeviceRepository.GetByIMEIAsync(imei);
             if (result == null)
             {
                 return this.NoContent();
