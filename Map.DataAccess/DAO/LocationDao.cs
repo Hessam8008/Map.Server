@@ -119,7 +119,7 @@ namespace Map.DataAccess.DAO
         /// <returns>return <exception cref="Location">Location</exception>.</returns>
         public Location ToLocation()
         {
-            return new Location
+            var result = new Location
             {
                 Time = this.Timestamp,
                 Longitude = this.Longitude,
@@ -127,9 +127,15 @@ namespace Map.DataAccess.DAO
                 Altitude = this.Altitude,
                 Angle = this.Angle,
                 Satellites = this.Satellites,
-                Speed = this.Speed,
-                Elements = (from e in this.Elements select e.ToLocationElement()).ToList()
+                Speed = this.Speed
             };
+
+            if (this.Elements != null)
+            {
+                result.Elements = (from e in this.Elements select e.ToLocationElement()).ToList();
+            }
+
+            return result;
         }
     }
 }

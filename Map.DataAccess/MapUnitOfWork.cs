@@ -59,6 +59,8 @@ namespace Map.DataAccess
         /// </summary>
         private IReportRepository reportRepo;
 
+        private ICustomerRepository customerRepo;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MapUnitOfWork" /> class.
         /// </summary>
@@ -94,6 +96,9 @@ namespace Map.DataAccess
         /// <value>The report repository.</value>
         public IReportRepository ReportRepository =>
             this.reportRepo = this.reportRepo ?? new ReportRepo(this.transaction);
+
+        public ICustomerRepository CustomerRepository =>
+            this.customerRepo = this.customerRepo ?? new CustomerRepo(this.transaction);
 
         /// <summary>
         /// Begins the transaction.
@@ -191,6 +196,8 @@ namespace Map.DataAccess
             // Dispose all repositories.
             this.deviceRepo = null;
             this.locationRepo = null;
+            this.reportRepo = null;
+            this.customerRepo = null;
         }
         
         #endregion

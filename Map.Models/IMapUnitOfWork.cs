@@ -37,5 +37,12 @@ namespace Map.Models
         /// </summary>
         /// <value>The report repository.</value>
         public IReportRepository ReportRepository { get; }
+
+
+        /// <summary>
+        /// Gets the customer repository.
+        /// </summary>
+        /// <value>The customer repository.</value>
+        public ICustomerRepository CustomerRepository { get; }
     }
 }
