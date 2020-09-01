@@ -33,7 +33,7 @@
         }
 
         /// <summary>
-        /// Get all customers registered in the system.
+        /// Get all customers registered in the system by area.
         /// </summary>
         /// <param name="area">
         /// The area id.
@@ -44,8 +44,8 @@
         /// <response code="200">Returns a list of customers.</response>
         /// <response code="204">If no customer found.</response>
         [ProducesResponseType(typeof(IEnumerable<CustomerInfo>), 200)]
-        [HttpGet("area/{area}")]
-        public async Task<IActionResult> GetByAreaAsync([Required] int area)
+        [HttpGet("GetByArea")]
+        public async Task<IActionResult> GetByAreaAsync([Required] [FromQuery] int area = 1)
         {
             var result = await this.unitOfWork.CustomerRepository.GetByAreaAsync(area);
             if (result == null || !result.Any())
