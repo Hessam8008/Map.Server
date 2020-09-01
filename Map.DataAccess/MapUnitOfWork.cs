@@ -59,6 +59,9 @@ namespace Map.DataAccess
         /// </summary>
         private IReportRepository reportRepo;
 
+        /// <summary>
+        /// The customer repo.
+        /// </summary>
         private ICustomerRepository customerRepo;
 
         /// <summary>
@@ -97,6 +100,9 @@ namespace Map.DataAccess
         public IReportRepository ReportRepository =>
             this.reportRepo = this.reportRepo ?? new ReportRepo(this.transaction);
 
+        /// <summary>
+        /// The customer repository.
+        /// </summary>
         public ICustomerRepository CustomerRepository =>
             this.customerRepo = this.customerRepo ?? new CustomerRepo(this.transaction);
 

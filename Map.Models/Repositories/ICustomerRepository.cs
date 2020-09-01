@@ -1,4 +1,17 @@
-﻿namespace Map.Models.Repositories
+﻿// ***********************************************************************
+// Assembly         : Map.Models
+// Author           : U12178
+// Created          : 09-01-2020
+//
+// Last Modified By : U12178
+// Last Modified On : 09-01-2020
+// ***********************************************************************
+// <copyright file="ICustomerRepository.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+namespace Map.Models.Repositories
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;

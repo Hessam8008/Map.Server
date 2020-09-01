@@ -1,4 +1,17 @@
-﻿namespace Map.Service.Controllers
+﻿// ***********************************************************************
+// Assembly         : Map.Models
+// Author           : U12178
+// Created          : 09-01-2020
+//
+// Last Modified By : U12178
+// Last Modified On : 09-01-2020
+// ***********************************************************************
+// <copyright file="CustomerController.cs" company="Golriz">
+//     Copyright (c) 2020 Golriz,Inc. All rights reserved.
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+namespace Map.Service.Controllers
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -6,7 +19,6 @@
     using System.Threading.Tasks;
 
     using Map.Models;
-    using Map.Models.AVL;
     using Map.Models.Customer;
 
     using Microsoft.AspNetCore.Mvc;
@@ -55,6 +67,5 @@
 
             return this.Ok(result);
         }
-
     }
 }
