@@ -15,6 +15,6 @@
         /// </summary>
         /// <param name="area">The area.</param>
         /// <returns>Task of IEnumerable CustomerInfo.</returns>
-        public Task<IEnumerable<CustomerInfo>> GetCustomerByArea(int area);
+        public Task<IEnumerable<CustomerInfo>> GetByAreaAsync(int area);
     }
 }

@@ -1,11 +1,13 @@
 ﻿namespace Map.Service.Controllers
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
 
     using Map.Models;
     using Map.Models.AVL;
+    using Map.Models.Customer;
 
     using Microsoft.AspNetCore.Mvc;
 
@@ -31,16 +33,21 @@
         }
 
         /// <summary>
-        /// Get all devices registered in the system.
+        /// Get all customers registered in the system.
         /// </summary>
-        /// <returns>List of devices</returns>
-        /// <response code="200">Returns a list of devices.</response>
-        /// <response code="204">If no device found.</response>
-        [ProducesResponseType(typeof(IEnumerable<Device>), 200)]
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        /// <param name="area">
+        /// The area id.
+        /// </param>
+        /// <returns>
+        /// List of customers
+        /// </returns>
+        /// <response code="200">Returns a list of customers.</response>
+        /// <response code="204">If no customer found.</response>
+        [ProducesResponseType(typeof(IEnumerable<CustomerInfo>), 200)]
+        [HttpGet("area/{area}")]
+        public async Task<IActionResult> GetByAreaAsync([Required] int area)
         {
-            var result = await this.unitOfWork.DeviceRepository.GetAllAsync();
+            var result = await this.unitOfWork.CustomerRepository.GetByAreaAsync(area);
             if (result == null || !result.Any())
             {
                 return this.NoContent();
