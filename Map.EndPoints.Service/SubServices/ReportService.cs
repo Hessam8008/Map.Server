@@ -16,13 +16,16 @@
         {
         }
 
-        public async Task<List<Point>> GetLastLocationsAsync(List<int> devices)
+        public async Task<List<Point>> GetLastLocationsAsync(List<int> devices = null)
         {
             var param = new RequestParameters { Path = $"{this.RootUrl}/GetLastLocations" };
 
-            foreach (var device in devices)
+            if (devices != null)
             {
-                param.AddUrlParameter("devices", device.ToString());
+                foreach (var device in devices)
+                {
+                    param.AddUrlParameter("devices", device.ToString());
+                }
             }
 
             var response = await this.ApiService.GetAsync(param).ConfigureAwait(false);
