@@ -5,8 +5,8 @@
 
     using Map.EndPoints.Service.Models;
 
-    public interface ICustomerService
+    public interface IReportService
     {
-        Task<List<CustomerInfo>> GetByAreaAsync(int area);
+        Task<List<Point>> GetLastLocationsAsync(List<int> devices);
     }
 }

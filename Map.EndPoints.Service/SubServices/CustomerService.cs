@@ -16,7 +16,7 @@
         {
         }
 
-        public async Task<List<CustomerInfo>> GetByArea(int area)
+        public async Task<List<CustomerInfo>> GetByAreaAsync(int area)
         {
             var param = new RequestParameters { Path = $"{this.RootUrl}/GetByArea" };
 
