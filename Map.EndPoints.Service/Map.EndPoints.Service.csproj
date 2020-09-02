@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.1</Version>
+    <Authors>Hessam Hosseini</Authors>
+    <Company>Golriz</Company>
+    <Product>Map Service</Product>
+    <Description>Represent all data gathered from visitors and drivers GPS devices</Description>
+    <Copyright>Copyright (c) 2020 Golriz,Inc. All rights reserved.</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Services.Core" Version="0.1.5" />
+    <PackageReference Include="Services.WebApiCaller" Version="0.1.11" />
+  </ItemGroup>
+
+</Project>
