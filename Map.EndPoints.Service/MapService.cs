@@ -2,15 +2,14 @@
 {
     using System.Collections.Generic;
 
+    using Map.EndPoints.Service.Interfaces;
+    using Map.EndPoints.Service.SubServices;
+
     using Services.Core;
     using Services.Core.Interfaces;
 
     public sealed class MapService : IMapService
     {
-        public ApiSite SiteInfo { get; }
-
-        public ICustomerService CustomerService { get; }
-
         private const string _serviceTitle = "Map.Api";
 
         public MapService(IApiCaller apiService, IApiConfiguration apiConfig)
@@ -23,5 +22,9 @@
 
             this.CustomerService = new CustomerService(apiService, this.SiteInfo, "Customer");
         }
+
+        public ICustomerService CustomerService { get; }
+
+        public ApiSite SiteInfo { get; }
     }
 }

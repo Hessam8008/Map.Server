@@ -1,4 +1,4 @@
-﻿namespace Map.EndPoints.Service
+﻿namespace Map.EndPoints.Service.SubServices
 {
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -10,8 +10,10 @@
 
     internal abstract class AbstractSubService
     {
-        protected readonly string RootUrl;
         protected readonly IApiCaller ApiService;
+
+        protected readonly string RootUrl;
+
         protected readonly ApiSite Site;
 
         protected AbstractSubService(IApiCaller apiService, ApiSite site, string root)
@@ -21,10 +23,15 @@
             this.RootUrl = site.UrlAddress + "/" + root;
         }
 
-        protected T Parse<T>(string json) => JsonConvert.DeserializeObject<T>(json);
+        protected T Parse<T>(string json)
+        {
+            return JsonConvert.DeserializeObject<T>(json);
+        }
 
         protected async Task ParseAsync(HttpResponseMessage message)
-            => await CheckResponse(message).ConfigureAwait(false);
+        {
+            await CheckResponse(message).ConfigureAwait(false);
+        }
 
         protected async Task<T> ParseAsync<T>(HttpResponseMessage message)
         {
@@ -39,19 +46,6 @@
             {
                 var reason = msg.ReasonPhrase;
                 var code = msg.StatusCode;
-                //var content = msg.Content;
-                //var details = "N/A";
-                //if (content != null)
-                //    details = await msg.Content.ReadAsStringAsync()
-                //                  .ConfigureAwait(false);
-
-                //if ((int)msg.StatusCode == 499)// خطای داخلی هندل شده توسط سرویس دهنده
-                //{
-                //    var handledError = JsonConvert.DeserializeObject<HandledServerError>(details);
-                //    if (handledError != null)
-                //        throw new ApiException(handledError.Code, handledError.Message);
-                //}
-                //else // خطای هندل نشده توسط سرویس دهنده
                 throw new ApiException(code, reason);
             }
         }

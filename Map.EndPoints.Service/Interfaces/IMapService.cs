@@ -1,11 +1,11 @@
-﻿namespace Map.EndPoints.Service
+﻿namespace Map.EndPoints.Service.Interfaces
 {
     using Services.Core;
 
     public interface IMapService
     {
-        ApiSite SiteInfo { get; }
-
         ICustomerService CustomerService { get; }
+
+        ApiSite SiteInfo { get; }
     }
 }

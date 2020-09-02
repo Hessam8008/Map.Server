@@ -1,7 +1,10 @@
-﻿namespace Map.EndPoints.Service
+﻿namespace Map.EndPoints.Service.SubServices
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
+    using Map.EndPoints.Service.Interfaces;
+    using Map.EndPoints.Service.Models;
 
     using Services.Core;
     using Services.Core.Interfaces;
@@ -15,16 +18,11 @@
 
         public async Task<List<CustomerInfo>> GetByArea(int area)
         {
-            var param = new RequestParameters
-                            {
-                                Path = $"{this.RootUrl}/GetByArea"
-                            };
+            var param = new RequestParameters { Path = $"{this.RootUrl}/GetByArea" };
 
             param.AddUrlParameter(nameof(area), area.ToString());
-            var response = await this.ApiService.GetAsync(param)
-                               .ConfigureAwait(false);
-            return await this.ParseAsync<List<CustomerInfo>>(response)
-                       .ConfigureAwait(false);
+            var response = await this.ApiService.GetAsync(param).ConfigureAwait(false);
+            return await this.ParseAsync<List<CustomerInfo>>(response).ConfigureAwait(false);
         }
     }
 }
