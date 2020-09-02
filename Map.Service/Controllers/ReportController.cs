@@ -17,6 +17,7 @@ namespace Map.Service.Controllers
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
 
     using Map.Models;
@@ -54,11 +55,11 @@ namespace Map.Service.Controllers
         /// </summary>
         /// <param name="devices">List of devices ID.</param>
         /// <returns>Returns the list of points.</returns>
-        /// <response code="200">Returns the list of AvlPackage.</response>
+        /// <response code="200">Returns the list of points.</response>
         /// <response code="204">If no data available.</response>
         [HttpGet("GetLastLocations")]
         [ProducesResponseType(typeof(IEnumerable<Point>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetLastLocationsAsync([Required][FromQuery] List<int> devices)
+        public async Task<IActionResult> GetLastLocationsAsync([Optional][FromQuery] List<int> devices)
         {
             var result = await this.unitOfWork.ReportRepository.GetLastLocationsAsync(devices);
             if (result == null || !result.Any())
