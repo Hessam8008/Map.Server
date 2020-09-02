@@ -7,6 +7,6 @@
 
     public interface IReportService
     {
-        Task<List<Point>> GetLastLocationsAsync(List<int> devices);
+        Task<List<Point>> GetLastLocationsAsync(List<int> devices = null);
     }
 }
