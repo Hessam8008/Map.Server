@@ -18,13 +18,21 @@
 
             this.SiteInfo = apiConfig.FindByTitle(_serviceTitle);
             if (this.SiteInfo is null)
+            {
                 throw new KeyNotFoundException($"Entry for '{_serviceTitle}' not found in the configuration.");
+            }
 
             this.CustomerService = new CustomerService(apiService, this.SiteInfo, "Customer");
+            this.DeviceService = new DeviceService(apiService, this.SiteInfo, "Device");
+            this.ReportService = new ReportService(apiService, this.SiteInfo, "Report");
         }
+
+        public ApiSite SiteInfo { get; }
 
         public ICustomerService CustomerService { get; }
 
-        public ApiSite SiteInfo { get; }
+        public IDeviceService DeviceService { get; }
+
+        public IReportService ReportService { get; }
     }
 }

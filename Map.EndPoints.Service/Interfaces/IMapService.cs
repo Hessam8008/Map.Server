@@ -4,8 +4,13 @@
 
     public interface IMapService
     {
-        ICustomerService CustomerService { get; }
-
         ApiSite SiteInfo { get; }
+        
+        ICustomerService CustomerService { get; }
+        
+        IReportService ReportService { get; }
+
+        IDeviceService DeviceService { get; }
+
     }
 }
