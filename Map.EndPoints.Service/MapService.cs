@@ -24,6 +24,7 @@
 
             this.CustomerService = new CustomerService(apiService, this.SiteInfo, "Customer");
             this.DeviceService = new DeviceService(apiService, this.SiteInfo, "Device");
+            this.LocationService = new LocationService(apiService, this.SiteInfo, "Location");
             this.ReportService = new ReportService(apiService, this.SiteInfo, "Report");
         }
 
@@ -32,6 +33,8 @@
         public ICustomerService CustomerService { get; }
 
         public IDeviceService DeviceService { get; }
+
+        public ILocationService LocationService { get; }
 
         public IReportService ReportService { get; }
     }

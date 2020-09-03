@@ -12,5 +12,8 @@
 
         IDeviceService DeviceService { get; }
 
+        ILocationService LocationService { get; }
+
+
     }
 }
