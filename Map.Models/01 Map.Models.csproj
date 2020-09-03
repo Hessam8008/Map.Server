@@ -1,10 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>Hessam Hosseini</Authors>
     <Company>Golriz</Company>
     <Copyright>Copyright (c) 2020 Golriz,Inc. All rights reserved.</Copyright>
+    <AssemblyName>Map.Models</AssemblyName>
+    <RootNamespace>Map.Models</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

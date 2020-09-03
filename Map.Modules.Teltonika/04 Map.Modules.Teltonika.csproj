@@ -5,6 +5,8 @@
     <Authors>Hessam Hosseini</Authors>
     <Company>Golriz</Company>
     <Copyright>Copyright (c) 2020 Golriz,Inc. All rights reserved.</Copyright>
+    <AssemblyName>Map.Modules.Teltonika</AssemblyName>
+    <RootNamespace>Map.Modules.Teltonika</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -44,7 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Map.Models\Map.Models.csproj" />
+    <ProjectReference Include="..\Map.Models\01 Map.Models.csproj" />
   </ItemGroup>
 
 </Project>

@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Map.Models\Map.Models.csproj" />
+    <ProjectReference Include="..\Map.Models\01 Map.Models.csproj" />
   </ItemGroup>
 
 </Project>
