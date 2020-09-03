@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Security.Cryptography;
     using System.Threading.Tasks;
 
     using Map.EndPoints.Service.Interfaces;
@@ -19,7 +20,10 @@
 
         public async Task<List<Location>> GetPathAsync(int device, DateTime @from, DateTime to)
         {
-            var param = new RequestParameters { Path = $"{this.RootUrl}/{device}/{from}/{to}" };
+            var param = new RequestParameters { Path = $"{this.RootUrl}/GetPath" };
+            param.AddUrlParameter(nameof(device), device.ToString());
+            param.AddUrlParameter(nameof(from), from.ToString("s"));
+            param.AddUrlParameter(nameof(to), to.ToString("s"));
             var response = await this.ApiService.GetAsync(param).ConfigureAwait(false);
             return await this.ParseAsync<List<Location>>(response).ConfigureAwait(false);
         }
