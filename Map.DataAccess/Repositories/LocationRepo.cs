@@ -19,6 +19,8 @@ namespace Map.DataAccess.Repositories
     using System.Linq;
     using System.Threading.Tasks;
 
+    using global::Dapper;
+
     using Map.DataAccess.DAO;
     using Map.DataAccess.Dapper;
     using Map.Models.AVL;
@@ -82,7 +84,14 @@ namespace Map.DataAccess.Repositories
         public async Task<IEnumerable<Location>> GetByDeviceAsync(int deviceId, DateTime @from, DateTime to)
         {
             const string Proc = "[gps].[stpLocation_GetByDevice]";
-            var reader = await this.QueryMultipleAsync(Proc, new { deviceId, from, to });
+            /*
+             * Use DynamicParameters because of using DateTime
+             */
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("deviceId", deviceId, DbType.Int32);
+            dp.Add("from", @from, DbType.DateTime);
+            dp.Add("to", to, DbType.DateTime);
+            var reader = await this.QueryMultipleAsync(Proc, dp);
             var locations = (await reader.ReadAsync<LocationDAO>()).ToList();
             var elements = (await reader.ReadAsync<LocationElementDAO>()).ToList();
 
