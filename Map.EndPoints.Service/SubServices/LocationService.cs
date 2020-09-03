@@ -22,8 +22,8 @@
         {
             var param = new RequestParameters { Path = $"{this.RootUrl}/GetPath" };
             param.AddUrlParameter(nameof(device), device.ToString());
-            param.AddUrlParameter(nameof(from), from.ToString(CultureInfo.InvariantCulture));
-            param.AddUrlParameter(nameof(to), to.ToString(CultureInfo.InvariantCulture));
+            param.AddUrlParameter(nameof(from), from.ToString("YYYY-MM-dd HH:mm"));
+            param.AddUrlParameter(nameof(to), to.ToString("YYYY-MM-dd HH:mm"));
             var response = await this.ApiService.GetAsync(param).ConfigureAwait(false);
             return await this.ParseAsync<List<Location>>(response).ConfigureAwait(false);
         }
