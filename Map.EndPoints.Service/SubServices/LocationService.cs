@@ -24,6 +24,9 @@
             param.AddUrlParameter(nameof(device), device.ToString());
             param.AddUrlParameter(nameof(from), from.ToString("YYYY-MM-dd HH:mm"));
             param.AddUrlParameter(nameof(to), to.ToString("YYYY-MM-dd HH:mm"));
+            
+            Console.WriteLine("httpTarget: {0}", param.GetUri());
+
             var response = await this.ApiService.GetAsync(param).ConfigureAwait(false);
             return await this.ParseAsync<List<Location>>(response).ConfigureAwait(false);
         }
