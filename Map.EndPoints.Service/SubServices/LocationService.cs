@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Security.Cryptography;
+    using System.Globalization;
     using System.Threading.Tasks;
 
     using Map.EndPoints.Service.Interfaces;
@@ -22,8 +22,8 @@
         {
             var param = new RequestParameters { Path = $"{this.RootUrl}/GetPath" };
             param.AddUrlParameter(nameof(device), device.ToString());
-            param.AddUrlParameter(nameof(from), from.ToString("s"));
-            param.AddUrlParameter(nameof(to), to.ToString("s"));
+            param.AddUrlParameter(nameof(from), from.ToString(CultureInfo.InvariantCulture));
+            param.AddUrlParameter(nameof(to), to.ToString(CultureInfo.InvariantCulture));
             var response = await this.ApiService.GetAsync(param).ConfigureAwait(false);
             return await this.ParseAsync<List<Location>>(response).ConfigureAwait(false);
         }
