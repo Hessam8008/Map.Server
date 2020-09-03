@@ -12,20 +12,20 @@
     {
         private const string _serviceTitle = "Map.Api";
 
-        public MapService(IApiCaller apiService, IApiConfiguration apiConfig)
+        public MapService(IApiCaller caller, IApiConfiguration config)
         {
-            apiConfig.Load();
+            config.Load();
 
-            this.SiteInfo = apiConfig.FindByTitle(_serviceTitle);
+            this.SiteInfo = config.FindByTitle(_serviceTitle);
             if (this.SiteInfo is null)
             {
                 throw new KeyNotFoundException($"Entry for '{_serviceTitle}' not found in the configuration.");
             }
 
-            this.CustomerService = new CustomerService(apiService, this.SiteInfo, "Customer");
-            this.DeviceService = new DeviceService(apiService, this.SiteInfo, "Device");
-            this.LocationService = new LocationService(apiService, this.SiteInfo, "Location");
-            this.ReportService = new ReportService(apiService, this.SiteInfo, "Report");
+            this.CustomerService = new CustomerService(caller, this.SiteInfo, "Customer");
+            this.DeviceService = new DeviceService(caller, this.SiteInfo, "Device");
+            this.LocationService = new LocationService(caller, this.SiteInfo, "Location");
+            this.ReportService = new ReportService(caller, this.SiteInfo, "Report");
         }
 
         public ApiSite SiteInfo { get; }

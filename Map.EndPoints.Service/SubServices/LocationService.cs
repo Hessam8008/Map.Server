@@ -18,12 +18,12 @@
         {
         }
 
-        public async Task<List<Location>> GetPathAsync(int device, DateTime @from, DateTime to)
+        public async Task<List<Location>> GetPathAsync(int deviceId, DateTime @from, DateTime to)
         {
             var param = new RequestParameters { Path = $"{this.RootUrl}/GetPath" };
-            param.AddUrlParameter(nameof(device), device.ToString());
-            param.AddUrlParameter(nameof(from), from.ToString("YYYY-MM-dd HH:mm"));
-            param.AddUrlParameter(nameof(to), to.ToString("YYYY-MM-dd HH:mm"));
+            param.AddUrlParameter(nameof(deviceId), deviceId.ToString());
+            param.AddUrlParameter(nameof(from), from.ToString("yyyy-MM-dd HH:mm"));
+            param.AddUrlParameter(nameof(to), to.ToString("yyyy-MM-dd HH:mm"));
             
             Console.WriteLine("httpTarget: {0}", param.GetUri());
 
