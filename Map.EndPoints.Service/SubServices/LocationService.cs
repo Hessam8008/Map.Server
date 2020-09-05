@@ -18,9 +18,9 @@
         {
         }
 
-        public async Task<List<Location>> GetPathAsync(int deviceId, DateTime @from, DateTime to)
+        public async Task<List<Location>> GetLocationsAsync(int deviceId, DateTime @from, DateTime to)
         {
-            var param = new RequestParameters { Path = $"{this.RootUrl}/GetPath" };
+            var param = new RequestParameters { Path = $"{this.RootUrl}/GetLocations" };
             param.AddUrlParameter(nameof(deviceId), deviceId.ToString());
             param.AddUrlParameter(nameof(from), from.ToString("yyyy-MM-dd HH:mm"));
             param.AddUrlParameter(nameof(to), to.ToString("yyyy-MM-dd HH:mm"));

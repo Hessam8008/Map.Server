@@ -1,6 +1,8 @@
 ﻿namespace Map.EndPoints.Service.SubServices
 {
+    using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Threading.Tasks;
 
     using Map.EndPoints.Service.Interfaces;
@@ -30,6 +32,17 @@
 
             var response = await this.ApiService.GetAsync(param).ConfigureAwait(false);
             return await this.ParseAsync<List<Point>>(response).ConfigureAwait(false);
+        }
+
+        public async Task<List<ProLocation>> BrowseRoute(int device, DateTime start, DateTime end)
+        {
+            var param = new RequestParameters { Path = $"{this.RootUrl}/BrowseRoute" };
+            param.AddUrlParameter("deviceId", device.ToString());
+            param.AddUrlParameter("from", start.ToString(CultureInfo.InvariantCulture));
+            param.AddUrlParameter("to", end.ToString(CultureInfo.InvariantCulture));
+
+            var response = await this.ApiService.GetAsync(param).ConfigureAwait(false);
+            return await this.ParseAsync<List<ProLocation>>(response).ConfigureAwait(false);
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Map.EndPoints.Service.Test
         {
             try
             {
-                var result = await this.ms.LocationService.GetPathAsync(13, DateTime.Now.AddDays(-1), DateTime.Now);
+                var result = await this.ms.LocationService.GetLocationsAsync(13, DateTime.Now.AddDays(-1), DateTime.Now);
                 Assert.IsTrue(result != null);
             }
             catch (Exception e)
@@ -35,7 +35,21 @@ namespace Map.EndPoints.Service.Test
                 Console.WriteLine(e);
                 Assert.Fail(e.Message);
             }
+        }
 
+        [TestMethod]
+        public async Task BrowseRoute()
+        {
+            try
+            {
+                var result = await this.ms.ReportService.BrowseRoute(13, DateTime.Now.AddDays(-1), DateTime.Now);
+                Assert.IsTrue(result != null);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Assert.Fail(e.Message);
+            }
         }
     }
 }

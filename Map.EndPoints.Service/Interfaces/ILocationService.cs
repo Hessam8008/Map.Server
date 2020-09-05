@@ -8,6 +8,6 @@
 
     public interface ILocationService
     {
-        Task<List<Location>> GetPathAsync(int deviceId, DateTime from, DateTime to);
+        Task<List<Location>> GetLocationsAsync(int deviceId, DateTime from, DateTime to);
     }
 }

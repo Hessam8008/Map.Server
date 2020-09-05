@@ -58,8 +58,8 @@ namespace Map.Service.Controllers
         /// <response code="200">Returns a list of locations.</response>
         /// <response code="204">If no location found.</response>
         [ProducesResponseType(typeof(IEnumerable<Location>), StatusCodes.Status200OK)]
-        [HttpGet("GetPath")]
-        public async Task<IActionResult> GetPathAsync(
+        [HttpGet("GetLocations")]
+        public async Task<IActionResult> GetLocationsAsync(
             [Required][FromQuery] int deviceId,
             [Required][FromQuery] DateTime from,
             [Required][FromQuery] DateTime to)

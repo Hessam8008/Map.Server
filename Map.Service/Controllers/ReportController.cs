@@ -69,5 +69,33 @@ namespace Map.Service.Controllers
 
             return this.Ok(result);
         }
+
+        /// <summary>
+        /// Returns the clear list of a location in a period.
+        /// </summary>
+        /// <param name="deviceId">ID of the device</param>
+        /// <param name="from">Start time</param>
+        /// <param name="to">End time</param>
+        /// <returns>List of ProLocations.</returns>
+        /// <response code="200">Returns a list of locations.</response>
+        /// <response code="204">If no location found.</response>
+        [ProducesResponseType(typeof(List<ProLocation>), StatusCodes.Status200OK)]
+        [HttpGet("BrowseRoute")]
+        public async Task<IActionResult> BrowseRouteAsync(
+            [Required][FromQuery] int deviceId,
+            [Required][FromQuery] DateTime from,
+            [Required][FromQuery] DateTime to)
+        {
+            var locations = (await this.unitOfWork.LocationRepository.GetByDeviceAsync(deviceId, from, to)).ToList();
+            var br = new RouteBrowser(locations);
+            br.BrowseRoute();
+
+            if (br.ProLocations == null || !br.ProLocations.Any())
+            {
+                return this.NoContent();
+            }
+
+            return this.Ok(br.ProLocations);
+        }
     }
 }
