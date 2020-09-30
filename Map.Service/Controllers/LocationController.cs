@@ -58,11 +58,11 @@ namespace Map.Service.Controllers
         /// <response code="200">Returns a list of locations.</response>
         /// <response code="204">If no location found.</response>
         [ProducesResponseType(typeof(IEnumerable<Location>), StatusCodes.Status200OK)]
-        [HttpGet("{deviceId:int}/{from}/{to}")]
-        public async Task<IActionResult> Get(
-            [Required] int deviceId,
-            [Required]DateTime from,
-            [Required] DateTime to)
+        [HttpGet("GetLocations")]
+        public async Task<IActionResult> GetLocationsAsync(
+            [Required][FromQuery] int deviceId,
+            [Required][FromQuery] DateTime from,
+            [Required][FromQuery] DateTime to)
         {
             var result = await this.unitOfWork.LocationRepository.GetByDeviceAsync(deviceId, from, to);
             if (result == null || !result.Any())

@@ -8,6 +8,8 @@
     <Product>Map.Server</Product>
     <PackageId>Map.Server</PackageId>
     <Copyright>Copyright (c) 2020 Golriz,Inc. All rights reserved.</Copyright>
+    <AssemblyName>Map.Server</AssemblyName>
+    <RootNamespace>Map.Server</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -40,8 +42,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Map.DataAccess\Map.DataAccess.csproj" />
-    <ProjectReference Include="..\Map.Modules.Teltonika\Map.Modules.Teltonika.csproj" />
+    <ProjectReference Include="..\Map.DataAccess\02 Map.DataAccess.csproj" />
+    <ProjectReference Include="..\Map.Modules.Teltonika\04 Map.Modules.Teltonika.csproj" />
   </ItemGroup>
 
   <ItemGroup>

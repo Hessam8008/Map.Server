@@ -7,6 +7,8 @@
 		<Copyright>Copyright (c) 2020 Golriz,Inc. All rights reserved.</Copyright>
 		<Company>Golriz</Company>
 		<Authors>Hessam Hosseini</Authors>
+		<AssemblyName>Map.Service</AssemblyName>
+		<RootNamespace>Map.Service</RootNamespace>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -18,8 +20,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Map.DataAccess\Map.DataAccess.csproj" />
-		<ProjectReference Include="..\Map.Models\Map.Models.csproj" />
+		<ProjectReference Include="..\Map.DataAccess\02 Map.DataAccess.csproj" />
+		<ProjectReference Include="..\Map.Models\01 Map.Models.csproj" />
 	</ItemGroup>
 
 </Project>

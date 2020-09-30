@@ -50,12 +50,16 @@ namespace Map.DataAccess.Repositories
         public async Task<IEnumerable<Point>> GetLastLocationsAsync(List<int> devices)
         {
             const string ProcedureName = "[gps].[stpReport_GetLastLocations]";
-            var reader = await QueryMultipleAsync(ProcedureName, new { deviceList = devices.ToDataTable() });
+
+            var reader = devices == null || !devices.Any()
+                             ? await this.QueryMultipleAsync(ProcedureName)
+                             : await this.QueryMultipleAsync(ProcedureName, new { deviceList = devices.ToDataTable() });
+
             var deviceList = (await reader.ReadAsync<DeviceDAO>()).ToList();
             var locationList = (await reader.ReadAsync<LocationDAO>()).ToList();
             var elementList = (await reader.ReadAsync<LocationElementDAO>()).ToList();
-
             var result = new List<Point>();
+
             foreach (var daoDevice in deviceList)
             {
                 var p = new Point { Device = daoDevice.ToDevice() };

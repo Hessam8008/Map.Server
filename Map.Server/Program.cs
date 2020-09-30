@@ -38,6 +38,7 @@ namespace Map.Server
         /// <param name="args">The args<see cref="string" />.</param>
         public static void Main(string[] args)
         {
+            // Main object
             ObjectiveMain();
         }
 
@@ -154,7 +155,7 @@ namespace Map.Server
                 {
                     dc.LastLocation = last;
                     dc.LastStatus = last;
-                    await NotifierService.BroadcastLastLocation(e.IMEI, last);
+                    await NotifierService.BroadcastLastLocation(dc.Device, last);
                 }
                 else if (last.Time >= dc.LastLocation.Time)
                 {
@@ -162,7 +163,7 @@ namespace Map.Server
                     {
                         dc.LastLocation = last;
                         dc.LastStatus = last;
-                        await NotifierService.BroadcastLastLocation(e.IMEI, last);
+                        await NotifierService.BroadcastLastLocation(dc.Device, last);
                     }
                     else
                     {

@@ -108,13 +108,13 @@ namespace Map.Server
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        public static async Task BroadcastLastLocation(string imei, Location location)
+        public static async Task BroadcastLastLocation(Device device, Location location)
         {
             var obj = new
             {
                 TYPE = "LAST_LOCATION",
                 TIME = DateTime.UtcNow,
-                OBJ = new { imei, Location = location }.ToJson()
+                OBJ = new { device, location }.ToJson()
             };
             await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
         }
