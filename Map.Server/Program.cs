@@ -155,7 +155,7 @@ namespace Map.Server
                 {
                     dc.LastLocation = last;
                     dc.LastStatus = last;
-                    await NotifierService.BroadcastLastLocation(e.IMEI, last);
+                    await NotifierService.BroadcastLastLocation(dc.Device, last);
                 }
                 else if (last.Time >= dc.LastLocation.Time)
                 {
@@ -163,7 +163,7 @@ namespace Map.Server
                     {
                         dc.LastLocation = last;
                         dc.LastStatus = last;
-                        await NotifierService.BroadcastLastLocation(e.IMEI, last);
+                        await NotifierService.BroadcastLastLocation(dc.Device, last);
                     }
                     else
                     {
