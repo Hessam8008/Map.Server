@@ -38,27 +38,6 @@ namespace Map.Server
         /// <param name="args">The args<see cref="string" />.</param>
         public static void Main(string[] args)
         {
-            ObjectiveMain();
-        }
-
-        /// <summary>
-        /// Log the text.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="color">The color.</param>
-        private static void Log(string text, ConsoleColor color = ConsoleColor.Gray)
-        {
-            var tempColor = Console.ForegroundColor;
-            Console.ForegroundColor = color;
-            Console.WriteLine("{0:HH:mm:ss}\n {1}\n\n", DateTime.Now, text);
-            Console.ForegroundColor = tempColor;
-        }
-
-        /// <summary>
-        /// Objectives the main.
-        /// </summary>
-        private static void ObjectiveMain()
-        {
             try
             {
                 var c = new DatabaseSettings();
@@ -88,6 +67,19 @@ namespace Map.Server
 
             Console.WriteLine("Server stopped, press any key to close...");
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// Log the text.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="color">The color.</param>
+        private static void Log(string text, ConsoleColor color = ConsoleColor.Gray)
+        {
+            var tempColor = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine("{0:HH:mm:ss}\n {1}\n\n", DateTime.Now, text);
+            Console.ForegroundColor = tempColor;
         }
 
         /// <summary>

@@ -114,7 +114,7 @@ namespace Map.Server
             {
                 TYPE = "LAST_LOCATION",
                 TIME = DateTime.UtcNow,
-                OBJ = new { device, location }.ToJson()
+                OBJ = new { Device = device, Location = location }.ToJson()
             };
             await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
         }
@@ -137,7 +137,7 @@ namespace Map.Server
             {
                 TYPE = "LAST_STATUS",
                 TIME = DateTime.UtcNow,
-                OBJ = new { imei, Location = location }.ToJson()
+                OBJ = new { IMEI = imei , Location = location }.ToJson()
             };
             await BroadcastMessage(obj.ToJson()).ConfigureAwait(false);
         }

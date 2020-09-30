@@ -16,6 +16,7 @@ namespace Map.Service
     using System;
     using System.IO;
     using System.Reflection;
+    using System.Text.Json;
 
     using Map.DataAccess;
     using Map.Models;
@@ -55,7 +56,9 @@ namespace Map.Service
         /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(o => o.JsonSerializerOptions.PropertyNamingPolicy = null); 
+
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             this.AddSwagger(services);
