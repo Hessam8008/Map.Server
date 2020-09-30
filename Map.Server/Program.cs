@@ -38,7 +38,6 @@ namespace Map.Server
         /// <param name="args">The args<see cref="string" />.</param>
         public static void Main(string[] args)
         {
-            // Main object
             ObjectiveMain();
         }
 
