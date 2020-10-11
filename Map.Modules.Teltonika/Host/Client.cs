@@ -47,6 +47,18 @@ namespace Map.Modules.Teltonika.Host
     public delegate void OnDisconnected(object sender, DisconnectedArgs e);
 
     /// <summary>
+    /// On error occurred.
+    /// </summary>
+    /// <param name="sender">
+    /// The sender.
+    /// </param>
+    /// <param name="e">
+    /// The e.
+    /// </param>
+    public delegate void OnErrorOccurred(object sender, ErrorOccurredArgs e);
+
+
+    /// <summary>
     /// Defines the <see cref="Client" />.
     /// </summary>
     internal class Client
@@ -103,6 +115,11 @@ namespace Map.Modules.Teltonika.Host
         /// Occurs when something happened.
         /// </summary>
         public event OnLogged Logged;
+
+        /// <summary>
+        /// The error occurred.
+        /// </summary>
+        public event OnErrorOccurred ErrorOccurred;
 
         /// <summary>
         /// Get data from device.
@@ -170,8 +187,7 @@ namespace Map.Modules.Teltonika.Host
                 TeltonikaUnitOfWork uow;
                 using (uow = new TeltonikaUnitOfWork(this.databaseSettings.ConnectionString))
                 {
-                    while ((counter = await stream.ReadAsync(bytes, 0, bytes.Length)
-                            .ConfigureAwait(false)) != 0)
+                    while ((counter = await stream.ReadAsync(bytes, 0, bytes.Length).ConfigureAwait(false)) != 0)
                     {
                         var hexData = BitConverter.ToString(bytes, 0, counter).Replace("-", string.Empty);
                         var rawMessage = new RawData(this.imei, hexData);
@@ -211,6 +227,10 @@ namespace Map.Modules.Teltonika.Host
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                this.ErrorOccurred?.Invoke(this, new ErrorOccurredArgs(ex));
+            }
             finally
             {
                 this.CloseConnection();
@@ -222,9 +242,16 @@ namespace Map.Modules.Teltonika.Host
         /// </summary>
         private void CloseConnection()
         {
-            this.client?.Close();
-            this.client?.Dispose();
-            this.Disconnected?.Invoke(this, new DisconnectedArgs(this.imei));
+            try
+            {
+                this.client?.Close();
+                this.client?.Dispose();
+                this.Disconnected?.Invoke(this, new DisconnectedArgs(this.imei));
+            }
+            catch (Exception ex)
+            {
+                this.ErrorOccurred?.Invoke(this, new ErrorOccurredArgs(ex));
+            }
         }
     }
 }

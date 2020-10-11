@@ -175,6 +175,7 @@ namespace Map.Modules.Teltonika.Host
             client.PacketReceived += (sender, args) => this.ClientPacketReceived?.Invoke(client, args);
             client.Disconnected += (sender, args) => this.ClientDisconnected?.Invoke(client, args);
             client.Logged += (sender, args) => this.Logged?.Invoke(client, args);
+            client.ErrorOccurred += (sender, args) => this.ErrorOccured?.Invoke(this, args);
             try
             {
                 await client.GetDataAsync();

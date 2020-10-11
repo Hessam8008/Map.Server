@@ -13,6 +13,7 @@
 // ***********************************************************************
 namespace Map.Server
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
@@ -27,7 +28,6 @@ namespace Map.Server
     /// Implements the <see cref="IBlackBox" />
     /// </summary>
     /// <seealso cref="IBlackBox" />
-    [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed. Suppression is OK here.")]
     internal class TeltonikaBlackBox : IBlackBox
     {
         /// <summary>
@@ -52,29 +52,38 @@ namespace Map.Server
         /// <returns>The task of boolean.</returns>
         public async Task<bool> ApprovedIMEIAsync(string imei)
         {
-            MapUnitOfWork uow;
-            using (uow = new MapUnitOfWork(this.DatabaseSettings))
+            try
             {
-                var device = await uow.DeviceRepository.GetByIMEIAsync(imei).ConfigureAwait(false);
-                if (device != null)
+                MapUnitOfWork uow;
+                using (uow = new MapUnitOfWork(this.DatabaseSettings))
                 {
-                    return true;
+                    var device = await uow.DeviceRepository.GetByIMEIAsync(imei).ConfigureAwait(false);
+                    if (device != null)
+                    {
+                        return true;
+                    }
+
+                    device = new Device
+                                 {
+                                     IMEI = imei,
+                                     Model = "N/A",
+                                     SimNumber = "0000000000",
+                                     OwnerMobileNumber = "0000000000",
+                                     Nickname = "N/A",
+                                     SN = "N/A"
+                                 };
+                    await uow.DeviceRepository.SyncAsync(device).ConfigureAwait(false);
+                    uow.Commit();
                 }
 
-                device = new Device
-                             {
-                                 IMEI = imei,
-                                 Model = "N/A",
-                                 SimNumber = "0000000000",
-                                 OwnerMobileNumber = "0000000000",
-                                 Nickname = "N/A",
-                                 SN = "N/A"
-                             };
-                await uow.DeviceRepository.SyncAsync(device).ConfigureAwait(false);
-                uow.Commit();
+                return true;
             }
-
-            return true;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+           
         }
 
         /// <summary>
@@ -85,24 +94,33 @@ namespace Map.Server
         /// <returns>The task of boolean.</returns>
         public async Task<bool> AcceptedLocationsAsync(string imei, List<Location> locations)
         {
-            MapUnitOfWork db;
-            using (db = new MapUnitOfWork(this.DatabaseSettings))
+            try
             {
-                var device = await db.DeviceRepository.GetByIMEIAsync(imei).ConfigureAwait(false);
-                if (device == null)
+                MapUnitOfWork db;
+                using (db = new MapUnitOfWork(this.DatabaseSettings))
                 {
-                    return false;
+                    var device = await db.DeviceRepository.GetByIMEIAsync(imei).ConfigureAwait(false);
+                    if (device == null)
+                    {
+                        return false;
+                    }
+
+                    foreach (var location in locations)
+                    {
+                        var locationId = await db.LocationRepository.InsertAsync(device.ID, location).ConfigureAwait(false);
+                    }
+
+                    db.Commit();
                 }
 
-                foreach (var location in locations)
-                {
-                    var locationId = await db.LocationRepository.InsertAsync(device.ID, location).ConfigureAwait(false);
-                }
-
-                db.Commit();
+                return true;
             }
-
-            return true;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+           
         }
     }
 }
