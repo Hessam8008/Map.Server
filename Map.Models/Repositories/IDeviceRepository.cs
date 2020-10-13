@@ -13,16 +13,22 @@
 // ***********************************************************************
 namespace Map.Models.Repositories
 {
+    using Map.Models.AVL;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
-    using Map.Models.AVL;
 
     /// <summary>
     /// Interface IDeviceRepository
     /// </summary>
     public interface IDeviceRepository
     {
+        /// <summary>Inserts the asynchronous.</summary>
+        /// <param name="device">The device.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public Task<int> InsertAsync(Device device);
+
         /// <summary>
         /// Gets all asynchronous.
         /// </summary>

@@ -11,17 +11,19 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+
+using System;
+
 namespace Map.DataAccess.Repositories
 {
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Linq;
-    using System.Threading.Tasks;
-
     using Map.DataAccess.DAO;
     using Map.DataAccess.Dapper;
     using Map.Models.AVL;
     using Map.Models.Repositories;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Linq;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Class DeviceRepo.
@@ -39,6 +41,21 @@ namespace Map.DataAccess.Repositories
         {
         }
 
+        /// <summary>Inserts the asynchronous.</summary>
+        /// <param name="device">The device.</param>
+        /// <exception cref="ArgumentNullException">device</exception>
+        public async Task<int> InsertAsync(Device device)
+        {
+            if (device == null)
+                throw new ArgumentNullException(nameof(device));
+
+            var dao = new DeviceDAO(device);
+
+            var param = dao.DynamicParameters();
+
+            return await QuerySingleOrDefaultAsync<int>("[gps].[stpDevice_Insert]", param);
+        }
+
         /// <summary>
         /// get all as an asynchronous operation.
         /// </summary>
@@ -46,7 +63,7 @@ namespace Map.DataAccess.Repositories
         public async Task<IEnumerable<Device>> GetAllAsync()
         {
             const string ProcedureName = "[gps].[stpDevice_GetAll]";
-            var devices = await this.QueryAsync<DeviceDAO>(ProcedureName);
+            var devices = await QueryAsync<DeviceDAO>(ProcedureName);
             var result =
                 from d in devices
                 select d?.ToDevice();
@@ -62,7 +79,7 @@ namespace Map.DataAccess.Repositories
         {
             const string ProcedureName = "[gps].[stpDevice_GetById]";
             var param = new { id };
-            var device = await this.QueryFirstOrDefaultAsync<DeviceDAO>(ProcedureName, param);
+            var device = await QueryFirstOrDefaultAsync<DeviceDAO>(ProcedureName, param);
             return device?.ToDevice();
         }
 
@@ -75,7 +92,7 @@ namespace Map.DataAccess.Repositories
         {
             const string ProcedureName = "[gps].[stpDevice_GetByIMEI]";
             var param = new { imei };
-            var device = await this.QueryFirstOrDefaultAsync<DeviceDAO>(ProcedureName, param);
+            var device = await QueryFirstOrDefaultAsync<DeviceDAO>(ProcedureName, param);
             return device?.ToDevice();
         }
 
@@ -88,7 +105,7 @@ namespace Map.DataAccess.Repositories
         {
             const string ProcedureName = "[gps].[stpDevice_Sync]";
             var param = new DeviceDAO(device).DynamicParameters();
-            var result = await this.QueryFirstOrDefaultAsync<DeviceDAO>(ProcedureName, param);
+            var result = await QueryFirstOrDefaultAsync<DeviceDAO>(ProcedureName, param);
             return result?.ToDevice();
         }
     }
