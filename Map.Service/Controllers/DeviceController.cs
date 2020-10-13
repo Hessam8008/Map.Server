@@ -13,16 +13,14 @@
 // ***********************************************************************
 namespace Map.Service.Controllers
 {
+    using Map.Models;
+    using Map.Models.AVL;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using Map.Models;
-    using Map.Models.AVL;
-
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
     /// Class DeviceController.
@@ -48,6 +46,22 @@ namespace Map.Service.Controllers
             this.unitOfWork = unitOfWork;
         }
 
+        [HttpPost]
+        [Route("Create")]
+        [ProducesResponseType(typeof(int), 200)]
+        public async Task<IActionResult> Create([Required] Device device)
+        {
+            var result = await unitOfWork.DeviceRepository.InsertAsync(device);
+
+            if (result == 0)
+            {
+                return NoContent();
+            }
+
+            unitOfWork.Commit();
+            return Ok(result);
+        }
+
         /// <summary>
         /// Get all devices registered in the system.
         /// </summary>
@@ -58,13 +72,13 @@ namespace Map.Service.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
-            var result = await this.unitOfWork.DeviceRepository.GetAllAsync();
+            var result = await unitOfWork.DeviceRepository.GetAllAsync();
             if (result == null || !result.Any())
             {
-                return this.NoContent();
+                return NoContent();
             }
 
-            return this.Ok(result);
+            return Ok(result);
         }
 
         /// <summary>
@@ -78,13 +92,13 @@ namespace Map.Service.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetByIdAsync([Required] int id)
         {
-            var result = await this.unitOfWork.DeviceRepository.GetByIdAsync(id);
+            var result = await unitOfWork.DeviceRepository.GetByIdAsync(id);
             if (result == null)
             {
-                return this.NoContent();
+                return NoContent();
             }
 
-            return this.Ok(result);
+            return Ok(result);
         }
 
         /// <summary>
@@ -98,13 +112,13 @@ namespace Map.Service.Controllers
         [HttpGet("GetByIMEI")]
         public async Task<IActionResult> GetByIMEIAsync([Required][FromQuery] string imei)
         {
-            var result = await this.unitOfWork.DeviceRepository.GetByIMEIAsync(imei);
+            var result = await unitOfWork.DeviceRepository.GetByIMEIAsync(imei);
             if (result == null)
             {
-                return this.NoContent();
+                return NoContent();
             }
 
-            return this.Ok(result);
+            return Ok(result);
         }
     }
 }
