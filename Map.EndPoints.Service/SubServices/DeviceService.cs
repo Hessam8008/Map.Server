@@ -1,13 +1,15 @@
-﻿namespace Map.EndPoints.Service.SubServices
-{
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+﻿using Services.Core.Tools;
+using System.Net.Http;
+using System.Text;
 
+namespace Map.EndPoints.Service.SubServices
+{
     using Map.EndPoints.Service.Interfaces;
     using Map.EndPoints.Service.Models;
-
     using Services.Core;
     using Services.Core.Interfaces;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     internal class DeviceService : AbstractSubService, IDeviceService
     {
@@ -15,27 +17,57 @@
             : base(apiService, site, root)
         {
         }
-
+        public async Task<int> CreateAsync(Device device)
+        {
+            var body = device.ToJson();
+            var param = new RequestParameters
+            {
+                Path = $"{RootUrl}/Create",
+                Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.ApplicationJson)
+            };
+            var response = await ApiService.PostAsync(param).ConfigureAwait(false);
+            return await ParseAsync<int>(response).ConfigureAwait(false);
+        }
+        public async Task<int> UpdateAsync(Device device)
+        {
+            var body = device.ToJson();
+            var param = new RequestParameters
+            {
+                Path = $"{RootUrl}/Update",
+                Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.ApplicationJson)
+            };
+            var response = await ApiService.PutAsync(param).ConfigureAwait(false);
+            return await ParseAsync<int>(response).ConfigureAwait(false);
+        }
+        public async Task<int> DeleteAsync(Device device)
+        {
+            var body = device.ToJson();
+            var param = new RequestParameters
+            {
+                Path = $"{RootUrl}/Delete",
+                Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.ApplicationJson)
+            };
+            var response = await ApiService.DeleteAsync(param).ConfigureAwait(false);
+            return await ParseAsync<int>(response).ConfigureAwait(false);
+        }
         public async Task<List<Device>> GetAllAsync()
         {
-            var param = new RequestParameters { Path = $"{this.RootUrl}" };
-            var response = await this.ApiService.GetAsync(param).ConfigureAwait(false);
-            return await this.ParseAsync<List<Device>>(response).ConfigureAwait(false);
+            var param = new RequestParameters { Path = $"{RootUrl}" };
+            var response = await ApiService.GetAsync(param).ConfigureAwait(false);
+            return await ParseAsync<List<Device>>(response).ConfigureAwait(false);
         }
-
         public async Task<Device> GetAsync(int id)
         {
-            var param = new RequestParameters { Path = $"{this.RootUrl}/{id}" };
-            var response = await this.ApiService.GetAsync(param).ConfigureAwait(false);
-            return await this.ParseAsync<Device>(response).ConfigureAwait(false);
+            var param = new RequestParameters { Path = $"{RootUrl}/{id}" };
+            var response = await ApiService.GetAsync(param).ConfigureAwait(false);
+            return await ParseAsync<Device>(response).ConfigureAwait(false);
         }
-
         public async Task<Device> GetByIMEIAsync(string imei)
         {
-            var param = new RequestParameters { Path = $"{this.RootUrl}/GetByIMEI" };
+            var param = new RequestParameters { Path = $"{RootUrl}/GetByIMEI" };
             param.AddUrlParameter("imei", imei);
-            var response = await this.ApiService.GetAsync(param).ConfigureAwait(false);
-            return await this.ParseAsync<Device>(response).ConfigureAwait(false);
+            var response = await ApiService.GetAsync(param).ConfigureAwait(false);
+            return await ParseAsync<Device>(response).ConfigureAwait(false);
         }
     }
 }
