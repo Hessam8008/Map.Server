@@ -56,6 +56,33 @@ namespace Map.DataAccess.Repositories
             return await QuerySingleOrDefaultAsync<int>("[gps].[stpDevice_Insert]", param);
         }
 
+        /// <summary>Updates the asynchronous.</summary>
+        /// <param name="device">The device.</param>
+        /// <exception cref="ArgumentNullException">device</exception>
+        public async Task<int> UpdateAsync(Device device)
+        {
+            if (device == null)
+                throw new ArgumentNullException(nameof(device));
+
+            var dao = new DeviceDAO(device);
+
+            var param = dao.DynamicParameters();
+
+            return await ExecuteAsync("[gps].[stpDevice_Update]", param);
+        }
+
+        /// <summary>Deletes the asynchronous.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<int> DeleteAsync(int id)
+        {
+            var param = new { ID = id };
+
+            return await ExecuteAsync("[gps].[stpDevice_Delete]", param);
+        }
+
         /// <summary>
         /// get all as an asynchronous operation.
         /// </summary>

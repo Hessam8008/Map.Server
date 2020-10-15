@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Map.EndPoints.Service" Version="0.13.0" />
+    <PackageReference Include="Services.WebApiCaller" Version="0.1.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Map.EndPoints.Service\06 Map.EndPoints.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ApiConfig.cfg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>
