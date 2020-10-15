@@ -48,7 +48,7 @@ namespace Map.Service.Controllers
 
         [HttpPost]
         [Route("Create")]
-        [ProducesResponseType(typeof(int), 200)]
+        [ProducesResponseType(typeof(Device), 200)]
         public async Task<IActionResult> CreateAsync([Required] Device device)
         {
             var result = await unitOfWork.DeviceRepository.InsertAsync(device);
@@ -58,40 +58,41 @@ namespace Map.Service.Controllers
                 return NoContent();
             }
 
+            var insertedDevice = await unitOfWork.DeviceRepository.GetByIdAsync(result);
+
             unitOfWork.Commit();
-            return Ok(result);
+            return Ok(insertedDevice);
         }
 
         [HttpPut]
         [Route("Update")]
-        [ProducesResponseType(typeof(int), 200)]
+        [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> UpdateAsync([Required] Device device)
         {
             var result = await unitOfWork.DeviceRepository.UpdateAsync(device);
 
-            if (result == 0)
+            if (result <= 0)
             {
                 return NoContent();
             }
 
             unitOfWork.Commit();
-            return Ok(result);
+            return Ok();
         }
 
         [HttpDelete]
         [Route("Delete")]
-        [ProducesResponseType(typeof(int), 200)]
-        public async Task<IActionResult> DeleteAsync([Required] Device device)
+        public async Task<IActionResult> DeleteAsync([Required] int id)
         {
-            var result = await unitOfWork.DeviceRepository.DeleteAsync(device);
+            var result = await unitOfWork.DeviceRepository.DeleteAsync(id);
 
-            if (result == 0)
+            if (result <= 0)
             {
                 return NoContent();
             }
 
             unitOfWork.Commit();
-            return Ok(result);
+            return Ok();
         }
 
         /// <summary>

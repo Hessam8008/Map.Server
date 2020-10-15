@@ -41,7 +41,7 @@ namespace Map.Models.Repositories
         /// <returns>
         ///   <br />
         /// </returns>
-        Task<int> DeleteAsync(Device device);
+        Task<int> DeleteAsync(int id);
 
         /// <summary>
         /// Gets all asynchronous.

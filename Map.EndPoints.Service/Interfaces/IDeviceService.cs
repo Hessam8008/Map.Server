@@ -6,9 +6,9 @@
 
     public interface IDeviceService
     {
-        Task<int> CreateAsync(Device device);
-        Task<int> UpdateAsync(Device device);
-        Task<int> DeleteAsync(Device device);
+        Task<Device> CreateAsync(Device device);
+        Task UpdateAsync(Device device);
+        Task DeleteAsync(int id);
         Task<List<Device>> GetAllAsync();
         Task<Device> GetAsync(int id);
         Task<Device> GetByIMEIAsync(string imei);

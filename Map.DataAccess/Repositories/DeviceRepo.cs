@@ -72,14 +72,13 @@ namespace Map.DataAccess.Repositories
         }
 
         /// <summary>Deletes the asynchronous.</summary>
-        /// <param name="device"></param>
-        /// <exception cref="ArgumentNullException">device</exception>
-        public async Task<int> DeleteAsync(Device device)
+        /// <param name="id">The identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<int> DeleteAsync(int id)
         {
-            if (device == null)
-                throw new ArgumentNullException(nameof(device));
-
-            var param = new { ID = device.ID };
+            var param = new { ID = id };
 
             return await ExecuteAsync("[gps].[stpDevice_Delete]", param);
         }

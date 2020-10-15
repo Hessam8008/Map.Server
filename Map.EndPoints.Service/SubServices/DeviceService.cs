@@ -17,7 +17,7 @@ namespace Map.EndPoints.Service.SubServices
             : base(apiService, site, root)
         {
         }
-        public async Task<int> CreateAsync(Device device)
+        public async Task<Device> CreateAsync(Device device)
         {
             var body = device.ToJson();
             var param = new RequestParameters
@@ -26,9 +26,9 @@ namespace Map.EndPoints.Service.SubServices
                 Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.ApplicationJson)
             };
             var response = await ApiService.PostAsync(param).ConfigureAwait(false);
-            return await ParseAsync<int>(response).ConfigureAwait(false);
+            return await ParseAsync<Device>(response).ConfigureAwait(false);
         }
-        public async Task<int> UpdateAsync(Device device)
+        public async Task UpdateAsync(Device device)
         {
             var body = device.ToJson();
             var param = new RequestParameters
@@ -37,18 +37,18 @@ namespace Map.EndPoints.Service.SubServices
                 Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.ApplicationJson)
             };
             var response = await ApiService.PutAsync(param).ConfigureAwait(false);
-            return await ParseAsync<int>(response).ConfigureAwait(false);
+            await ParseAsync(response).ConfigureAwait(false);
         }
-        public async Task<int> DeleteAsync(Device device)
+        public async Task DeleteAsync(int id)
         {
-            var body = device.ToJson();
+            var body = id.ToJson();
             var param = new RequestParameters
             {
                 Path = $"{RootUrl}/Delete",
                 Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.ApplicationJson)
             };
             var response = await ApiService.DeleteAsync(param).ConfigureAwait(false);
-            return await ParseAsync<int>(response).ConfigureAwait(false);
+            await ParseAsync(response).ConfigureAwait(false);
         }
         public async Task<List<Device>> GetAllAsync()
         {
