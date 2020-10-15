@@ -27,7 +27,21 @@ namespace Map.Models.Repositories
         /// <returns>
         ///   <br />
         /// </returns>
-        public Task<int> InsertAsync(Device device);
+        Task<int> InsertAsync(Device device);
+
+        /// <summary>Updates the asynchronous.</summary>
+        /// <param name="device">The device.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<int> UpdateAsync(Device device);
+
+        /// <summary>Deletes the asynchronous.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<int> DeleteAsync(Device device);
 
         /// <summary>
         /// Gets all asynchronous.
