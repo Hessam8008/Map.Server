@@ -49,9 +49,41 @@ namespace Map.Service.Controllers
         [HttpPost]
         [Route("Create")]
         [ProducesResponseType(typeof(int), 200)]
-        public async Task<IActionResult> Create([Required] Device device)
+        public async Task<IActionResult> CreateAsync([Required] Device device)
         {
             var result = await unitOfWork.DeviceRepository.InsertAsync(device);
+
+            if (result == 0)
+            {
+                return NoContent();
+            }
+
+            unitOfWork.Commit();
+            return Ok(result);
+        }
+
+        [HttpPut]
+        [Route("Update")]
+        [ProducesResponseType(typeof(int), 200)]
+        public async Task<IActionResult> UpdateAsync([Required] Device device)
+        {
+            var result = await unitOfWork.DeviceRepository.UpdateAsync(device);
+
+            if (result == 0)
+            {
+                return NoContent();
+            }
+
+            unitOfWork.Commit();
+            return Ok(result);
+        }
+
+        [HttpDelete]
+        [Route("Delete")]
+        [ProducesResponseType(typeof(int), 200)]
+        public async Task<IActionResult> DeleteAsync([Required] Device device)
+        {
+            var result = await unitOfWork.DeviceRepository.DeleteAsync(device);
 
             if (result == 0)
             {
