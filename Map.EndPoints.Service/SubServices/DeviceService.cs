@@ -41,12 +41,13 @@ namespace Map.EndPoints.Service.SubServices
         }
         public async Task DeleteAsync(int id)
         {
-            var body = id.ToJson();
             var param = new RequestParameters
             {
                 Path = $"{RootUrl}/Delete",
-                Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.ApplicationJson)
             };
+
+            param.AddUrlParameter(nameof(id), id.ToString());
+
             var response = await ApiService.DeleteAsync(param).ConfigureAwait(false);
             await ParseAsync(response).ConfigureAwait(false);
         }
