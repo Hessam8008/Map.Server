@@ -19,7 +19,7 @@ namespace Map.Endpoints.Service.Tests.Console
 
             var ms = new MapService(_caller, _config);
 
-            //await ms.DeviceService.DeleteAsync(70);
+            
 
             var result = await ms.DeviceService.CreateAsync(new Device()
             {
@@ -32,9 +32,11 @@ namespace Map.Endpoints.Service.Tests.Console
                 SimNumber = "121"
             });
 
+            var device = await ms.DeviceService.GetAsync(result.ID);
+
             await ms.DeviceService.UpdateAsync(new Device()
             {
-                ID = 71,
+                ID = result.ID,
                 IMEI = "123",
                 Model = "1",
                 CreateTime = DateTime.Now,
@@ -43,6 +45,9 @@ namespace Map.Endpoints.Service.Tests.Console
                 Nickname = "sss",
                 SimNumber = "121"
             });
+
+            await ms.DeviceService.DeleteAsync(result.ID);
+
 
             //System.Console.WriteLine(result?.ToString());
         }
