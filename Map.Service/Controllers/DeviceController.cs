@@ -66,7 +66,6 @@ namespace Map.Service.Controllers
 
         [HttpPut]
         [Route("Update")]
-        [ProducesResponseType(typeof(bool), 200)]
         public async Task<IActionResult> UpdateAsync([Required] Device device)
         {
             var result = await unitOfWork.DeviceRepository.UpdateAsync(device);
