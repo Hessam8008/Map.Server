@@ -13,16 +13,43 @@
 // ***********************************************************************
 namespace Map.Models.Repositories
 {
+    using Map.Models.Customer;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
-    using Map.Models.Customer;
 
     /// <summary>
     /// Interface IReportRepository
     /// </summary>
     public interface ICustomerRepository
     {
+        /// <summary>Inserts the asynchronous.</summary>
+        /// <param name="customer">The customer.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<int> InsertAsync(CustomerInfo customer);
+
+        /// <summary>Updates the asynchronous.</summary>
+        /// <param name="customer">The customer.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<int> UpdateAsync(CustomerInfo customer);
+
+        /// <summary>Deletes the asynchronous.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<int> DeleteAsync(int id);
+
+        /// <summary>Gets the by identifier asynchronous.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        Task<CustomerInfo> GetByIdAsync(int id);
+
         /// <summary>
         /// Gets the customers asynchronous.
         /// </summary>

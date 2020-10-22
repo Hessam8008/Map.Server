@@ -11,15 +11,18 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+
+using Map.DataAccess.DAO;
+using System;
+
 namespace Map.DataAccess.Repositories
 {
-    using System.Collections.Generic;
-    using System.Data;
-    using System.Threading.Tasks;
-
     using Map.DataAccess.Dapper;
     using Map.Models.Customer;
     using Map.Models.Repositories;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Class DeviceRepo.
@@ -39,6 +42,67 @@ namespace Map.DataAccess.Repositories
         {
         }
 
+        /// <summary>Inserts the asynchronous.</summary>
+        /// <param name="customer">The customer.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        /// <exception cref="ArgumentNullException">customer</exception>
+        public async Task<int> InsertAsync(CustomerInfo customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var dao = new CustomerDao(customer);
+
+            var param = dao.DynamicParameters();
+
+            return await ExecuteAsync("[dbo].[stpCustomer_Insert]", param);
+        }
+
+        /// <summary>Updates the asynchronous.</summary>
+        /// <param name="customer">The customer.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        /// <exception cref="ArgumentNullException">customer</exception>
+        public async Task<int> UpdateAsync(CustomerInfo customer)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            var dao = new CustomerDao(customer);
+
+            var param = dao.DynamicParameters();
+
+            return await ExecuteAsync("[dbo].[stpCustomer_Update]", param);
+        }
+
+        /// <summary>Deletes the asynchronous.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<int> DeleteAsync(int id)
+        {
+            var param = new { ID = id };
+
+            return await ExecuteAsync("[dbo].[stpCustomer_Delete]", param);
+        }
+
+        /// <summary>Gets the by identifier asynchronous.</summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>
+        ///   <br />
+        /// </returns>
+        public async Task<CustomerInfo> GetByIdAsync(int id)
+        {
+            const string ProcedureName = "[dbo].[stpCustomer_GetById]";
+            var param = new { id };
+            var customer = await QueryFirstOrDefaultAsync<CustomerDao>(ProcedureName, param);
+            return customer?.ToCustomerInfo();
+        }
+
         /// <summary>
         /// The get a list of customers by area.
         /// </summary>
@@ -52,7 +116,7 @@ namespace Map.DataAccess.Repositories
         {
             const string ProcedureName = "[dbo].[stpCustomer_GetByArea]";
             var param = new { area };
-            return await this.QueryAsync<CustomerInfo>(ProcedureName, param);
+            return await QueryAsync<CustomerInfo>(ProcedureName, param);
         }
     }
 }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.14.0</Version>
+    <Version>0.15.0</Version>
     <Authors>Hessam Hosseini</Authors>
     <Company>Golriz</Company>
     <Product>Map Service</Product>
@@ -11,7 +11,7 @@
     <Copyright>Copyright (c) 2020 Golriz,Inc. All rights reserved.</Copyright>
     <AssemblyName>Map.EndPoints.Service</AssemblyName>
     <RootNamespace>Map.EndPoints.Service</RootNamespace>
-    <PackageReleaseNotes>Add Create,Update And Delete Device Services</PackageReleaseNotes>
+    <PackageReleaseNotes>Add Create,Update And Delete Customer Services</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
