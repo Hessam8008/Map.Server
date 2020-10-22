@@ -12,13 +12,14 @@
 // <summary></summary>
 // ***********************************************************************
 
+using System;
+
 namespace Map.DataAccess.Dapper
 {
+    using global::Dapper;
     using System.Collections.Generic;
     using System.Data;
     using System.Threading.Tasks;
-
-    using global::Dapper;
 
     /// <summary>
     /// Class DapperRepository.
@@ -29,7 +30,7 @@ namespace Map.DataAccess.Dapper
         /// Initializes a new instance of the <see cref="DapperRepository" /> class.
         /// </summary>
         /// <param name="transaction">The transaction.</param>
-        protected DapperRepository(IDbTransaction transaction) => this.Transaction = transaction;
+        protected DapperRepository(IDbTransaction transaction) => Transaction = transaction;
 
         /// <summary>
         /// Gets the transaction.
@@ -41,7 +42,7 @@ namespace Map.DataAccess.Dapper
         /// Gets the connection.
         /// </summary>
         /// <value>The connection.</value>
-        protected IDbConnection Connection => this.Transaction?.Connection;
+        protected IDbConnection Connection => Transaction?.Connection;
 
         /// <summary>
         /// Queries the specified procedure name.
@@ -52,13 +53,20 @@ namespace Map.DataAccess.Dapper
         /// <returns>IEnumerable of T</returns>
         protected IEnumerable<T> Query<T>(string procedureName, object param = null)
         {
-            var entities = this.Connection.Query<T>(
-                sql: procedureName,
-                param: param,
-                commandType: CommandType.StoredProcedure,
-                transaction: this.Transaction);
+            try
+            {
+                var entities = Connection.Query<T>(
+                    sql: procedureName,
+                    param: param,
+                    commandType: CommandType.StoredProcedure,
+                    transaction: Transaction);
 
-            return entities;
+                return entities;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         /// <summary>
@@ -70,13 +78,20 @@ namespace Map.DataAccess.Dapper
         /// <returns>Return a GridReader.</returns>
         protected SqlMapper.GridReader QueryMultiple(string sqlScript, object param = null, CommandType commandType = CommandType.StoredProcedure)
         {
-            var grid = this.Connection.QueryMultiple(
-                sql: sqlScript,
-                param: param,
-                commandType: commandType,
-                transaction: this.Transaction);
-            
-            return grid;
+            try
+            {
+                var grid = Connection.QueryMultiple(
+                    sql: sqlScript,
+                    param: param,
+                    commandType: commandType,
+                    transaction: Transaction);
+
+                return grid;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         /// <summary>
@@ -88,12 +103,19 @@ namespace Map.DataAccess.Dapper
         /// <returns>Object of T.</returns>
         protected T QueryFirstOrDefault<T>(string procedureName, object param = null)
         {
-            var entity = this.Connection.QueryFirstOrDefault<T>(
-                sql: procedureName,
-                param: param,
-                        commandType: CommandType.StoredProcedure,
-                        transaction: this.Transaction);
-            return entity;
+            try
+            {
+                var entity = Connection.QueryFirstOrDefault<T>(
+                    sql: procedureName,
+                    param: param,
+                    commandType: CommandType.StoredProcedure,
+                    transaction: Transaction);
+                return entity;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         /// <summary>
@@ -105,14 +127,21 @@ namespace Map.DataAccess.Dapper
         /// <returns>Object of T.</returns>
         protected T QuerySingleOrDefault<T>(string procedureName, object param = null)
         {
-            var entity =
-                this.Connection.QuerySingleOrDefault<T>(
+            try
+            {
+                var entity =
+                    Connection.QuerySingleOrDefault<T>(
                         sql: procedureName,
                         param: param,
                         commandType: CommandType.StoredProcedure,
-                        transaction: this.Transaction);
+                        transaction: Transaction);
 
-            return entity;
+                return entity;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         /// <summary>
@@ -124,11 +153,18 @@ namespace Map.DataAccess.Dapper
         /// <remarks>Must call 'Commit()' at the end to commit changes to the database.</remarks>
         protected int Execute(string procedureName, object param = null)
         {
-            return this.Connection.Execute(
-                sql: procedureName,
-                param: param,
-                commandType: CommandType.StoredProcedure,
-                transaction: this.Transaction);
+            try
+            {
+                return Connection.Execute(
+                    sql: procedureName,
+                    param: param,
+                    commandType: CommandType.StoredProcedure,
+                    transaction: Transaction);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         /// <summary>
@@ -141,13 +177,20 @@ namespace Map.DataAccess.Dapper
         protected T ExecuteScalar<T>(string procedureName, object param = null)
         where T : struct
         {
-            var result =
-                this.Connection.ExecuteScalar<T>(
-                    sql: procedureName,
+            try
+            {
+                var result =
+                    Connection.ExecuteScalar<T>(
+                        sql: procedureName,
                         param: param,
                         commandType: CommandType.StoredProcedure,
-                        transaction: this.Transaction);
-            return result;
+                        transaction: Transaction);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         /// <summary>
@@ -159,14 +202,21 @@ namespace Map.DataAccess.Dapper
         /// <returns>IEnumerable Task of T.</returns>
         protected async Task<IEnumerable<T>> QueryAsync<T>(string procedureName, object param = null)
         {
-            var entities = await
-                this.Connection.QueryAsync<T>(
+            try
+            {
+                var entities = await
+                    Connection.QueryAsync<T>(
                         sql: procedureName,
                         param: param,
                         commandType: CommandType.StoredProcedure,
-                        transaction: this.Transaction);
+                        transaction: Transaction);
 
-            return entities;
+                return entities;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         /// <summary>
@@ -178,11 +228,18 @@ namespace Map.DataAccess.Dapper
         /// <returns>Task of GridReader.</returns>
         protected async Task<SqlMapper.GridReader> QueryMultipleAsync(string sql, object param = null, CommandType commandType = CommandType.StoredProcedure)
         {
-            return await this.Connection.QueryMultipleAsync(
+            try
+            {
+                return await Connection.QueryMultipleAsync(
                     sql: sql,
                     param: param,
                     commandType: commandType,
-                    transaction: this.Transaction);
+                    transaction: Transaction);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         /// <summary>
@@ -194,13 +251,20 @@ namespace Map.DataAccess.Dapper
         /// <returns>Task of T.</returns>
         protected async Task<T> QueryFirstOrDefaultAsync<T>(string procedureName, object param = null)
         {
-            var entity = await
-                             this.Connection.QueryFirstOrDefaultAsync<T>(
-                                 sql: procedureName,
-                                 param: param,
-                                 commandType: CommandType.StoredProcedure,
-                                 transaction: this.Transaction);
-            return entity;
+            try
+            {
+                var entity = await
+                    Connection.QueryFirstOrDefaultAsync<T>(
+                        sql: procedureName,
+                        param: param,
+                        commandType: CommandType.StoredProcedure,
+                        transaction: Transaction);
+                return entity;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         /// <summary>
@@ -212,13 +276,20 @@ namespace Map.DataAccess.Dapper
         /// <returns>Task of T.</returns>
         protected async Task<T> QuerySingleOrDefaultAsync<T>(string procedureName, object param = null)
         {
-            var entity = await
-                             this.Connection.QuerySingleOrDefaultAsync<T>(
-                                 sql: procedureName,
-                                 param: param,
-                                 commandType: CommandType.StoredProcedure,
-                                 transaction: this.Transaction);
-            return entity;
+            try
+            {
+                var entity = await
+                    Connection.QuerySingleOrDefaultAsync<T>(
+                        sql: procedureName,
+                        param: param,
+                        commandType: CommandType.StoredProcedure,
+                        transaction: Transaction);
+                return entity;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         /// <summary>
@@ -229,14 +300,21 @@ namespace Map.DataAccess.Dapper
         /// <returns>Task of integer.</returns>
         protected async Task<int> ExecuteAsync(string procedureName, object param = null)
         {
-            var result = await
-                this.Connection.ExecuteAsync(
+            try
+            {
+                var result = await
+                    Connection.ExecuteAsync(
                         sql: procedureName,
                         param: param,
                         commandType: CommandType.StoredProcedure,
-                        transaction: this.Transaction);
+                        transaction: Transaction);
 
-            return result;
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         /// <summary>
@@ -249,13 +327,20 @@ namespace Map.DataAccess.Dapper
         protected async Task<T> ExecuteScalarAsync<T>(string procedureName, object param = null)
         where T : struct
         {
-            var result = await
-                             this.Connection.ExecuteScalarAsync<T>(
-                                 sql: procedureName,
-                                 param: param,
-                                 commandType: CommandType.StoredProcedure,
-                                 transaction: this.Transaction);
-            return result;
+            try
+            {
+                var result = await
+                    Connection.ExecuteScalarAsync<T>(
+                        sql: procedureName,
+                        param: param,
+                        commandType: CommandType.StoredProcedure,
+                        transaction: Transaction);
+                return result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
     }
 }
