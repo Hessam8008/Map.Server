@@ -26,6 +26,7 @@
             this.DeviceService = new DeviceService(caller, this.SiteInfo, "Device");
             this.LocationService = new LocationService(caller, this.SiteInfo, "Location");
             this.ReportService = new ReportService(caller, this.SiteInfo, "Report");
+            this.AreaService = new AreaService(caller, this.SiteInfo, "Area");
         }
 
         public ApiSite SiteInfo { get; }
@@ -37,5 +38,6 @@
         public ILocationService LocationService { get; }
 
         public IReportService ReportService { get; }
+        public IAreaService AreaService { get; }
     }
 }
