@@ -70,5 +70,12 @@ namespace Map.EndPoints.Service.SubServices
             var response = await this.ApiService.GetAsync(param).ConfigureAwait(false);
             return await this.ParseAsync<List<CustomerInfo>>(response).ConfigureAwait(false);
         }
+
+        public async Task GetChangesAsync()
+        {
+            var param = new RequestParameters { Path = $"{RootUrl}/GetChanges" };
+            var response = await ApiService.GetAsync(param).ConfigureAwait(false);
+            await ParseAsync(response).ConfigureAwait(false);
+        }
     }
 }
