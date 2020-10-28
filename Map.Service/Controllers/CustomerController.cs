@@ -149,5 +149,12 @@ namespace Map.Service.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("GetChanges")]
+        public async Task<IActionResult> GetChangesAsync()
+        {
+            return Ok();
+        }
     }
 }
