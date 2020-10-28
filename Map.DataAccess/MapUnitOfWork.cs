@@ -64,6 +64,9 @@ namespace Map.DataAccess
         /// </summary>
         private ICustomerRepository customerRepo;
 
+        /// <summary>The area repository</summary>
+        private IAreaRepository areaRepository;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MapUnitOfWork" /> class.
         /// </summary>
@@ -105,6 +108,11 @@ namespace Map.DataAccess
         /// </summary>
         public ICustomerRepository CustomerRepository =>
             this.customerRepo = this.customerRepo ?? new CustomerRepo(this.transaction);
+
+        /// <summary>Gets the area repository.</summary>
+        /// <value>The area repository.</value>
+        public IAreaRepository AreaRepository =>
+            this.areaRepository = this.areaRepository ?? new AreaRepository(this.transaction);
 
         /// <summary>
         /// Begins the transaction.
@@ -204,6 +212,7 @@ namespace Map.DataAccess
             this.locationRepo = null;
             this.reportRepo = null;
             this.customerRepo = null;
+            this.areaRepository = null;
         }
         
         #endregion

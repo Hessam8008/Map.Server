@@ -44,6 +44,10 @@ namespace Map.Models
         /// <value>The customer repository.</value>
         public ICustomerRepository CustomerRepository { get; }
 
+        /// <summary>Gets the area repository.</summary>
+        /// <value>The area repository.</value>
+        public IAreaRepository AreaRepository { get; }
+
         /// <summary>Commits this instance.</summary>
         public void Commit();
     }
