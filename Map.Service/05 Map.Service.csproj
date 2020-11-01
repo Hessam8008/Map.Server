@@ -9,6 +9,7 @@
 		<Authors>Hessam Hosseini</Authors>
 		<AssemblyName>Map.Service</AssemblyName>
 		<RootNamespace>Map.Service</RootNamespace>
+		<UserSecretsId>63212dd0-df6e-47bd-b7e7-6645bd3cb6fb</UserSecretsId>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
