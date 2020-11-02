@@ -17,8 +17,4 @@
     <Compile Remove="EventArgs\ErrorArgs.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="RequestArgs\" />
-  </ItemGroup>
-
 </Project>
