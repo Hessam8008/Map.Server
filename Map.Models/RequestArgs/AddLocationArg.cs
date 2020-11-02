@@ -1,12 +1,10 @@
-﻿using System;
+﻿using Map.Models.AVL;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Map.Models.AVL;
 
-namespace Map.Service.Requests.LocationAgg
+namespace Map.Models.RequestArgs
 {
-    public class AddLocation
+    public class AddLocationArg
     {
         /// <summary>Gets or sets the device identifier.</summary>
         /// <value>The device identifier.</value>
@@ -63,18 +61,18 @@ namespace Map.Service.Requests.LocationAgg
         {
             var location = new Location()
             {
-                Longitude = this.Longitude,
-                Latitude = this.Latitude,
-                Altitude = this.Altitude,
-                Angle = this.Angle,
-                Elements = this.Elements,
-                Satellites = this.Satellites,
-                Speed = this.Speed,
-                Time = this.Time
+                Longitude = Longitude,
+                Latitude = Latitude,
+                Altitude = Altitude,
+                Angle = Angle,
+                Elements = Elements,
+                Satellites = Satellites,
+                Speed = Speed,
+                Time = Time
             };
 
             return location;
         }
-        
+
     }
 }

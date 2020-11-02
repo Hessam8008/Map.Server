@@ -12,7 +12,7 @@
 // <summary></summary>
 // ***********************************************************************
 
-using Map.Service.Requests.LocationAgg;
+using Map.Models.RequestArgs;
 
 namespace Map.Service.Controllers
 {
@@ -51,9 +51,9 @@ namespace Map.Service.Controllers
 
         [HttpPost]
         [Route("Create")]
-        public async Task<IActionResult> CreateAsync([FromBody, Required] AddLocation location)
+        public async Task<IActionResult> CreateAsync([FromBody, Required] AddLocationArg arg)
         {
-            var result = await unitOfWork.LocationRepository.InsertAsync(location.DeviceID, location.ToLocation());
+            var result = await unitOfWork.LocationRepository.InsertAsync(arg.DeviceID, arg.ToLocation());
 
             if (result == 0)
             {
