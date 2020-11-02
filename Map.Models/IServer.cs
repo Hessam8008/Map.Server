@@ -15,7 +15,7 @@ namespace Map.Models
 {
     using System;
 
-    using Map.Models.Args;
+    using Map.Models.EventArgs;
 
     /// <summary>
     /// The client connected.

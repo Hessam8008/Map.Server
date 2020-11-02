@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Map.EndPoints.Service.Models;
-
-namespace Map.EndPoints.Service.Args
+﻿namespace Map.EndPoints.Service.Args
 {
+    using System;
+    using System.Collections.Generic;
+
+    using Map.EndPoints.Service.Models;
+
     public class AddLocationArg
     {
+        /// <summary>
+        /// Gets or sets the device id.
+        /// </summary>
         public int DeviceID { get; set; }
+
         /// <summary>
         /// Gets or sets the Time.
         /// </summary>

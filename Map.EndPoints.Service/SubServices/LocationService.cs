@@ -20,18 +20,6 @@ namespace Map.EndPoints.Service.SubServices
         {
         }
 
-        //public async Task CreateAsync(Location location)
-        //{
-        //    var body = location.ToJson();
-        //    var param = new RequestParameters
-        //    {
-        //        Path = $"{RootUrl}/Create",
-        //        Content = new StringContent(body, Encoding.UTF8, MediaTypeNames.ApplicationJson)
-        //    };
-        //    var response = await ApiService.PostAsync(param).ConfigureAwait(false);
-        //    await ParseAsync(response).ConfigureAwait(false);
-        //}
-
         public async Task CreateAsync(AddLocationArg location)
         {
             var body = location.ToJson();

@@ -6,26 +6,25 @@
 // Last Modified By : U12178
 // Last Modified On : 06-15-2020
 // ***********************************************************************
-// <copyright file="ClientConnectedArgs.cs" company="Golriz">
+// <copyright file="DisconnectedArgs.cs" company="Golriz">
 //     Copyright (c) 2020 Golriz,Inc. All rights reserved.
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-
-namespace Map.Models.Args
+namespace Map.Models.EventArgs
 {
     using System;
 
     /// <summary>
-    /// Defines the <see cref="ClientConnectedArgs" />.
+    /// The disconnected args.
     /// </summary>
-    public class ClientConnectedArgs : EventArgs
+    public class DisconnectedArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ClientConnectedArgs" /> class.
+        /// Initializes a new instance of the <see cref="DisconnectedArgs" /> class.
         /// </summary>
-        /// <param name="imei">The IMEI<see cref="string" />.</param>
-        public ClientConnectedArgs(string imei)
+        /// <param name="imei">The IMEI.</param>
+        public DisconnectedArgs(string imei)
         {
             this.IMEI = imei;
         }
@@ -33,7 +32,7 @@ namespace Map.Models.Args
         /// <summary>
         /// Gets the IMEI.
         /// </summary>
-        /// <value>The IMEI of device.</value>
+        /// <value>The IMEI of the device.</value>
         public string IMEI { get; }
     }
 }

@@ -17,8 +17,8 @@ namespace Map.Server
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
 
-    using Map.Models.Args;
     using Map.Models.AVL;
+    using Map.Models.EventArgs;
 
     using Notifier.EndPoints.Service.Base;
     using Notifier.EndPoints.Service.Notification.Enums;

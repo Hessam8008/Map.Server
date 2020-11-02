@@ -19,7 +19,7 @@ namespace Map.Modules.Teltonika.Host
     using System.Threading.Tasks;
 
     using Map.Models;
-    using Map.Models.Args;
+    using Map.Models.EventArgs;
 
     /// <summary>
     /// Defines the <see cref="Server" />.
