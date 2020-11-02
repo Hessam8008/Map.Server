@@ -20,7 +20,7 @@ namespace Map.Server
 
     using Map.DataAccess;
     using Map.Models;
-    using Map.Models.Args;
+    using Map.Models.EventArgs;
 
     /// <summary>
     /// The program.

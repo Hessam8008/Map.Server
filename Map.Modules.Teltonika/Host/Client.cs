@@ -20,7 +20,7 @@ namespace Map.Modules.Teltonika.Host
     using System.Threading.Tasks;
 
     using Map.Models;
-    using Map.Models.Args;
+    using Map.Models.EventArgs;
     using Map.Modules.Teltonika.DataAccess;
     using Map.Modules.Teltonika.Host.Parsers;
     using Map.Modules.Teltonika.Models;

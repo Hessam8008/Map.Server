@@ -11,19 +11,20 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+
+using Map.Models.RequestArgs;
+
 namespace Map.Service.Controllers
 {
+    using Map.Models;
+    using Map.Models.AVL;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using Map.Models;
-    using Map.Models.AVL;
-
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
 
     /// <summary>
     /// Class LocationController.
@@ -48,6 +49,21 @@ namespace Map.Service.Controllers
             this.unitOfWork = unitOfWork;
         }
 
+        [HttpPost]
+        [Route("Create")]
+        public async Task<IActionResult> CreateAsync([FromBody, Required] AddLocationArg arg)
+        {
+            var result = await unitOfWork.LocationRepository.InsertAsync(arg.DeviceID, arg.ToLocation());
+
+            if (result == 0)
+            {
+                return NoContent();
+            }
+
+            unitOfWork.Commit();
+            return Ok();
+        }
+
         /// <summary>
         /// Returns the list of a device location in a period.
         /// </summary>
@@ -64,13 +80,13 @@ namespace Map.Service.Controllers
             [Required][FromQuery] DateTime from,
             [Required][FromQuery] DateTime to)
         {
-            var result = await this.unitOfWork.LocationRepository.GetByDeviceAsync(deviceId, from, to);
+            var result = await unitOfWork.LocationRepository.GetByDeviceAsync(deviceId, from, to);
             if (result == null || !result.Any())
             {
-                return this.NoContent();
+                return NoContent();
             }
 
-            return this.Ok(result);
+            return Ok(result);
         }
     }
 }

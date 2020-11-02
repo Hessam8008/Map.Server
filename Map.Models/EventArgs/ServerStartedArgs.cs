@@ -11,7 +11,7 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
-namespace Map.Models.Args
+namespace Map.Models.EventArgs
 {
     using System;
     using System.Net;
