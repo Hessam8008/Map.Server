@@ -33,12 +33,11 @@ namespace Map.Server
     /// <summary>
     /// Defines the <see cref="NotifierService" />.
     /// </summary>
-    public static class NotifierService
+    public static class NotifierService000
     {
         /// <summary>
-        /// The notifier service
+        /// The notify service
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed. Suppression is OK here.")]
         private static INotifierService notifierService;
 
         /// <summary>
@@ -151,7 +150,7 @@ namespace Map.Server
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        internal static string ToJson(this object obj)
+        private static string ToJson(this object obj)
         {
             return Newtonsoft.Json.JsonConvert.SerializeObject(obj);
         }
@@ -173,7 +172,7 @@ namespace Map.Server
             }
 
             var token = await uac.GetToken().ConfigureAwait(false);
-            apiCaller.SetJwtToken(token);
+            apiCaller.SetAuthorizationToken("bearer",token);
 
             try
             {
@@ -186,7 +185,7 @@ namespace Map.Server
                     Type = NotificationTimingType.Online
                 };
 
-                await notifierService.Notification.SendNotification(arg).ConfigureAwait(false);
+                await notifierService.Notification.SendNotificationAsync(arg).ConfigureAwait(false);
             }
             catch (Exception e)
             {
