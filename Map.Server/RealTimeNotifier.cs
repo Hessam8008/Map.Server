@@ -189,19 +189,19 @@ namespace Map.Server
 
                     Console.WriteLine("Real time hub url: {0}", hubUrl.UrlAddress);
 
-                    connection = new HubConnectionBuilder().WithUrl(
-                            new Uri(hubUrl.UrlAddress),
-                            options =>
-                                {
-                                    options.Headers["AppToken"] = Token;
-                                })
+                    connection = new HubConnectionBuilder()
+                        .WithUrl(new Uri(hubUrl.UrlAddress), options =>
+                            {
+                                options.Headers["AppToken"] = Token;
+                            })
                         .WithAutomaticReconnect()
                         .Build();
 
-                    //_connection.On<Dictionary<string, string>>("NotifyAsync", ShowNotification);
+                    //connection.On<Dictionary<string, string>>("NotifyAsync", ShowNotification);
 
                     ServicePointManager.DefaultConnectionLimit = 1;
-                    await connection.StartAsync().ConfigureAwait(false);
+                    await connection.StartAsync();
+
                 }
                 catch (Exception e)
                 {
