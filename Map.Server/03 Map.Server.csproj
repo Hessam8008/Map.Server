@@ -39,6 +39,7 @@
     <PackageReference Include="Notifier.EndPoints.Service" Version="1.0.4" />
     <PackageReference Include="Services.Core" Version="0.1.11" />
     <PackageReference Include="Services.WebApiCaller" Version="0.1.17" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="5.0.0" />
     <PackageReference Include="UAC.EndPoints.Service" Version="0.1.21" />
   </ItemGroup>
 
