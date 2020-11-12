@@ -44,7 +44,11 @@ namespace Map.Server
                 var bb = new TeltonikaBlackBox(c);
 
                 IServer server = new Modules.Teltonika.Host.Server(bb, c);
-                server.ServerStarted += (sender, e) => Log($"Server started on '{e.IP}:{e.Port}'.", ConsoleColor.Yellow);
+                server.ServerStarted += async (sender, e) =>
+                    {
+                        Log($"Server started on '{e.IP}:{e.Port}'.", ConsoleColor.Yellow);
+                        await RealTimeNotifier.BroadcastStartServer().ConfigureAwait(false);
+                    };
                 server.ServerStopped += (sender, e) => Log($"Server stopped.", ConsoleColor.Yellow);
                 server.ConnectionAccepted += (sender, e) => Log($"Client accepted {e.RemoteIP}, port {e.Port}, Ttl {e.Ttl}", ConsoleColor.Green);
                 server.ErrorOccured += (sender, e) => Log($"Error>\n{e.Exception}", ConsoleColor.Red);
@@ -54,7 +58,7 @@ namespace Map.Server
                 server.Logged += Server_Logged;
 
                 server.Start(IPAddress.Any.ToString(), 3343);
-
+                
                 Console.WriteLine("Press any key to stop server...");
                 Console.ReadKey();
 
@@ -102,7 +106,7 @@ namespace Map.Server
             var message = $"{e.IMEI} Connected.";
             try
             {
-                await NotifierService.BroadcastIMEI(e.IMEI).ConfigureAwait(false);
+                await RealTimeNotifier.BroadcastIMEI(e.IMEI).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -146,7 +150,7 @@ namespace Map.Server
                 {
                     dc.LastLocation = last;
                     dc.LastStatus = last;
-                    await NotifierService.BroadcastLastLocation(dc.Device, last);
+                    await RealTimeNotifier.BroadcastLastLocation(dc.Device, last);
                 }
                 else if (last.Time >= dc.LastLocation.Time)
                 {
@@ -154,16 +158,16 @@ namespace Map.Server
                     {
                         dc.LastLocation = last;
                         dc.LastStatus = last;
-                        await NotifierService.BroadcastLastLocation(dc.Device, last);
+                        await RealTimeNotifier.BroadcastLastLocation(dc.Device, last);
                     }
                     else
                     {
                         dc.LastStatus = last;
-                        await NotifierService.BroadcastLastStatus(e.IMEI, last);
+                        await RealTimeNotifier.BroadcastLastStatus(e.IMEI, last);
                     }
                 }
 
-                await NotifierService.BroadcastPacket(e);
+                await RealTimeNotifier.BroadcastPacket(e);
             }
             catch (Exception ex)
             {
