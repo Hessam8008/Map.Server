@@ -53,6 +53,12 @@ namespace Map.Service.Controllers
         [Route("Create")]
         public async Task<IActionResult> CreateAsync([FromBody, Required] AddLocationArg arg)
         {
+            foreach (var e in arg.Elements)
+            {
+                var bytes = Convert.FromBase64String(e.Value?.ToString());
+                e.Value = bytes;
+            }
+            
             var result = await unitOfWork.LocationRepository.InsertAsync(arg.DeviceID, arg.ToLocation());
 
             if (result == 0)
