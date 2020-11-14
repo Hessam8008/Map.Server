@@ -13,7 +13,8 @@ namespace Map.EndPoints.Service.Test
     {
         public void Load()
         {
-            this.ApiSites = new List<ApiSite> { new ApiSite("Map.Api", "http://10.10.1.34:3344/api") };
+            //this.ApiSites = new List<ApiSite> { new ApiSite("Map.Api", "http://10.10.1.34:3344/api") };
+            this.ApiSites = new List<ApiSite> { new ApiSite("Map.Api", "http://localhost:2348/api") };
         }
 
         public void Save()
