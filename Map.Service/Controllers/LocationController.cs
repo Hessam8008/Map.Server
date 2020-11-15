@@ -55,7 +55,10 @@ namespace Map.Service.Controllers
         {
             foreach (var e in arg.Elements)
             {
-                var bytes = Convert.FromBase64String(e.Value?.ToString());
+                var isNumeric = int.TryParse(e.Value.ToString(), out var number);
+                var bytes = isNumeric ? 
+                                BitConverter.GetBytes(number) : 
+                                Convert.FromBase64String(e.Value?.ToString());
                 e.Value = bytes;
             }
             
