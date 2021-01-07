@@ -62,6 +62,6 @@ namespace Map.Models.Customer
         /// <summary>
         /// Gets or sets the area (Branch).
         /// </summary>
-        public int Area { get; set; }
+        public int AreaID { get; set; }
     }
 }

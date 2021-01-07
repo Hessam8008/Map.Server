@@ -18,7 +18,7 @@ namespace Map.DataAccess.DAO
             Longitude = customer.Longitude;
             Active = customer.Active;
             Grade = customer.Grade;
-            Area = customer.Area;
+            AreaID = customer.AreaID;
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Map.DataAccess.DAO
         /// <summary>
         /// Gets or sets the area (Branch).
         /// </summary>
-        public int Area { get; set; }
+        public int AreaID { get; set; }
 
         /// <summary>Converts to customerinfo.</summary>
         /// <returns>
@@ -78,7 +78,7 @@ namespace Map.DataAccess.DAO
                 ID = ID,
                 Active = Active,
                 Address = Address,
-                Area = Area,
+                AreaID = AreaID,
                 Grade = Grade,
                 Latitude = Latitude,
                 Longitude = Longitude,

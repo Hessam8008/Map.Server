@@ -28,6 +28,7 @@ namespace Map.Service.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var result = await unitOfWork.AreaRepository.GetAllAsync();
+            
             if (result == null || !result.Any())
             {
                 return NoContent();
@@ -36,5 +37,34 @@ namespace Map.Service.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// The update location of the area async.
+        /// </summary>
+        /// <param name="id">
+        /// The area id.
+        /// </param>
+        /// <param name="latitude">
+        /// The Latitude.
+        /// </param>
+        /// <param name="longitude">
+        /// The Longitude.
+        /// </param>
+        /// <returns>
+        /// The <see cref="Task"/>.
+        /// </returns>
+        [ProducesResponseType(typeof(IEnumerable<Area>), 200)]
+        [Route("UpdateLocation")]
+        [HttpGet]
+        public async Task<IActionResult> UpdateLocationAsync(int id, float latitude, float longitude)
+        {
+            var result = await this.unitOfWork.AreaRepository.UpdateLocationAsync(id, latitude, longitude);
+            this.unitOfWork.Commit();
+            if (result > 0)
+            {
+                return this.Ok();
+            }
+
+            return this.NotFound();
+        }
     }
 }

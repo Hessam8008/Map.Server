@@ -18,21 +18,20 @@ namespace Map.DataAccess.Repositories
 
         public async Task<IEnumerable<Area>> GetAllAsync()
         {
-            //const string ProcedureName = "[gps].[stpArea_GetAll]";
-            //var areaDaos = await QueryAsync<AreaDAO>(ProcedureName);
-            //var result =
-            //    from d in areaDaos
-            //    select d?.ToArea();
-            
-            //return result;
-            var result = new List<Area>();
+            const string ProcedureName = "[dbo].[stpArea_GetAll]";
+            var areaDaos = await QueryAsync<AreaDAO>(ProcedureName);
+            var result =
+                from d in areaDaos
+                select d?.ToArea();
 
-            result.Add(new Area(){ID = 1, Title = "مشهد" });
-            result.Add(new Area() { ID = 2, Title = "تهران" });
-            result.Add(new Area() { ID = 3, Title = "مازندران" });
-            result.Add(new Area() { ID = 4, Title = "گیلان" });
-            result.Add(new Area() { ID = 5, Title = "اصفهان" });
+            return result;
+        }
 
+        public async Task<int> UpdateLocationAsync(int id, float latitude, float longitude)
+        {
+            const string ProcedureName = "[dbo].[stpArea_SetLocation]";
+            var param = new { id, latitude, longitude };
+            var result = await this.ExecuteAsync(ProcedureName, param);
             return result;
         }
     }
