@@ -7,5 +7,7 @@ namespace Map.Models.Repositories
     public interface IAreaRepository
     {
         Task<IEnumerable<Area>> GetAllAsync();
+
+        Task<int> UpdateLocationAsync(int id, float latitude, float longitude);
     }
 }
