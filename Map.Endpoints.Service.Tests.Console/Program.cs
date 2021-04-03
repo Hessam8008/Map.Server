@@ -15,7 +15,7 @@ namespace Map.Endpoints.Service.Tests.Console
     {
         private static async Task Main(string[] _)
         {
-
+            
             var _caller = new ApiCaller();
             var _config = new WinApiConfiguration();
 
