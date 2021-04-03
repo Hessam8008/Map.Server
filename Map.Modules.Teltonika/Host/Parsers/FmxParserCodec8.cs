@@ -40,8 +40,8 @@
 // 
 //   0x00000000 
 // 
-//   (Preamble)    | Data Field Length     | Codec ID    | Number Of Data 1 |    AVL Data    | Number Of Data 2    | CRC-16
-//    4 bytes      |      4 bytes          |  1 byte     |      1 byte      |     X bytes    |     1 byte          | 4 bytes
+//   (Preamble)    │ Data Field Length     │ Codec ID    │ Number Of Data 1 │    AVL Data    │ Number Of Data 2    │ CRC-16
+//    4 bytes      │      4 bytes          │  1 byte     │      1 byte      │     X bytes    │     1 byte          │ 4 bytes
 // 
 //   Preamble          : The packet starts with four zero bytes.
 //   Data Field Length : Size is calculated starting from Codec ID to Number of Data 2.
@@ -59,8 +59,8 @@
 //
 //   * Below table represents AVL Data structure.
 //
-//   Timestamp  |  Priority  | GPS Element | IO Element
-//    8 bytes   |   1 byte   |  15 bytes   |   X bytes
+//   Timestamp  │  Priority  │ GPS Element │ IO Element
+//    8 bytes   │   1 byte   │  15 bytes   │   X bytes
 //
 //   Timestamp   : A difference, in milliseconds, between the current time and midnight, January, 1970 UTC(UNIX time).
 //   Priority    : Field which define AVL data priority(more information below).
@@ -68,14 +68,14 @@
 //   IO Element  : Additional configurable information from device(more information visit reference site).
 //
 //   Priority
-//   0| Low
-//   1| High
-//   2| Panic
+//   0│ Low
+//   1│ High
+//   2│ Panic
 //
 //
 //   GPS element
-//   Longitude |    Latitude |  Altitude  |  Angle  | Satellites |  Speed
-//    4 bytes  |    4 bytes  |  2 bytes   | 2 bytes |   1 byte   | 2 bytes
+//   Longitude │    Latitude │  Altitude  │  Angle  │ Satellites │  Speed
+//    4 bytes  │    4 bytes  │  2 bytes   │ 2 bytes │   1 byte   │ 2 bytes
 //
 //   Longitude  : East – west position.
 //   Latitude   : North – south position.
@@ -134,7 +134,7 @@ namespace Map.Modules.Teltonika.Host.Parsers
             var result = new TcpPacket { RawMessage = hexMessage };
             var hc = new HexCrawler(hexMessage.PrimitiveMessage);
 
-            /* ■■ Warning : Order of variables and assumptions is important.
+            /* ■■ Warning : Order of variables and assumptions are important.
              * ■■           Don't reorder them.
              */
 
@@ -222,7 +222,7 @@ namespace Map.Modules.Teltonika.Host.Parsers
             }
 
             /*
-                 A number which defines how many records is in the packet. 
+                 A number which defines how many records are in the packet. 
                  This number must be the same as “Number of Data 1”.
              */
             result.NumberOfData2 = hc.PopAsByte();
