@@ -197,8 +197,6 @@ namespace Map.Server
                         .WithAutomaticReconnect()
                         .Build();
 
-                    //connection.On<Dictionary<string, string>>("NotifyAsync", ShowNotification);
-
                     ServicePointManager.DefaultConnectionLimit = 1;
                     await connection.StartAsync();
 
