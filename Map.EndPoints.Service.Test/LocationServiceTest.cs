@@ -16,9 +16,9 @@ namespace Map.EndPoints.Service.Test
     [TestClass]
     public class LocationServiceTest
     {
-        private IApiCaller apiCaller = new ApiCaller();
-        private IApiConfiguration apiConfiguration = new TestApiConfiguration();
-        private IMapService mapService;
+        private readonly IApiCaller apiCaller = new ApiCaller();
+        private readonly IApiConfiguration apiConfiguration = new TestApiConfiguration();
+        private readonly IMapService mapService;
 
         public LocationServiceTest()
         {
