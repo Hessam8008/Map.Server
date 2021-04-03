@@ -9,11 +9,14 @@ namespace Map.EndPoints.Service.Test
     using Services.Core;
     using Services.Core.Interfaces;
 
-    internal class MyConfiguration : IApiConfiguration
+    internal class TestApiConfiguration : IApiConfiguration
     {
         public void Load()
         {
-            //this.ApiSites = new List<ApiSite> { new ApiSite("Map.Api", "http://10.10.1.34:3344/api") };
+            /*
+             * server: http://10.10.1.34:3344/api
+             * local : http://localhost:2348/api
+             */
             this.ApiSites = new List<ApiSite> { new ApiSite("Map.Api", "http://localhost:2348/api") };
         }
 

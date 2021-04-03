@@ -21,20 +21,20 @@ namespace Map.DataAccess.DAO
     /// <summary>
     /// Class Device.
     /// </summary>
-    internal class DeviceDAO
+    internal class DeviceDao
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeviceDAO"/> class.
+        /// Initializes a new instance of the <see cref="DeviceDao"/> class.
         /// </summary>
-        public DeviceDAO()
+        public DeviceDao()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeviceDAO" /> class.
+        /// Initializes a new instance of the <see cref="DeviceDao" /> class.
         /// </summary>
         /// <param name="device">The device.</param>
-        public DeviceDAO(Device device)
+        public DeviceDao(Device device)
         {
             this.ID = device.ID;
             this.IMEI = device.IMEI;

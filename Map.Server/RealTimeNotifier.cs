@@ -171,7 +171,7 @@ namespace Map.Server
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        private static async Task<HubConnection> getHub()
+        private static async Task<HubConnection> GetHub()
         {
             if (connection == null)
             {
@@ -197,8 +197,6 @@ namespace Map.Server
                         .WithAutomaticReconnect()
                         .Build();
 
-                    //connection.On<Dictionary<string, string>>("NotifyAsync", ShowNotification);
-
                     ServicePointManager.DefaultConnectionLimit = 1;
                     await connection.StartAsync();
 
@@ -222,7 +220,7 @@ namespace Map.Server
         {
             try
             {
-                var hub = await getHub().ConfigureAwait(false);
+                var hub = await GetHub().ConfigureAwait(false);
                 if (hub == null)
                 {
                     Console.WriteLine("Cannot connect to real time hub for notification.");

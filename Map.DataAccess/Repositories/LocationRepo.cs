@@ -53,7 +53,7 @@ namespace Map.DataAccess.Repositories
             const string Proc1 = "[gps].[stpLocation_Insert]";
             const string Proc2 = "[gps].[stpLocationElement_Insert]";
 
-            var dao = new LocationDAO(deviceId, location);
+            var dao = new LocationDao(deviceId, location);
             var param1 = dao.DynamicParameters();
             await this.ExecuteAsync(Proc1, param1);
             dao.ID = param1.Get<int>("ID");
@@ -92,8 +92,8 @@ namespace Map.DataAccess.Repositories
             dp.Add("from", @from, DbType.DateTime);
             dp.Add("to", to, DbType.DateTime);
             var reader = await this.QueryMultipleAsync(Proc, dp);
-            var locations = (await reader.ReadAsync<LocationDAO>()).ToList();
-            var elements = (await reader.ReadAsync<LocationElementDAO>()).ToList();
+            var locations = (await reader.ReadAsync<LocationDao>()).ToList();
+            var elements = (await reader.ReadAsync<LocationElementDao>()).ToList();
 
             foreach (var location in locations)
             {

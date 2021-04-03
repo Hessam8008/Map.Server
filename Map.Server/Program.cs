@@ -35,15 +35,14 @@ namespace Map.Server
         /// <summary>
         /// The main method.
         /// </summary>
-        /// <param name="args">The args<see cref="string" />.</param>
-        public static void Main(string[] args)
+        public static void Main()
         {
             try
             {
-                var c = new DatabaseSettings();
-                var bb = new TeltonikaBlackBox(c);
+                var dbSettings = new DatabaseSettings();
+                var teltonikaBalckBox = new TeltonikaBlackBox(dbSettings);
 
-                IServer server = new Modules.Teltonika.Host.Server(bb, c);
+                IServer server = new Modules.Teltonika.Host.Server(teltonikaBalckBox, dbSettings);
                 server.ServerStarted += async (sender, e) =>
                     {
                         Log($"Server started on '{e.IP}:{e.Port}'.", ConsoleColor.Yellow);

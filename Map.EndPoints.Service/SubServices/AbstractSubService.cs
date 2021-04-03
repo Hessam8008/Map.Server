@@ -48,6 +48,7 @@
                 var code = msg.StatusCode;
                 throw new ApiException(code, reason);
             }
+            await Task.CompletedTask;
         }
     }
 }
