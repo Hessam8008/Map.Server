@@ -17,12 +17,12 @@ namespace Map.EndPoints.Service.Test
     public class LocationServiceTest
     {
         private IApiCaller apiCaller = new ApiCaller();
-        private IApiConfiguration apiConfiguration = new MyConfiguration();
-        private IMapService ms;
+        private IApiConfiguration apiConfiguration = new TestApiConfiguration();
+        private IMapService mapService;
 
         public LocationServiceTest()
         {
-            this.ms = new MapService(apiCaller, apiConfiguration);
+            this.mapService = new MapService(apiCaller, apiConfiguration);
         }
 
         [TestMethod]
@@ -30,7 +30,7 @@ namespace Map.EndPoints.Service.Test
         {
             try
             {
-                var result = await this.ms.LocationService.GetLocationsAsync(13, DateTime.Now.AddDays(-1), DateTime.Now);
+                var result = await this.mapService.LocationService.GetLocationsAsync(13, DateTime.Now.AddDays(-1), DateTime.Now);
                 Assert.IsTrue(result != null);
             }
             catch (Exception e)
@@ -45,7 +45,7 @@ namespace Map.EndPoints.Service.Test
         {
             try
             {
-                var result = await this.ms.ReportService.BrowseRoute(13, DateTime.Now.AddDays(-1), DateTime.Now);
+                var result = await this.mapService.ReportService.BrowseRoute(13, DateTime.Now.AddDays(-1), DateTime.Now);
                 Assert.IsTrue(result != null);
             }
             catch (Exception e)
@@ -56,7 +56,7 @@ namespace Map.EndPoints.Service.Test
         }
 
         [TestMethod]
-        public async Task InsertLocationAsync()
+        public async Task InsertLocation()
         {
             try
             {
@@ -67,7 +67,7 @@ namespace Map.EndPoints.Service.Test
                     Elements = new List<LocationElement> { new LocationElement { Id = 1, Value = 100 } }
                 };
 
-                await this.ms.LocationService.CreateAsync(param).ConfigureAwait(false);
+                await this.mapService.LocationService.CreateAsync(param).ConfigureAwait(false);
             }
             catch (Exception e)
             {
