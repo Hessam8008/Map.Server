@@ -55,9 +55,9 @@ namespace Map.DataAccess.Repositories
                              ? await this.QueryMultipleAsync(ProcedureName)
                              : await this.QueryMultipleAsync(ProcedureName, new { deviceList = devices.ToDataTable() });
 
-            var deviceList = (await reader.ReadAsync<DeviceDAO>()).ToList();
-            var locationList = (await reader.ReadAsync<LocationDAO>()).ToList();
-            var elementList = (await reader.ReadAsync<LocationElementDAO>()).ToList();
+            var deviceList = (await reader.ReadAsync<DeviceDao>()).ToList();
+            var locationList = (await reader.ReadAsync<LocationDao>()).ToList();
+            var elementList = (await reader.ReadAsync<LocationElementDao>()).ToList();
             var result = new List<Point>();
 
             foreach (var daoDevice in deviceList)
@@ -90,8 +90,8 @@ namespace Map.DataAccess.Repositories
         {
             const string ProcedureName = "[gps].[stpReport_GetPath]";
             var reader = await this.QueryMultipleAsync(ProcedureName, new { deviceList = devices.ToDataTable(), from, to });
-            var deviceList = (await reader.ReadAsync<DeviceDAO>()).ToList();
-            var locationList = (await reader.ReadAsync<LocationDAO>()).ToList();
+            var deviceList = (await reader.ReadAsync<DeviceDao>()).ToList();
+            var locationList = (await reader.ReadAsync<LocationDao>()).ToList();
 
             return deviceList.Select(device => new AvlPackage
             {

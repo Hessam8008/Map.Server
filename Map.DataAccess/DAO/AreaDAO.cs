@@ -5,7 +5,7 @@
     /// <summary>
     /// The area data access object.
     /// </summary>
-    public class AreaDAO
+    public class AreaDao
     {
         /// <summary>Gets or sets the identifier.</summary>
         /// <value>The identifier.</value>
@@ -33,7 +33,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="AreaDAO"/> class.
         /// </summary>
-        public AreaDAO() { }
+        public AreaDao() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AreaDAO"/> class.
@@ -41,7 +41,7 @@
         /// <param name="area">
         /// The area.
         /// </param>
-        public AreaDAO(Area area)
+        public AreaDao(Area area)
         {
             this.ID = area.ID;
             this.Title = area.Title;

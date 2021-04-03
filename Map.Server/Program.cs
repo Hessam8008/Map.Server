@@ -35,8 +35,7 @@ namespace Map.Server
         /// <summary>
         /// The main method.
         /// </summary>
-        /// <param name="args">The args<see cref="string" />.</param>
-        public static void Main(string[] args)
+        public static void Main()
         {
             try
             {

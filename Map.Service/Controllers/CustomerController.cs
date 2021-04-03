@@ -154,6 +154,7 @@ namespace Map.Service.Controllers
         [Route("GetChanges")]
         public async Task<IActionResult> GetChangesAsync()
         {
+            await Task.CompletedTask;
             return Ok();
         }
     }

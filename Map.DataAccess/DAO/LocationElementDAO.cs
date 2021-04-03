@@ -21,20 +21,20 @@ namespace Map.DataAccess.DAO
     /// <summary>
     /// Class LocationElement.
     /// </summary>
-    internal class LocationElementDAO
+    internal class LocationElementDao
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocationElementDAO" /> class.
+        /// Initializes a new instance of the <see cref="LocationElementDao" /> class.
         /// </summary>
-        public LocationElementDAO()
+        public LocationElementDao()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocationElementDAO" /> class.
+        /// Initializes a new instance of the <see cref="LocationElementDao" /> class.
         /// </summary>
         /// <param name="element">The element.</param>
-        public LocationElementDAO(LocationElement element)
+        public LocationElementDao(LocationElement element)
         {
             this.ElementId = element.Id;
             this.ElementValue = element.Value;

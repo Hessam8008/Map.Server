@@ -24,21 +24,21 @@ namespace Map.DataAccess.DAO
     /// <summary>
     /// Class Location.
     /// </summary>
-    internal class LocationDAO
+    internal class LocationDao
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocationDAO"/> class.
+        /// Initializes a new instance of the <see cref="LocationDao"/> class.
         /// </summary>
-        public LocationDAO()
+        public LocationDao()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LocationDAO" /> class.
+        /// Initializes a new instance of the <see cref="LocationDao" /> class.
         /// </summary>
         /// <param name="deviceId">Device ID</param>
         /// <param name="location">The location.</param>
-        public LocationDAO(int deviceId, Location location)
+        public LocationDao(int deviceId, Location location)
         {
             this.Timestamp = location.Time;
             this.Longitude = location.Longitude;
@@ -48,7 +48,7 @@ namespace Map.DataAccess.DAO
             this.Satellites = location.Satellites;
             this.Speed = location.Speed;
             this.DeviceId = deviceId;
-            this.Elements = (from e in location.Elements select new LocationElementDAO(e)).ToList();
+            this.Elements = (from e in location.Elements select new LocationElementDao(e)).ToList();
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Map.DataAccess.DAO
         /// </summary>
         /// <value>The elements.</value>
         [DapperIgnoreParameter]
-        public List<LocationElementDAO> Elements { get; set; }
+        public List<LocationElementDao> Elements { get; set; }
 
         /// <summary>
         /// Converts to location.

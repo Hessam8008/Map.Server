@@ -19,7 +19,7 @@ namespace Map.DataAccess.Repositories
         public async Task<IEnumerable<Area>> GetAllAsync()
         {
             const string ProcedureName = "[dbo].[stpArea_GetAll]";
-            var areaDaos = await QueryAsync<AreaDAO>(ProcedureName);
+            var areaDaos = await QueryAsync<AreaDao>(ProcedureName);
             var result =
                 from d in areaDaos
                 select d?.ToArea();
