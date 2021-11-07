@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Map.Models.AVL;
+using Microsoft.AspNetCore.Http;
 
 namespace Map.Service.Controllers
 {
@@ -53,13 +54,15 @@ namespace Map.Service.Controllers
         /// <returns>
         /// The <see cref="Task"/>.
         /// </returns>
-        [ProducesResponseType(typeof(IEnumerable<Area>), 200)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("{id}/UpdateLocation")]
         [HttpPut]
         public async Task<IActionResult> UpdateLocationAsync([Required][FromRoute] int id, float latitude, float longitude)
         {
             var result = await this.unitOfWork.AreaRepository.UpdateLocationAsync(id, latitude, longitude);
             this.unitOfWork.Commit();
+
             if (result > 0)
             {
                 return this.Ok();
