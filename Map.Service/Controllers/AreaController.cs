@@ -1,6 +1,7 @@
 ﻿using Map.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Map.Models.AVL;
@@ -18,17 +19,17 @@ namespace Map.Service.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-        /// <summary>Gets all asynchronous.</summary>
+        /// <summary>Gets all area's asynchronous.</summary>
         /// <returns>
         ///   <br />
         /// </returns>
         [ProducesResponseType(typeof(IEnumerable<Area>), 200)]
-        [Route("GetAll")]
+        [Route("")]
         [HttpGet]
         public async Task<IActionResult> GetAllAsync()
         {
             var result = await unitOfWork.AreaRepository.GetAllAsync();
-            
+
             if (result == null || !result.Any())
             {
                 return NoContent();
@@ -41,7 +42,7 @@ namespace Map.Service.Controllers
         /// The update location of the area async.
         /// </summary>
         /// <param name="id">
-        /// The area id.
+        /// The area Id.
         /// </param>
         /// <param name="latitude">
         /// The Latitude.
@@ -53,9 +54,9 @@ namespace Map.Service.Controllers
         /// The <see cref="Task"/>.
         /// </returns>
         [ProducesResponseType(typeof(IEnumerable<Area>), 200)]
-        [Route("UpdateLocation")]
-        [HttpGet]
-        public async Task<IActionResult> UpdateLocationAsync(int id, float latitude, float longitude)
+        [Route("{id}/UpdateLocation")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateLocationAsync([Required][FromRoute] int id, float latitude, float longitude)
         {
             var result = await this.unitOfWork.AreaRepository.UpdateLocationAsync(id, latitude, longitude);
             this.unitOfWork.Commit();

@@ -11,9 +11,12 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+
+using Microsoft.Extensions.Configuration;
+
 namespace Map.Service
 {
-    using Map.Models;
+    using Models;
 
     /// <summary>
     /// Class DatabaseSettings.
@@ -22,16 +25,15 @@ namespace Map.Service
     /// <seealso cref="Map.Models.IDatabaseSettings" />
     internal class DatabaseSettings : IDatabaseSettings
     {
+        private readonly IConfiguration Configuration;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseSettings"/> class.
         /// </summary>
-        public DatabaseSettings()
+        public DatabaseSettings(IConfiguration configuration)
         {
-#if DEBUG
-            this.ConnectionString = "server=dm1server1;uid=dbUser;pwd=1234;database=GPS;MultipleActiveResultSets=True;Application Name=MAP.SERVER";
-#else
-            this.ConnectionString = "server=10.10.1.12\\GCAS;database=GPSTrackerDB;uid=DVP1;pwd=Fly#3592;MultipleActiveResultSets=True;Application Name=MAP.SERVER";
-#endif
+            this.Configuration = configuration;
+            this.ConnectionString = configuration["ConnectionString"];
         }
 
         /// <summary>

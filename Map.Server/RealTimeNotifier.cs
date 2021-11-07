@@ -11,27 +11,20 @@
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
+
+using Map.Models.AVL;
+using Map.Models.EventArgs;
+using Microsoft.AspNetCore.SignalR.Client;
+
+using Services.Core.Interfaces;
+using Services.WebApiCaller.Configuration;
+
 namespace Map.Server
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Net;
-    using System.Threading.Tasks;
-
-    using Map.Models.AVL;
-    using Map.Models.EventArgs;
-    using Microsoft.AspNetCore.SignalR.Client;
-
-    using Notifier.EndPoints.Service.Notification.Enums;
-    using Notifier.EndPoints.Service.Notification.RequestsArg;
-
-    using Services.Core.Interfaces;
-    using Services.Core.Tools;
-    using Services.WebApiCaller;
-    using Services.WebApiCaller.Configuration;
-
-    using UAC.EndPoints.Service.Base;
-
     /// <summary>
     /// Defines the real time notify.
     /// </summary>

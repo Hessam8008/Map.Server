@@ -97,9 +97,9 @@ namespace Map.DataAccess.Repositories
         /// </returns>
         public async Task<CustomerInfo> GetByIdAsync(int id)
         {
-            const string ProcedureName = "[dbo].[stpCustomer_GetById]";
+            const string procedureName = "[dbo].[stpCustomer_GetById]";
             var param = new { id };
-            var customer = await QueryFirstOrDefaultAsync<CustomerDao>(ProcedureName, param);
+            var customer = await QueryFirstOrDefaultAsync<CustomerDao>(procedureName, param);
             return customer?.ToCustomerInfo();
         }
 
@@ -114,9 +114,19 @@ namespace Map.DataAccess.Repositories
         /// </returns>
         public async Task<IEnumerable<CustomerInfo>> GetByAreaAsync(int area)
         {
-            const string ProcedureName = "[dbo].[stpCustomer_GetByArea]";
+            const string procedureName = "[dbo].[stpCustomer_GetByArea]";
             var param = new { area };
-            return await QueryAsync<CustomerInfo>(ProcedureName, param);
+            return await QueryAsync<CustomerInfo>(procedureName, param);
+        }
+
+
+        /// <summary>
+        /// synchronize changes by ACE database as an asynchronous operation.
+        /// </summary>
+        public async Task SyncChangesAsync()
+        {
+            const string procedureName = "[dbo].[stpConvertCustomersFromAce]";
+            await ExecuteAsync(procedureName).ConfigureAwait(false);
         }
     }
 }

@@ -12,12 +12,12 @@
 // <summary></summary>
 // ***********************************************************************
 
-using Microsoft.AspNetCore.Http;
 
 namespace Map.Service.Controllers
 {
-    using Map.Models;
-    using Map.Models.Customer;
+    using Microsoft.AspNetCore.Http;
+    using Models;
+    using Models.Customer;
     using Microsoft.AspNetCore.Mvc;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -46,13 +46,9 @@ namespace Map.Service.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-        /// <summary>Creates the asynchronous.</summary>
+        /// <summary>Create a customer asynchronous.</summary>
         /// <param name="customer">The customer.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
         [HttpPost]
-        [Route("Create")]
         public async Task<IActionResult> CreateAsync([Required] CustomerInfo customer)
         {
             var result = await unitOfWork.CustomerRepository.InsertAsync(customer);
@@ -66,13 +62,10 @@ namespace Map.Service.Controllers
             return Ok();
         }
 
-        /// <summary>Updates the asynchronous.</summary>
+        /// <summary>Updates the customer asynchronous.</summary>
         /// <param name="customer">The customer.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
         [HttpPut]
-        [Route("Update")]
+        //[Route("Update")]
         public async Task<IActionResult> UpdateAsync([Required] CustomerInfo customer)
         {
             var result = await unitOfWork.CustomerRepository.UpdateAsync(customer);
@@ -86,13 +79,13 @@ namespace Map.Service.Controllers
             return Ok();
         }
 
-        /// <summary>Deletes the asynchronous.</summary>
-        /// <param name="id">The identifier.</param>
+        /// <summary>Deletes a customer asynchronous.</summary>
+        /// <param name="id">The customer identifier.</param>
         /// <returns>
         ///   <br />
         /// </returns>
         [HttpDelete]
-        [Route("Delete")]
+        //[Route("Delete")]
         public async Task<IActionResult> DeleteAsync([Required] int id)
         {
             var result = await unitOfWork.CustomerRepository.DeleteAsync(id);
@@ -106,15 +99,12 @@ namespace Map.Service.Controllers
             return Ok();
         }
 
-        /// <summary>Gets the by identifier asynchronous.</summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns>
-        ///   <br />
-        /// </returns>
+        /// <summary>Gets the customer by identifier asynchronous.</summary>
+        /// <param name="id">The customer identifier.</param>
         [ProducesResponseType(typeof(CustomerInfo), StatusCodes.Status200OK)]
         [HttpGet]
-        [Route("Get")]
-        public async Task<IActionResult> GetAsync([Required] int id)
+        [Route("{id}")]
+        public async Task<IActionResult> GetAsync([Required][FromRoute] int id)
         {
             var result = await unitOfWork.CustomerRepository.GetByIdAsync(id);
             if (result == null)
@@ -138,8 +128,8 @@ namespace Map.Service.Controllers
         /// <response code="204">If no customer found.</response>
         [ProducesResponseType(typeof(IEnumerable<CustomerInfo>), 200)]
         [HttpGet]
-        [Route("GetByArea")]
-        public async Task<IActionResult> GetByAreaAsync([Required] [FromQuery] int area = 1)
+        [Route("area/{area}")]
+        public async Task<IActionResult> GetByAreaAsync([Required][FromRoute] int area = 1)
         {
             var result = await unitOfWork.CustomerRepository.GetByAreaAsync(area);
             if (result == null || !result.Any())
@@ -150,11 +140,15 @@ namespace Map.Service.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        [Route("GetChanges")]
+        /// <summary>
+        /// Sync all customers registered in the ACE database.
+        /// </summary>
+        /// <response code="200">Success</response>
+        [HttpPut]
+        [Route("SyncChanges")]
         public async Task<IActionResult> GetChangesAsync()
         {
-            await Task.CompletedTask;
+            await unitOfWork.CustomerRepository.SyncChangesAsync();
             return Ok();
         }
     }
